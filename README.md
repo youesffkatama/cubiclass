@@ -1,4 +1,4 @@
-# 🎓 Scholar.AI Backend
+# 🎓 Scholar.AI
 
 **Enterprise-grade AI-powered study assistant with Retrieval-Augmented Generation (RAG) capabilities.**
 
@@ -348,5 +348,6 @@ For issues and questions:
 - Documentation: https://docs.scholar-ai.com
 
 ---
+
 
 **Built with ❤️ by the Scholar.AI Team**
