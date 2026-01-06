@@ -40,7 +40,7 @@ body {
     font-family: var(--font-main);
     overflow: hidden;
     height: 100vh;
-    cursor: none;
+    cursor: auto;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -381,6 +381,8 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 237, 100, 0.4);
+    pointer-events: auto;
+    z-index: 10;
 }
 
 .btn-primary::before {
@@ -1077,6 +1079,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center; 
     justify-content: center;
     animation: fade-in 0.3s ease-out;
+    pointer-events: auto;
 }
 
 .modal-card { 
@@ -1089,6 +1092,95 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(20px);
     animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: auto;
+}
+
+.forgot-password-modal .modal-card {
+    max-width: 450px;
+}
+
+.forgot-password-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.forgot-password-modal .modal-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.forgot-password-modal .btn-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    pointer-events: auto;
+}
+
+.forgot-password-modal .btn-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.forgot-password-modal .modal-body {
+    margin-bottom: 2rem;
+}
+
+.forgot-password-modal .modal-body p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.forgot-password-modal .form-group {
+    margin-bottom: 1rem;
+}
+
+.forgot-password-modal .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.forgot-password-modal .form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.forgot-password-modal .form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.forgot-password-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    pointer-events: auto;
+}
+
+.forgot-password-modal .modal-footer button {
+    pointer-events: auto;
 }
 
 /* ANIMATE ON SCROLL */
@@ -2385,6 +2477,8 @@ input:focus + .toggle-slider {
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 .link-accent:hover,
@@ -3049,6 +3143,22 @@ kbd {
 .notification-header h3 {
     font-size: 1.1rem;
     font-weight: 700;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+}
+
+.btn-text:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
 }
 
 .btn-text-sm {

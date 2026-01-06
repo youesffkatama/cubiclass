@@ -1,0 +1,62 @@
+{
+  "name": "scholar-ai",
+  "version": "2.0.0",
+  "description": "Intelligent Academic Workspace - Complete with AI Tutor, PDF Analysis, and Real-time Features",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'No build step required for this project'",
+    "test": "echo 'No tests specified'",
+    "install-deps": "npm install"
+  },
+  "keywords": [
+    "ai",
+    "education",
+    "tutor",
+    "pdf-analysis",
+    "machine-learning",
+    "academic",
+    "workspace"
+  ],
+  "author": "Scholar.AI Engineering Team",
+  "license": "MIT",
+  "dependencies": {
+    "bullmq": "^4.15.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "multer": "^1.4.5-lts.1",
+    "natural": "^6.12.0",
+    "nodemon": "^3.0.2",
+    "openai": "^4.20.1",
+    "@xenova/transformers": "^2.17.1",
+    "pdf-parse": "^1.1.1",
+    "socket.io": "^4.7.4",
+    "winston": "^3.11.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/youesffkatama/cubiclass.git"
+  },
+  "bugs": {
+    "url": "https://github.com/youesffkatama/cubiclass/issues"
+  },
+  "homepage": "https://github.com/youesffkatama/cubiclass#readme"
+}

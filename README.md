@@ -89,8 +89,10 @@ npm install
 # Copy environment template
 cp .env.example .env
 
-# Edit .env with your credentials
+# Edit `.env` with your credentials (do NOT commit real secrets to git)
 nano .env
+
+# TIP: The repository contains `.env.example` — use it as a guide when creating your `.env` file.
 ```
 
 **Critical Environment Variables:**

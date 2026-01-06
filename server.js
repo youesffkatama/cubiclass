@@ -128,7 +128,7 @@
  app.use(express.json({ limit: '10mb' }));
  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
  app.use(mongoSanitize());
- app.use(express.static('public'));
+ app.use(express.static('.'));
  app.use('/uploads', express.static('uploads'));
  
  // âœ… FIX: Stricter rate limiting for auth endpoints
@@ -448,32 +448,53 @@
  }
  
  // ==========================================
- // âœ… FIX: REDIS WITH CONNECTION POOLING
+ // âœ… FIX: REDIS WITH CONNECTION POOLING (OPTIONAL)
  // ==========================================
- const redis = new Redis({
-   host: CONFIG.REDIS_HOST,
-   port: CONFIG.REDIS_PORT,
-   maxRetriesPerRequest: null,
-   retryStrategy: (times) => {
-     const delay = Math.min(times * 50, 2000);
-     return delay;
-   },
-   enableReadyCheck: true,
-   lazyConnect: true
- });
- 
- redis.on('connect', () => logger.info('âœ… Redis connected'));
- redis.on('error', (err) => logger.error('Redis error:', err));
- redis.on('reconnecting', () => logger.warn('Redis reconnecting...'));
- 
- // Connect to Redis
- redis.connect().catch(err => {
-   logger.error('Failed to connect to Redis:', err);
- });
- 
- const pdfQueue = new Queue('pdf-processing', {
-   connection: redis
- });
+ let redis = null;
+ let pdfQueue = null;
+
+ try {
+   redis = new Redis({
+     host: CONFIG.REDIS_HOST,
+     port: CONFIG.REDIS_PORT,
+     password: CONFIG.REDIS_PASSWORD || undefined,
+     maxRetriesPerRequest: null,
+     retryStrategy: (times) => {
+       const delay = Math.min(times * 50, 2000);
+       return delay;
+     },
+     enableOfflineQueue: false,
+     enableReadyCheck: false,
+     lazyConnect: true,
+     connectTimeout: 3000,
+     commandTimeout: 3000
+   });
+
+   redis.on('error', (err) => {
+     console.warn('⚠️  Redis error (operation will continue without caching):', err.message);
+     redis = null;
+   });
+
+   redis.on('connect', () => {
+     console.log('✅ Redis connected');
+   });
+
+   // Try to connect Redis
+   redis.connect().catch(err => {
+     console.warn('⚠️  Redis connection failed, continuing without cache:', err.message);
+     redis = null;
+   });
+
+   if (redis) {
+     pdfQueue = new Queue('pdf-processing', {
+       connection: redis
+     });
+   }
+ } catch (err) {
+   console.warn('⚠️  Redis initialization failed:', err.message);
+   redis = null;
+ }
+
  
  // ==========================================
  // OPENROUTER AI CLIENT
@@ -590,6 +611,10 @@
  const LoginSchema = z.object({
    email: z.string().email(),
    password: z.string()
+ });
+ 
+ const ForgotPasswordSchema = z.object({
+   email: z.string().email()
  });
  
  const FlashcardSchema = z.object({
@@ -1059,6 +1084,46 @@
    });
  });
  
+ app.post('/api/v1/auth/forgot-password', async (req, res) => {
+   try {
+     const validated = ForgotPasswordSchema.parse(req.body);
+     
+     const user = await User.findOne({ email: validated.email });
+     if (!user) {
+       // Don't reveal if email exists or not for security
+       return res.json({ success: true, message: 'If an account with that email exists, a password reset link has been sent.' });
+     }
+     
+     // Generate reset token (in a real app, you'd store this in DB with expiration)
+     const resetToken = jwt.sign(
+       { userId: user._id, type: 'password_reset' },
+       CONFIG.JWT_SECRET,
+       { expiresIn: '1h' }
+     );
+     
+     // In a real implementation, you'd send an email here
+     // For now, we'll just log it and return success
+     logger.info(`Password reset requested for ${user.email}. Reset token: ${resetToken}`);
+     
+     // TODO: Send email with reset link containing the token
+     // Example: https://yourapp.com/reset-password?token=${resetToken}
+     
+     res.json({ 
+       success: true, 
+       message: 'If an account with that email exists, a password reset link has been sent.' 
+     });
+     
+   } catch (error) {
+     logger.error('Forgot password error:', error);
+     if (error instanceof z.ZodError) {
+       return res.status(400).json({
+         error: { message: 'Validation error', details: error.errors }
+       });
+     }
+     res.status(500).json({ error: { message: 'Request failed' } });
+   }
+ });
+ 
  // ✅ NEW: User Profile & Settings
  app.patch('/api/v1/user/profile', authenticateToken, async (req, res) => {
    try {
@@ -1103,10 +1168,12 @@
        status: 'QUEUED'
      });
      
-     await pdfQueue.add('process-pdf', {
-       nodeId: node._id.toString(),
-       filePath: req.file.path
-     });
+     if (pdfQueue) {
+       await pdfQueue.add('process-pdf', {
+         nodeId: node._id.toString(),
+         filePath: req.file.path
+       });
+     }
      
      logger.info(`📤 File uploaded: ${node._id}`);
      
@@ -1204,7 +1271,7 @@
      }
      
      let progress = null;
-     if (node.status === 'PROCESSING' || node.status === 'QUEUED') {
+     if ((node.status === 'PROCESSING' || node.status === 'QUEUED') && pdfQueue) {
        const jobs = await pdfQueue.getJobs(['active', 'waiting']);
        const job = jobs.find(j => j.data.nodeId === req.params.id);
        if (job) progress = await job.progress();

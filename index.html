@@ -41,28 +41,21 @@
                 </div>
                 <form id="loginForm" class="auth-form">
                     <div class="input-wrapper">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" placeholder="Academic Email" value="student@scholar.ai" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
                     </div>
                     <div class="input-wrapper">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" placeholder="Password" value="demo123" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
                     </div>
                     <div class="auth-extras">
-                        <label class="checkbox-label">
-                            <input type="checkbox" checked>
-                            <span class="checkmark"></span>
-                            <span>Remember me</span>
-                        </label>
-                        <a href="#" class="link-accent">Forgot Password?</a>
+                        <label class="checkbox-label"><input type="checkbox" id="rememberMe"> Remember Me</label>
+                        <a href="#" class="link-primary" onclick="console.log('Forgot password clicked'); AuthModule.showForgotPassword(); return false;">Forgot Password?</a>
                     </div>
-                    <button type="submit" class="btn-primary btn-glow full-width">
-                        <span>Sign In</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
+                    <button type="submit" class="btn-primary btn-glow full-width">Login</button>
                 </form>
                 <div class="auth-switch">
-                    New to Scholar.AI? <a href="#" class="link-primary" onclick="AuthModule.switchView('signup'); return false;">Create Account</a>
+                    New to Scholar.AI? <a href="#" class="link-primary" onclick="console.log('Create account clicked'); AuthModule.switchView('signup'); return false;">Create Account</a>
                 </div>
             </div>
 
@@ -76,28 +69,17 @@
                 <form id="signupForm" class="auth-form">
                     <div class="input-row">
                         <div class="input-wrapper">
-                            <input type="text" placeholder="First Name" required>
+                            <input type="text" name="firstName" placeholder="First Name" required>
                         </div>
                         <div class="input-wrapper">
-                            <input type="text" placeholder="Last Name" required>
+                            <input type="text" name="lastName" placeholder="Last Name">
                         </div>
                     </div>
                     <div class="input-wrapper">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" placeholder="Academic Email" required>
+                        <input type="email" name="email" placeholder="Email" required>
                     </div>
                     <div class="input-wrapper">
-                        <i class="fas fa-graduation-cap input-icon"></i>
-                        <select required>
-                            <option value="">Select Education Level</option>
-                            <option>High School</option>
-                            <option>Undergraduate</option>
-                            <option>Graduate</option>
-                        </select>
-                    </div>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" placeholder="Create Password" required>
+                        <input type="password" name="password" placeholder="Password" required>
                     </div>
                     <button type="submit" class="btn-primary btn-glow full-width">Create Account</button>
                 </form>
@@ -749,6 +731,29 @@
             <div class="modal-footer">
                 <button class="btn-text" onclick="ClassModule.closeModal()">Cancel</button>
                 <button class="btn-primary" onclick="ClassModule.createClass()">Create Class</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FORGOT PASSWORD MODAL ========== -->
+    <div id="forgotPasswordModal" class="modal-overlay forgot-password-modal">
+        <div class="modal-card animate__animated animate__zoomIn">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button class="btn-close" onclick="AuthModule.closeForgotPasswordModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <div class="form-group">
+                    <label for="resetEmail">Email</label>
+                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-text" onclick="AuthModule.closeForgotPasswordModal()">Cancel</button>
+                <button class="btn-primary" onclick="AuthModule.resetPassword()">Send Reset Link</button>
             </div>
         </div>
     </div>

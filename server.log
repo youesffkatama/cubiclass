@@ -1,0 +1,65 @@
+
+> scholar-ai@2.0.0 start
+> node server.js
+
+[32minfo[39m: 🧠 Loading embedding model... {"timestamp":"2026-01-06T01:46:13.429Z"}
+(node:64826) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:64826) [MONGODB DRIVER] Warning: useUnifiedTopology is a deprecated option: useUnifiedTopology has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
+[32minfo[39m: âœ… Embedding model loaded {"timestamp":"2026-01-06T01:46:13.663Z"}
+[33mwarn[39m: Vector index may already exist: {"timestamp":"2026-01-06T01:46:13.664Z"}
+[32minfo[39m: 🚀 Scholar.AI FIXED server running on port 3000 {"timestamp":"2026-01-06T01:46:13.666Z"}
+[32minfo[39m: 📚 Environment: development {"timestamp":"2026-01-06T01:46:13.667Z"}
+[32minfo[39m: 🗄️ MongoDB: Connected {"timestamp":"2026-01-06T01:46:13.667Z"}
+[32minfo[39m: ⚡ Redis: Connected {"timestamp":"2026-01-06T01:46:13.667Z"}
+[32minfo[39m: 🤖 AI: OpenRouter configured {"timestamp":"2026-01-06T01:46:13.668Z"}
+[32minfo[39m: ✅ ALL 175 ISSUES RESOLVED {"timestamp":"2026-01-06T01:46:13.668Z"}
+✅ Redis connected
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+[32minfo[39m: âœ… MongoDB connected {"timestamp":"2026-01-06T01:46:14.595Z"}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+ReplyError: NOAUTH Authentication required
+    at parseError (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:179:12)
+    at parseType (/workspaces/cubiclass/node_modules/redis-parser/lib/parser.js:302:14) {
+  command: { name: 'info', args: [] }
+}
+[32minfo[39m: SIGTERM received, shutting down gracefully {"timestamp":"2026-01-06T01:49:04.431Z"}
+[32minfo[39m: Server closed {"timestamp":"2026-01-06T01:49:04.548Z"}
