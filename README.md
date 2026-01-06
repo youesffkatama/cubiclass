@@ -2,7 +2,6 @@
 
 **Enterprise-grade AI-powered study assistant with Retrieval-Augmented Generation (RAG) capabilities.**
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)](https://www.mongodb.com/atlas)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -351,3 +350,4 @@ For issues and questions:
 
 
 **Built with ❤️ by the Scholar.AI Team**
+
