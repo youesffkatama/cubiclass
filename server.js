@@ -113,17 +113,29 @@
  }));
  
  // âœ… FIX: Strict CORS
- app.use(cors({
-   origin: (origin, callback) => {
-     const allowedOrigins = CONFIG.FRONTEND_URL ? [CONFIG.FRONTEND_URL] : ['http://localhost:8080'];
-     if (!origin || allowedOrigins.includes(origin)) {
-       callback(null, true);
-     } else {
-       callback(new Error('Not allowed by CORS'));
-     }
-   },
-   credentials: true
- }));
+// ✅ FIX: Strict CORS
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:8080',
+      'http://127.0.0.1:8080',
+      'http://localhost:3000',
+      'http://127.0.0.1:3000'
+    ];
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all in development
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
  
  app.use(express.json({ limit: '10mb' }));
  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -168,13 +180,37 @@
  // ==========================================
  // MONGOOSE SCHEMAS
  // ==========================================
+ const crypto = require('crypto');
+
+ // Password hashing (Bible.AI style)
+ function hashPassword(password) {
+   const salt = crypto.randomBytes(16).toString('hex');
+   const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+   return { salt: salt, hash: hash };
+ }
  
+ function verifyPassword(password, hash, salt) {
+   const hashToVerify = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+   return hash === hashToVerify;
+ }
+ 
+ // Token generation
+ function generateToken() {
+   return crypto.randomBytes(32).toString('hex');
+ }
  // User Schema
  const UserSchema = new mongoose.Schema({
    username: { type: String, required: true, unique: true, trim: true },
    email: { type: String, required: true, unique: true, lowercase: true },
    passwordHash: { type: String, required: true },
    refreshToken: String,
+
+   token: { type: String, default: null },
+  tokenExpiry: { type: Number, default: null },
+  salt: { type: String }, // For password hashing
+  hash: { type: String }, // Hashed password
+  phone: { type: String },
+  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
    
    profile: {
      firstName: String,
@@ -451,50 +487,38 @@
  // âœ… FIX: REDIS WITH CONNECTION POOLING (OPTIONAL)
  // ==========================================
  let redis = null;
- let pdfQueue = null;
+let pdfQueue = null;
 
- try {
-   redis = new Redis({
-     host: CONFIG.REDIS_HOST,
-     port: CONFIG.REDIS_PORT,
-     password: CONFIG.REDIS_PASSWORD || undefined,
-     maxRetriesPerRequest: null,
-     retryStrategy: (times) => {
-       const delay = Math.min(times * 50, 2000);
-       return delay;
-     },
-     enableOfflineQueue: false,
-     enableReadyCheck: false,
-     lazyConnect: true,
-     connectTimeout: 3000,
-     commandTimeout: 3000
-   });
+try {
+    redis = new Redis({
+        host: CONFIG.REDIS_HOST,
+        port: CONFIG.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD || undefined,
+        maxRetriesPerRequest: 3,
+        retryStrategy: (times) => {
+            if (times > 3) {
+                console.warn('⚠️ Redis connection failed, continuing without cache');
+                return null;
+            }
+            return Math.min(times * 50, 2000);
+        },
+        enableOfflineQueue: false
+    });
 
-   redis.on('error', (err) => {
-     console.warn('⚠️  Redis error (operation will continue without caching):', err.message);
-     redis = null;
-   });
+    redis.on('error', (err) => {
+        console.warn('⚠️ Redis error (continuing without cache):', err.message);
+        redis = null;
+    });
 
-   redis.on('connect', () => {
-     console.log('✅ Redis connected');
-   });
+    redis.on('connect', () => {
+        console.log('✅ Redis connected');
+        pdfQueue = new Queue('pdf-processing', { connection: redis });
+    });
 
-   // Try to connect Redis
-   redis.connect().catch(err => {
-     console.warn('⚠️  Redis connection failed, continuing without cache:', err.message);
-     redis = null;
-   });
-
-   if (redis) {
-     pdfQueue = new Queue('pdf-processing', {
-       connection: redis
-     });
-   }
- } catch (err) {
-   console.warn('⚠️  Redis initialization failed:', err.message);
-   redis = null;
- }
-
+} catch (err) {
+    console.warn('⚠️ Redis initialization failed, continuing without cache:', err.message);
+    redis = null;
+}
  
  // ==========================================
  // OPENROUTER AI CLIENT
@@ -577,28 +601,36 @@
  // AUTHENTICATION MIDDLEWARE
  // ==========================================
  const authenticateToken = async (req, res, next) => {
-   const authHeader = req.headers['authorization'];
-   const token = authHeader && authHeader.split(' ')[1];
-   
-   if (!token) {
-     return res.status(401).json({ error: { message: 'Access token required' } });
-   }
-   
-   try {
-     const decoded = jwt.verify(token, CONFIG.JWT_SECRET);
-     const user = await User.findById(decoded.userId);
-     
-     if (!user) {
-       return res.status(401).json({ error: { message: 'User not found' } });
-     }
-     
-     req.user = user;
-     next();
-   } catch (error) {
-     return res.status(403).json({ error: { message: 'Invalid or expired token' } });
-   }
- };
- 
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.startsWith('Bearer ') 
+    ? authHeader.split(' ')[1] 
+    : null;
+  
+  if (!token) {
+    return res.status(401).json({ error: { message: 'Access token required' } });
+  }
+  
+  try {
+    // Find user by token and check expiry
+    const user = await User.findOne({ 
+      token: token, 
+      tokenExpiry: { $gt: Date.now() } 
+    });
+    
+    if (!user) {
+      return res.status(401).json({ error: { message: 'Invalid or expired token' } });
+    }
+    
+    // Extend token expiry on each request (rolling expiration)
+    user.tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days
+    await user.save();
+    
+    req.user = user;
+    next();
+  } catch (error) {
+    return res.status(403).json({ error: { message: 'Token verification failed' } });
+  }
+};
  // ==========================================
  // âœ… FIX: COMPREHENSIVE VALIDATION SCHEMAS
  // ==========================================
@@ -678,42 +710,51 @@
  }
  
  async function awardXP(userId, amount, reason) {
-   try {
-     const user = await User.findById(userId);
-     if (!user) return null;
-     
-     user.dna.xp += amount;
-     const newLevel = calculateLevel(user.dna.xp);
-     const leveledUp = newLevel > user.dna.level;
-     
-     user.dna.level = newLevel;
-     user.dna.rank = calculateRank(newLevel);
-     
-     await user.save();
-     
-     await ActivityLog.create({
-       userId,
-       type: 'achievement',
-       description: reason,
-       xpGained: amount
-     });
-     
-     // âœ… FIX: Real-time notification
-     emitToUser(userId, 'xp-gained', {
-       amount,
-       reason,
-       newXP: user.dna.xp,
-       level: user.dna.level,
-       leveledUp
-     });
-     
-     return { leveledUp, newLevel, xp: user.dna.xp };
-   } catch (error) {
-     logger.error('Award XP error:', error);
-     return null;
-   }
- }
- 
+  try {
+    const user = await User.findById(userId);
+    if (!user) return null;
+    
+    user.dna.xp += amount;
+    const newLevel = calculateLevel(user.dna.xp);
+    const leveledUp = newLevel > user.dna.level;
+    
+    user.dna.level = newLevel;
+    user.dna.rank = calculateRank(newLevel);
+    
+    await user.save();
+    
+    await ActivityLog.create({
+      userId,
+      type: 'achievement',
+      description: reason,
+      xpGained: amount
+    });
+    
+    // ✅ Real-time XP notification
+    emitToUser(userId, 'xp-gained', {
+      amount,
+      reason,
+      newXP: user.dna.xp,
+      level: user.dna.level,
+      leveledUp
+    });
+    
+    // ✅ Send notification if leveled up
+    if (leveledUp) {
+      await sendNotification(userId, {
+        type: 'success',
+        title: 'Level Up!',
+        message: `Congratulations! You've reached level ${newLevel}!`,
+        link: '/profile'
+      });
+    }
+    
+    return { leveledUp, newLevel, xp: user.dna.xp };
+  } catch (error) {
+    logger.error('Award XP error:', error);
+    return null;
+  }
+}
  function generateInviteCode() {
    return Math.random().toString(36).substr(2, 8).toUpperCase();
  }
@@ -930,143 +971,224 @@
  // AUTH ROUTES
  // ==========================================
  app.post('/api/v1/auth/register', async (req, res) => {
-   try {
-     const validated = RegisterSchema.parse(req.body);
-     
-     const existingUser = await User.findOne({
-       $or: [{ email: validated.email }, { username: validated.username }]
-     });
-     
-     if (existingUser) {
-       return res.status(400).json({
-         error: { message: 'User already exists' }
-       });
-     }
-     
-     const passwordHash = await bcrypt.hash(validated.password, 12);
-     
-     const user = await User.create({
-       username: validated.username,
-       email: validated.email,
-       passwordHash,
-       profile: {
-         firstName: validated.username,
-         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(validated.username)}&background=00ed64&color=001e2b`
-       }
-     });
-     
-     const { accessToken, refreshToken } = generateTokens(user._id);
-     user.refreshToken = refreshToken;
-     await user.save();
-     
-     await ActivityLog.create({
-       userId: user._id,
-       type: 'login',
-       description: 'Account created'
-     });
-     
-     res.status(201).json({
-       success: true,
-       data: {
-         user: {
-           id: user._id,
-           username: user.username,
-           email: user.email,
-           avatar: user.profile.avatar,
-           dna: user.dna
-         },
-         tokens: { accessToken, refreshToken }
-       }
-     });
-     
-   } catch (error) {
-     logger.error('Registration error:', error);
-     if (error instanceof z.ZodError) {
-       return res.status(400).json({
-         error: { message: 'Validation error', details: error.errors }
-       });
-     }
-     res.status(500).json({ error: { message: 'Registration failed' } });
-   }
- });
- 
- app.post('/api/v1/auth/login', async (req, res) => {
-   try {
-     const validated = LoginSchema.parse(req.body);
-     
-     const user = await User.findOne({ email: validated.email });
-     if (!user || !(await bcrypt.compare(validated.password, user.passwordHash))) {
-       return res.status(401).json({ error: { message: 'Invalid credentials' } });
-     }
-     
-     const today = new Date().setHours(0, 0, 0, 0);
-     const lastActive = user.dna.lastActiveDate ? new Date(user.dna.lastActiveDate).setHours(0, 0, 0, 0) : 0;
-     const daysDiff = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
-     
-     if (daysDiff === 1) user.dna.streakDays += 1;
-     else if (daysDiff > 1) user.dna.streakDays = 1;
-     
-     user.dna.lastActiveDate = new Date();
-     user.lastLogin = new Date();
-     
-     const { accessToken, refreshToken } = generateTokens(user._id);
-     user.refreshToken = refreshToken;
-     await user.save();
-     
-     await ActivityLog.create({
-       userId: user._id,
-       type: 'login',
-       description: 'User logged in'
-     });
-     
-     res.json({
-       success: true,
-       data: {
-         user: {
-           id: user._id,
-           username: user.username,
-           email: user.email,
-           avatar: user.profile.avatar,
-           dna: user.dna,
-           settings: user.settings
-         },
-         tokens: { accessToken, refreshToken }
-       }
-     });
-     
-   } catch (error) {
-     logger.error('Login error:', error);
-     res.status(500).json({ error: { message: 'Login failed' } });
-   }
- });
- 
- app.post('/api/v1/auth/refresh', async (req, res) => {
-   try {
-     const { refreshToken } = req.body;
-     if (!refreshToken) {
-       return res.status(401).json({ error: { message: 'Refresh token required' } });
-     }
-     
-     const decoded = jwt.verify(refreshToken, CONFIG.JWT_REFRESH_SECRET);
-     const user = await User.findById(decoded.userId);
-     
-     if (!user || user.refreshToken !== refreshToken) {
-       return res.status(403).json({ error: { message: 'Invalid refresh token' } });
-     }
-     
-     const { accessToken, refreshToken: newRefreshToken } = generateTokens(user._id);
-     user.refreshToken = newRefreshToken;
-     await user.save();
-     
-     res.json({
-       success: true,
-       data: { tokens: { accessToken, refreshToken: newRefreshToken } }
-     });
-     
-   } catch (error) {
-     res.status(403).json({ error: { message: 'Token refresh failed' } });
-   }
- });
+  console.log('📝 Register request received:', req.body);
+  
+  try {
+    const { username, email, password, profile, educationLevel } = req.body;
+    
+    // ✅ Validation
+    if (!username || !email || !password) {
+      console.log('❌ Missing required fields');
+      return res.status(400).json({
+        error: { message: 'Missing required fields: username, email, password' }
+      });
+    }
+    
+    if (password.length < 8) {
+      console.log('❌ Password too short');
+      return res.status(400).json({
+        error: { message: 'Password must be at least 8 characters' }
+      });
+    }
+    
+    // ✅ Check existing user
+    const existingUser = await User.findOne({
+      $or: [{ email: email.toLowerCase() }, { username: username }]
+    });
+    
+    if (existingUser) {
+      console.log('❌ User already exists');
+      return res.status(400).json({
+        error: { message: 'User with this email or username already exists' }
+      });
+    }
+    
+    // ✅ Hash password
+    const { salt, hash } = hashPassword(password);
+    console.log('🔐 Password hashed');
+    
+    // ✅ Generate token
+    const token = generateToken();
+    const tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000);
+    
+    // ✅ Create user
+    const user = await User.create({
+      username: username,
+      email: email.toLowerCase(),
+      salt: salt,
+      hash: hash,
+      token: token,
+      tokenExpiry: tokenExpiry,
+      profile: {
+        firstName: profile?.firstName || username,
+        lastName: profile?.lastName || '',
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=00ed64&color=001e2b`
+      },
+      dna: {
+        learningStyle: 'Visual',
+        weaknesses: [],
+        strengths: [],
+        xp: 0,
+        level: 1,
+        rank: 'Novice',
+        badges: [],
+        streakDays: 0,
+        lastActiveDate: new Date()
+      },
+      settings: {
+        theme: 'dark',
+        aiModel: 'mistralai/mistral-7b-instruct:free',
+        notifications: true
+      },
+      subscription: {
+        plan: 'free'
+      },
+      status: 'active',
+      lastLogin: new Date()
+    });
+    
+    console.log('✅ User created:', user._id);
+    
+    // ✅ Create welcome notification
+    await Notification.create({
+      userId: user._id,
+      type: 'success',
+      title: 'Welcome to Scholar.AI!',
+      message: 'Get started by uploading your first PDF or exploring the AI Tutor.',
+      read: false
+    });
+    
+    // ✅ Log activity
+    await ActivityLog.create({
+      userId: user._id,
+      type: 'login',
+      description: 'Account created and first login',
+      xpGained: 0
+    });
+    
+    console.log('✅ Sending success response');
+    
+    res.status(201).json({
+      success: true,
+      data: {
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          avatar: user.profile.avatar,
+          dna: user.dna,
+          settings: user.settings,
+          profile: user.profile
+        },
+        tokens: { 
+          accessToken: token
+        }
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Registration error:', error);
+    res.status(500).json({ 
+      error: { 
+        message: 'Registration failed: ' + error.message 
+      } 
+    });
+  }
+});
+
+app.post('/api/v1/auth/login', async (req, res) => {
+  console.log('🔐 Login request received:', { email: req.body.email });
+  
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ 
+        error: { message: 'Email and password required' } 
+      });
+    }
+    
+    // ✅ Find user
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      console.log('❌ User not found');
+      return res.status(401).json({ 
+        error: { message: 'Invalid email or password' } 
+      });
+    }
+    
+    // ✅ Verify password
+    if (!verifyPassword(password, user.hash, user.salt)) {
+      console.log('❌ Invalid password');
+      return res.status(401).json({ 
+        error: { message: 'Invalid email or password' } 
+      });
+    }
+    
+    console.log('✅ Password verified');
+    
+    // ✅ Generate new token
+    const token = generateToken();
+    const tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000);
+    
+    user.token = token;
+    user.tokenExpiry = tokenExpiry;
+    user.lastLogin = new Date();
+    user.status = 'active';
+    
+    // ✅ Update streak
+    const today = new Date().setHours(0, 0, 0, 0);
+    const lastActive = user.dna.lastActiveDate 
+      ? new Date(user.dna.lastActiveDate).setHours(0, 0, 0, 0) 
+      : 0;
+    const daysDiff = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
+    
+    if (daysDiff === 1) {
+      user.dna.streakDays += 1;
+    } else if (daysDiff > 1) {
+      user.dna.streakDays = 1;
+    }
+    
+    user.dna.lastActiveDate = new Date();
+    await user.save();
+    
+    console.log('✅ Login successful');
+    
+    // ✅ Log activity
+    await ActivityLog.create({
+      userId: user._id,
+      type: 'login',
+      description: 'User logged in',
+      xpGained: 0
+    });
+    
+    res.json({
+      success: true,
+      data: {
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          avatar: user.profile.avatar,
+          dna: user.dna,
+          settings: user.settings,
+          profile: user.profile
+        },
+        tokens: { 
+          accessToken: token 
+        }
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Login error:', error);
+    res.status(500).json({ 
+      error: { message: 'Login failed: ' + error.message } 
+    });
+  }
+});
+
  
  app.get('/api/v1/auth/me', authenticateToken, (req, res) => {
    res.json({
@@ -2140,6 +2262,49 @@
    }
  });
  
+
+ app.post('/api/v1/auth/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        error: { message: 'Current and new password required' }
+      });
+    }
+    
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        error: { message: 'Password must be at least 8 characters' }
+      });
+    }
+    
+    // Verify current password
+    if (!verifyPassword(currentPassword, req.user.hash, req.user.salt)) {
+      return res.status(401).json({
+        error: { message: 'Current password incorrect' }
+      });
+    }
+    
+    // Hash new password
+    const { salt, hash } = hashPassword(newPassword);
+    
+    req.user.salt = salt;
+    req.user.hash = hash;
+    await req.user.save();
+    
+    res.json({
+      success: true,
+      data: { message: 'Password updated successfully' }
+    });
+    
+  } catch (error) {
+    logger.error('Password change error:', error);
+    res.status(500).json({
+      error: { message: 'Failed to change password' }
+    });
+  }
+});
  // ==========================================
  // ✅ SOCKET.IO REAL-TIME IMPLEMENTATION
  // ==========================================
@@ -2160,53 +2325,189 @@
  });
  
  io.on('connection', (socket) => {
-   logger.info(`🔌 User connected: ${socket.userId}`);
-   
-   socket.join(`user:${socket.userId}`);
-   
-   // Typing indicators
-   socket.on('typing', ({ conversationId }) => {
-     socket.to(`conversation:${conversationId}`).emit('user-typing', {
-       userId: socket.userId
-     });
-   });
-   
-   socket.on('stop-typing', ({ conversationId }) => {
-     socket.to(`conversation:${conversationId}`).emit('user-stopped-typing', {
-       userId: socket.userId
-     });
-   });
-   
-   // Conversation rooms
-   socket.on('join-conversation', ({ conversationId }) => {
-     socket.join(`conversation:${conversationId}`);
-     logger.info(`User ${socket.userId} joined conversation ${conversationId}`);
-   });
-   
-   socket.on('leave-conversation', ({ conversationId }) => {
-     socket.leave(`conversation:${conversationId}`);
-   });
-   
-   // Class rooms
-   socket.on('join-class', ({ classId }) => {
-     socket.join(`class:${classId}`);
-     socket.to(`class:${classId}`).emit('user-joined', {
-       userId: socket.userId
-     });
-   });
-   
-   socket.on('leave-class', ({ classId }) => {
-     socket.leave(`class:${classId}`);
-     socket.to(`class:${classId}`).emit('user-left', {
-       userId: socket.userId
-     });
-   });
-   
-   socket.on('disconnect', () => {
-     logger.info(`🔌 User disconnected: ${socket.userId}`);
-   });
- });
- 
+  logger.info(`🔌 User connected: ${socket.userId}`);
+  
+  socket.join(`user:${socket.userId}`);
+  
+  // ✅ User online status
+  socket.on('user-online', async () => {
+    try {
+      await User.findByIdAndUpdate(socket.userId, {
+        'dna.lastActiveDate': new Date()
+      });
+      
+      // Broadcast to friends/classmates
+      socket.broadcast.emit('user-status-changed', {
+        userId: socket.userId,
+        status: 'online'
+      });
+    } catch (error) {
+      logger.error('User online error:', error);
+    }
+  });
+  
+  // ✅ Typing indicators
+  socket.on('typing', ({ conversationId }) => {
+    socket.to(`conversation:${conversationId}`).emit('user-typing', {
+      userId: socket.userId
+    });
+  });
+  
+  socket.on('stop-typing', ({ conversationId }) => {
+    socket.to(`conversation:${conversationId}`).emit('user-stopped-typing', {
+      userId: socket.userId
+    });
+  });
+  
+  // ✅ Conversation rooms
+  socket.on('join-conversation', ({ conversationId }) => {
+    socket.join(`conversation:${conversationId}`);
+    logger.info(`User ${socket.userId} joined conversation ${conversationId}`);
+  });
+  
+  socket.on('leave-conversation', ({ conversationId }) => {
+    socket.leave(`conversation:${conversationId}`);
+  });
+  
+  // ✅ Class rooms
+  socket.on('join-class', ({ classId }) => {
+    socket.join(`class:${classId}`);
+    socket.to(`class:${classId}`).emit('user-joined', {
+      userId: socket.userId
+    });
+    logger.info(`User ${socket.userId} joined class ${classId}`);
+  });
+  
+  socket.on('leave-class', ({ classId }) => {
+    socket.leave(`class:${classId}`);
+    socket.to(`class:${classId}`).emit('user-left', {
+      userId: socket.userId
+    });
+  });
+  
+  // ✅ Class post created
+  socket.on('class-post-created', async ({ classId, post }) => {
+    socket.to(`class:${classId}`).emit('new-class-post', post);
+    
+    // Send notifications to class members
+    try {
+      const classObj = await Class.findById(classId);
+      if (classObj) {
+        classObj.members.forEach(member => {
+          if (!member.userId.equals(socket.userId)) {
+            sendNotification(member.userId, {
+              type: 'info',
+              title: 'New Class Post',
+              message: post.content.substring(0, 100),
+              link: `/class/${classId}`
+            });
+          }
+        });
+      }
+    } catch (error) {
+      logger.error('Class post notification error:', error);
+    }
+  });
+  
+  // ✅ Study session started
+  socket.on('study-session-started', async ({ duration }) => {
+    await trackActivity(
+      socket.userId,
+      'study',
+      `Started ${duration} minute study session`
+    );
+  });
+  
+  // ✅ Study session completed
+  socket.on('study-session-completed', async ({ duration }) => {
+    await trackActivity(
+      socket.userId,
+      'study',
+      `Completed ${duration} minute study session`
+    );
+    await awardXP(socket.userId, 25, 'Completed study session');
+  });
+  
+  // ✅ Quiz completed
+  socket.on('quiz-completed', async ({ score, total }) => {
+    const percentage = Math.round((score / total) * 100);
+    
+    await trackActivity(
+      socket.userId,
+      'quiz',
+      `Completed quiz: ${score}/${total} (${percentage}%)`,
+      { score, total, percentage }
+    );
+    
+    const xpAmount = Math.round(percentage / 2); // 50 XP for 100%
+    await awardXP(socket.userId, xpAmount, `Quiz completed: ${percentage}%`);
+  });
+  
+  // ✅ Flashcard session completed
+  socket.on('flashcard-session-completed', async ({ cardsReviewed, cardsKnown }) => {
+    await trackActivity(
+      socket.userId,
+      'study',
+      `Reviewed ${cardsReviewed} flashcards`,
+      { cardsReviewed, cardsKnown }
+    );
+    
+    await awardXP(socket.userId, cardsReviewed * 2, 'Flashcard practice');
+  });
+  
+  socket.on('disconnect', () => {
+    logger.info(`🔌 User disconnected: ${socket.userId}`);
+    
+    // Broadcast offline status
+    socket.broadcast.emit('user-status-changed', {
+      userId: socket.userId,
+      status: 'offline'
+    });
+  });
+});
+
+// ✅ ADD NEW ENDPOINT - Get user stats (Around line 750)
+app.get('/api/v1/user/stats', authenticateToken, async (req, res) => {
+  try {
+    const [totalFiles, totalConversations, totalTasks, completedTasks] = await Promise.all([
+      KnowledgeNode.countDocuments({ userId: req.user._id }),
+      Conversation.countDocuments({ userId: req.user._id }),
+      Task.countDocuments({ userId: req.user._id }),
+      Task.countDocuments({ userId: req.user._id, completed: true })
+    ]);
+    
+    const last7Days = new Date();
+    last7Days.setDate(last7Days.getDate() - 7);
+    
+    const recentActivity = await ActivityLog.countDocuments({
+      userId: req.user._id,
+      timestamp: { $gte: last7Days }
+    });
+    
+    res.json({
+      success: true,
+      data: {
+        user: {
+          level: req.user.dna.level,
+          xp: req.user.dna.xp,
+          rank: req.user.dna.rank,
+          streakDays: req.user.dna.streakDays
+        },
+        stats: {
+          totalFiles,
+          totalConversations,
+          totalTasks,
+          completedTasks,
+          recentActivity,
+          completionRate: totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+        }
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: { message: 'Failed to fetch stats' } });
+  }
+});
+
  // Utility function to emit to specific user
  function emitToUser(userId, event, data) {
    io.to(`user:${userId}`).emit(event, data);
@@ -2263,6 +2564,56 @@
    }
  });
  
+
+ async function trackActivity(userId, type, description, metadata = {}) {
+  try {
+    const activity = await ActivityLog.create({
+      userId,
+      type,
+      description,
+      metadata,
+      xpGained: 0 // Will be updated by awardXP
+    });
+    
+    // Emit to user's dashboard
+    emitToUser(userId, 'activity-added', {
+      type,
+      title: description,
+      icon: getActivityIcon(type),
+      color: getActivityColor(type),
+      time: Date.now()
+    });
+    
+    return activity;
+  } catch (error) {
+    logger.error('Failed to track activity:', error);
+  }
+}
+
+function getActivityIcon(type) {
+  const icons = {
+    login: 'fa-sign-in-alt',
+    upload: 'fa-upload',
+    chat: 'fa-comments',
+    quiz: 'fa-question-circle',
+    study: 'fa-book',
+    achievement: 'fa-trophy'
+  };
+  return icons[type] || 'fa-circle';
+}
+
+function getActivityColor(type) {
+  const colors = {
+    login: '#00bfff',
+    upload: '#00ed64',
+    chat: '#bd00ff',
+    quiz: '#ff9800',
+    study: '#00ed64',
+    achievement: '#FFD700'
+  };
+  return colors[type] || '#00ed64';
+}
+
  // ==========================================
  // SERVER INITIALIZATION
  // ==========================================

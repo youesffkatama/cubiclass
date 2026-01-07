@@ -21,174 +21,351 @@ const AppState = {
     activeClassId: null,
     settings: {
         theme: 'dark',
-        aiModel: 'scholar-pro',
+        aiModel: 'mistralai/mistral-7b-instruct:free',
         notifications: true,
         aiPersonality: 'friendly'
-    },
-    stats: {
-        studyHours: 142,
-        quizScore: 88,
-        retention: 94,
-        sessions: 142,
-        documents: 24
     }
 };
 
-// ==========================================
-// UTILITY FUNCTIONS
-// ==========================================
-const Utils = {
-    loadFromStorage: (key, defaultValue = null) => {
-        try {
-            const item = localStorage.getItem(key);
-            return item ? JSON.parse(item) : defaultValue;
-        } catch (error) {
-            console.error('Error loading from storage:', error);
-            return defaultValue;
-        }
-    },
-    
-    saveToStorage: (key, value) => {
-        try {
-            localStorage.setItem(key, JSON.stringify(value));
-        } catch (error) {
-            console.error('Error saving to storage:', error);
-        }
-    },
-    
-    clearStorage: () => {
-        try {
-            localStorage.clear();
-        } catch (error) {
-            console.error('Error clearing storage:', error);
-        }
-    },
-    
-    showToast: (message, type = 'info') => {
-        // Create toast container if it doesn't exist
-        let toastContainer = document.getElementById('toastContainer');
-        if (!toastContainer) {
-            toastContainer = document.createElement('div');
-            toastContainer.id = 'toastContainer';
-            toastContainer.className = 'toast-container';
-            document.body.appendChild(toastContainer);
-        }
-        
-        // Create toast element
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type} animate__animated animate__slideInRight`;
-        
-        const iconMap = {
-            success: 'fa-check-circle',
-            error: 'fa-exclamation-circle',
-            warning: 'fa-exclamation-triangle',
-            info: 'fa-info-circle'
-        };
-        
-        toast.innerHTML = `
-            <div class="toast-icon">
-                <i class="fas ${iconMap[type] || iconMap.info}"></i>
-            </div>
-            <div class="toast-content">
-                <p>${message}</p>
-            </div>
-            <button class="toast-close" onclick="this.parentElement.remove()">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        
-        toastContainer.appendChild(toast);
-        
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.classList.remove('animate__slideInRight');
-                toast.classList.add('animate__slideOutRight');
-                setTimeout(() => toast.remove(), 300);
-            }
-        }, 5000);
-    }
-};
 
 // ==========================================
 // API CONFIGURATION - ADD THIS
 // ==========================================
+// In script.js
+
 const API_CONFIG = {
     baseURL: 'http://localhost:3000/api/v1',
-    timeout: 30000
-  };
-  
-  const API = {
+    timeout: 5000 // Reduced to 5 seconds for faster feedback
+};
+
+const API = {
     async request(endpoint, options = {}) {
-      const url = `${API_CONFIG.baseURL}${endpoint}`;
-      const token = Utils.loadFromStorage('scholar_token');
-      
-      const config = {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'Authorization': `Bearer ${token}` }),
-          ...options.headers
+        const url = `${API_CONFIG.baseURL}${endpoint}`;
+        const token = Utils.loadFromStorage('scholar_token');
+
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), API_CONFIG.timeout);
+
+        const config = {
+            ...options,
+            signal: controller.signal,
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` }),
+                ...options.headers
+            }
+        };
+
+        try {
+            console.log('📡 API Request:', endpoint, options.method || 'GET');
+            
+            const response = await fetch(url, config);
+            clearTimeout(id);
+
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                data = { error: { message: 'Invalid response from server' } };
+            }
+
+            console.log('📡 API Response:', response.status, data);
+
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    Utils.saveToStorage('scholar_token', null);
+                    Utils.saveToStorage('currentUser', null);
+                }
+                throw new Error(data.error?.message || `Request failed with status ${response.status}`);
+            }
+            
+            return data;
+        } catch (error) {
+            clearTimeout(id);
+            console.error('❌ API Error:', error);
+            throw error;
         }
-      };
-      
-      try {
-        const response = await fetch(url, config);
-        const data = await response.json();
-        
-        if (!response.ok) {
-          if (response.status === 403 && Utils.loadFromStorage('scholar_refresh_token')) {
-            const refreshed = await API.refreshAccessToken();
-            if (refreshed) return API.request(endpoint, options);
-          }
-          throw new Error(data.error?.message || 'Request failed');
-        }
-        return data;
-      } catch (error) {
-        console.error('API Error:', error);
-        throw error;
-      }
     },
     
     get(endpoint) { return this.request(endpoint, { method: 'GET' }); },
-    post(endpoint, body) { return this.request(endpoint, { method: 'POST', body: JSON.stringify(body) }); },
+    post(endpoint, body) { 
+        console.log('📤 POST Body:', body);
+        return this.request(endpoint, { method: 'POST', body: JSON.stringify(body) }); 
+    },
     patch(endpoint, body) { return this.request(endpoint, { method: 'PATCH', body: JSON.stringify(body) }); },
     delete(endpoint) { return this.request(endpoint, { method: 'DELETE' }); },
     
     async upload(endpoint, formData) {
-      const url = `${API_CONFIG.baseURL}${endpoint}`;
-      const token = Utils.loadFromStorage('scholar_token');
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { ...(token && { 'Authorization': `Bearer ${token}` }) },
-        body: formData
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || 'Upload failed');
-      return data;
-    },
-    
-    async refreshAccessToken() {
-      try {
-        const refreshToken = Utils.loadFromStorage('scholar_refresh_token');
-        const response = await fetch(`${API_CONFIG.baseURL}/auth/refresh`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refreshToken })
+        const url = `${API_CONFIG.baseURL}${endpoint}`;
+        const token = Utils.loadFromStorage('scholar_token');
+        
+        console.log('📤 Upload to:', url);
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { ...(token && { 'Authorization': `Bearer ${token}` }) },
+            body: formData
         });
+        
         const data = await response.json();
-        if (response.ok) {
-          Utils.saveToStorage('scholar_token', data.data.tokens.accessToken);
-          Utils.saveToStorage('scholar_refresh_token', data.data.tokens.refreshToken);
-          return true;
-        }
-        return false;
-      } catch (error) {
-        console.error('Token refresh failed:', error);
+        console.log('📡 Upload Response:', response.status, data);
+        
+        if (!response.ok) throw new Error(data.error?.message || 'Upload failed');
+        return data;
+    }
+};
+
+// In loadSavedSession():
+function loadSavedSession() {
+    const savedToken = localStorage.getItem('scholar_token');
+    const savedUser = localStorage.getItem('currentUser');
+    
+    if (savedToken && savedUser) {
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        currentUser = { ...parsedUser, token: savedToken };
+        return true; // Session exists
+      } catch(e) {
+        console.error('Failed to parse saved user:', e);
+        localStorage.removeItem('scholar_token');
+        localStorage.removeItem('currentUser');
         return false;
       }
     }
+    return false;
   };
+
+  let socket = null;
+
+  function initializeSocket(token) {
+      if (!token) {
+          console.warn('⚠️ No token provided for socket connection');
+          return;
+      }
+      
+      try {
+          socket = io('http://localhost:3000', {
+              auth: { token },
+              reconnection: true,
+              reconnectionDelay: 1000,
+              reconnectionAttempts: 5
+          });
+          
+          socket.on('connect', () => {
+              console.log('🔌 Socket connected');
+          });
+          
+          socket.on('connect_error', (error) => {
+              console.warn('⚠️ Socket connection error:', error.message);
+          });
+          
+          socket.on('disconnect', () => {
+              console.log('🔌 Socket disconnected');
+          });
+          
+          // Real-time PDF processing updates
+          socket.on('pdf:processing-started', (data) => {
+              Utils.showToast('Processing PDF...', 'info');
+          });
+          
+          socket.on('pdf:progress', (data) => {
+              console.log(`PDF Progress: ${data.progress}%`);
+              const progressBar = document.getElementById('pdfProgressBar');
+              const progressText = document.getElementById('pdfProgressText');
+              if (progressBar) progressBar.style.width = `${data.progress}%`;
+              if (progressText) progressText.textContent = `${data.progress}%`;
+          });
+          
+          socket.on('pdf:completed', async (data) => {
+              Utils.showToast('PDF processing complete!', 'success');
+              await PDFModule.loadFiles();
+              if (data) {
+                  PDFModule.currentPdf = data;
+                  PDFModule.showPdfDashboard(data);
+              }
+          });
+          
+          socket.on('pdf:failed', (data) => {
+              Utils.showToast('PDF processing failed', 'error');
+          });
+          
+          // Real-time XP updates
+          socket.on('xp-gained', (data) => {
+              if (data.leveledUp) {
+                  Utils.showToast(`🎉 Level Up! You're now level ${data.newLevel}!`, 'success');
+              } else {
+                  Utils.showToast(`+${data.amount} XP: ${data.reason}`, 'success');
+              }
+              if (AppState.user) {
+                  AppState.user.dna.xp = data.newXP;
+                  AppState.user.dna.level = data.level;
+              }
+          });
+          
+          socket.on('notification', (data) => {
+              NotificationSystem.add(data);
+          });
+          
+      } catch (error) {
+          console.error('❌ Socket initialization failed:', error);
+      }
+  }
+
+
+
+// ==========================================
+// CLASS MANAGEMENT MODULE
+// ==========================================
+const ClassModule = {
+    init: async () => {
+        try {
+          // Load from API instead of localStorage
+          const response = await API.get('/classes');
+          AppState.classes = response.data.classes || [];
+          ClassModule.renderClassList();
+        } catch (error) {
+          console.error('Failed to load classes:', error);
+          AppState.classes = [];
+        }
+        
+        // Bind color picker
+        document.querySelectorAll('.color-dot').forEach(dot => {
+          dot.addEventListener('click', (e) => {
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+            e.target.classList.add('selected');
+          });
+        });
+      },
+      
+    
+    renderClassList: () => {
+        const container = document.getElementById('classListContainer');
+        container.innerHTML = '';
+        
+        AppState.classes.forEach(cls => {
+            const link = document.createElement('a');
+            link.href = '#';
+            link.className = 'nav-link animate__animated animate__fadeInLeft';
+            link.innerHTML = `
+                <i class="fas fa-book"></i>
+                <span>${cls.name}</span>
+            `;
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                ClassModule.openClass(cls.id);
+            });
+            container.appendChild(link);
+        });
+    },
+    
+    openModal: () => {
+        document.getElementById('createClassModal').style.display = 'flex';
+        document.getElementById('classNameInput').focus();
+    },
+    
+    closeModal: () => {
+        document.getElementById('createClassModal').style.display = 'none';
+        document.getElementById('classNameInput').value = '';
+        document.getElementById('classDescInput').value = '';
+    },
+    
+    createClass: async () => {
+        const name = document.getElementById('classNameInput').value.trim();
+        const desc = document.getElementById('classDescInput').value.trim();
+        const selectedColor = document.querySelector('.color-dot.selected');
+        
+        if (!name) {
+          Utils.showToast('Please enter a class name', 'error');
+          return;
+        }
+        
+        try {
+          const response = await API.post('/classes', {
+            name,
+            description: desc || '',
+            color: selectedColor?.getAttribute('data-color') || 'green'
+          });
+          
+          AppState.classes.push(response.data);
+          ClassModule.renderClassList();
+          ClassModule.closeModal();
+          
+          Utils.showToast(`Class "${name}" created successfully!`, 'success');
+          
+          setTimeout(() => ClassModule.openClass(response.data._id), 500);
+        } catch (error) {
+          Utils.showToast(error.message || 'Failed to create class', 'error');
+        }
+      },
+    
+    openClass: (classId) => {
+        const cls = AppState.classes.find(c => c.id === classId);
+        if (!cls) return;
+        
+        AppState.activeClassId = classId;
+        
+        // Hide all views
+        document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+        
+        // Show class template
+        const template = document.getElementById('view-class-template');
+        template.style.display = 'block';
+        template.classList.add('animate__animated', 'animate__fadeIn');
+        
+        // Update content
+        document.getElementById('classTitle').textContent = cls.name;
+        document.getElementById('classDescription').textContent = cls.description;
+        document.getElementById('pageTitle').textContent = cls.name;
+        
+        // Update active state
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    }
+};
+
+  
+// ==========================================
+// ACTIVITY MODULE
+// ==========================================
+const ActivityModule = {
+    // REPLACE ActivityModule.init
+    init: async () => {
+        try {
+          const response = await API.get('/analytics/dashboard');
+          AppState.activities = response.data.recentActivity || [];
+          ActivityModule.renderFeed();
+        } catch (error) {
+          console.error('Failed to load activities:', error);
+          AppState.activities = [];
+        }
+      },
+          
+    renderFeed: () => {
+        const feed = document.getElementById('activityFeed');
+        if (!feed) return;
+        
+        feed.innerHTML = '';
+        
+        AppState.activities.forEach((activity, index) => {
+            const item = document.createElement('div');
+            item.className = 'activity-item animate__animated animate__fadeInUp';
+            item.style.animationDelay = `${index * 0.1}s`;
+            item.innerHTML = `
+                <div class="act-icon" style="color: ${activity.color}">
+                    <i class="fas ${activity.icon}"></i>
+                </div>
+                <div class="act-details">
+                    <h4>${activity.title}</h4>
+                    <span>${Utils.formatDate(activity.time)}</span>
+                </div>
+                <div class="act-score">${activity.score}</div>
+            `;
+            feed.appendChild(item);
+        });
+    }
+};
+
+
+
 // ==========================================
 // PARTICLE SYSTEM FOR BACKGROUND
 // ==========================================
@@ -310,28 +487,36 @@ const ParticleSystem = {
 // ==========================================
 const CursorEffect = {
     init: () => {
+        // Only init cursor on desktop
+        if (window.innerWidth < 768) return;
+        
         const cursor = document.createElement('div');
         cursor.className = 'custom-cursor';
+        cursor.id = 'customCursor';
         document.body.appendChild(cursor);
         
         const cursorDot = document.createElement('div');
         cursorDot.className = 'cursor-dot';
+        cursorDot.id = 'cursorDot';
         document.body.appendChild(cursorDot);
         
         let mouseX = 0, mouseY = 0;
         let cursorX = 0, cursorY = 0;
         let dotX = 0, dotY = 0;
         
+        // Track mouse position
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
         
+        // Animate cursor with RAF
         const animateCursor = () => {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            dotX += (mouseX - dotX) * 0.3;
-            dotY += (mouseY - dotY) * 0.3;
+            // Smooth follow
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            dotX += (mouseX - dotX) * 0.35;
+            dotY += (mouseY - dotY) * 0.35;
             
             cursor.style.left = cursorX + 'px';
             cursor.style.top = cursorY + 'px';
@@ -341,28 +526,31 @@ const CursorEffect = {
             requestAnimationFrame(animateCursor);
         };
         
-        animateCursor();
+        // Start animation
+        requestAnimationFrame(animateCursor);
         
         // Scale on hover
-        const hoverElements = 'a, button, .nav-link, .feature-card, .btn-icon, .chip, input, textarea, select';
+        const hoverElements = 'a, button, .nav-link, .feature-card, .btn-icon, .chip, input, textarea, select, .btn-primary, .btn-glass';
+        
         document.addEventListener('mouseover', (e) => {
-            if (e.target.matches(hoverElements)) {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursor.style.background = 'rgba(0, 237, 100, 0.2)';
+            if (e.target.matches(hoverElements) || e.target.closest(hoverElements)) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.8)';
+                cursor.style.background = 'rgba(0, 237, 100, 0.3)';
                 cursor.style.borderColor = '#00ff6a';
             }
         });
         
         document.addEventListener('mouseout', (e) => {
-            if (e.target.matches(hoverElements)) {
+            if (e.target.matches(hoverElements) || e.target.closest(hoverElements)) {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1)';
                 cursor.style.background = 'rgba(0, 237, 100, 0.1)';
                 cursor.style.borderColor = '#00ed64';
             }
         });
+        
+        console.log('✅ Custom cursor initialized');
     }
 };
-
 // ==========================================
 // SMOOTH SCROLL & PARALLAX
 // ==========================================
@@ -509,12 +697,6 @@ const TypingEffect = {
 // NOTIFICATION SYSTEM
 // ==========================================
 const NotificationSystem = {
-    notifications: [
-        { id: 1, title: 'Quiz Ready', message: 'Your AI-generated quiz is ready', time: '2m ago', icon: 'fa-check-circle', type: 'success' },
-        { id: 2, title: 'New Assignment', message: 'Calculus homework due tomorrow', time: '1h ago', icon: 'fa-book', type: 'info' },
-        { id: 3, title: 'Study Reminder', message: 'Time for your daily review', time: '3h ago', icon: 'fa-clock', type: 'warning' }
-    ],
-    
     init: () => {
         // Create notification panel
         const panel = document.createElement('div');
@@ -606,211 +788,1076 @@ const NotificationSystem = {
         NotificationSystem.closePanel();
         const badge = document.querySelector('.notification-dot');
         if (badge) badge.style.display = 'none';
-    }
+    },
+    loadNotifications: async () => {
+        try {
+          const response = await API.get('/notifications');
+          NotificationSystem.notifications = response.data.notifications || [];
+          
+          // Update badge
+          const badge = document.querySelector('.notification-dot');
+          if (badge) {
+            if (response.data.unreadCount > 0) {
+              badge.textContent = response.data.unreadCount;
+              badge.style.display = 'flex';
+            } else {
+              badge.style.display = 'none';
+            }
+          }
+        } catch (error) {
+          console.error('Failed to load notifications:', error);
+        }
+      },
+      
+      add: (notification) => {
+        NotificationSystem.notifications.unshift(notification);
+        NotificationSystem.loadNotifications();
+        
+        // Show toast
+        Utils.showToast(notification.message, notification.type || 'info');
+      }
 };
 
 // ==========================================
 // REAL-TIME ACTIVITY UPDATES
 // ==========================================
 const ActivityUpdater = {
-    init: async () => {
-        try {
-            const res = await API.get('/analytics/dashboard');
-            if (res.data?.recentActivity) {
-                AppState.activities = res.data.recentActivity;
-                ActivityModule.renderFeed && ActivityModule.renderFeed();
+    init: () => {
+        // Simulate real-time activity updates
+        setInterval(() => {
+            ActivityUpdater.addRandomActivity();
+        }, 30000); // Every 30 seconds
+    },
+    
+    addRandomActivity: () => {
+        const activities = [
+            { type: 'study', title: 'Study Session Completed', score: '45 min', icon: 'fa-clock', color: '#00ed64' },
+            { type: 'quiz', title: 'Quiz Completed', score: '92%', icon: 'fa-check-circle', color: '#00bfff' },
+            { type: 'pdf', title: 'PDF Analyzed', score: '15 pages', icon: 'fa-file-pdf', color: '#bd00ff' }
+        ];
+        
+        const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+        randomActivity.time = Date.now();
+        
+        AppState.activities.unshift(randomActivity);
+        if (AppState.activities.length > 10) AppState.activities.pop();
+        
+        // Use setTimeout to defer execution
+        setTimeout(() => {
+            if (typeof ActivityModule !== 'undefined' && ActivityModule.renderFeed) {
+                ActivityModule.renderFeed();
             }
-        } catch (e) {
-            console.warn('Failed to load activities', e);
-        }
-
-        // Poll every 30s for updates
-        setInterval(async () => {
-            try {
-                const res = await API.get('/analytics/dashboard');
-                AppState.activities = res.data?.recentActivity || AppState.activities;
-                ActivityModule.renderFeed && ActivityModule.renderFeed();
-            } catch (e) { /* ignore */ }
-        }, 30000);
+        }, 0);
     }
 };
 
 // ==========================================
+// KEYBOARD SHORTCUTS
+// ==========================================
+const KeyboardShortcuts = {
+    init: () => {
+        document.addEventListener('keydown', (e) => {
+            // Cmd/Ctrl + K - Focus search
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearch')?.focus();
+            }
+            
+            // Cmd/Ctrl + N - New class
+            if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+                e.preventDefault();
+                ClassModule.openModal();
+            }
+            
+            // Cmd/Ctrl + U - Upload PDF
+            if ((e.metaKey || e.ctrlKey) && e.key === 'u') {
+                e.preventDefault();
+                document.getElementById('pdfFileInput')?.click();
+            }
+            
+            // Escape - Close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                NotificationSystem.closePanel();
+            }
+        });
+    }
+};
+
+// ==========================================
+// LOADING ANIMATIONS
+// ==========================================
+const LoadingAnimations = {
+    init: () => {
+        // Add loading states to buttons
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-primary, .btn-upload');
+            if (!btn || btn.disabled) return;
+            
+            // Don't add loading to certain buttons
+            if (btn.closest('.modal-footer') || btn.id === 'loginForm' || btn.id === 'signupForm') {
+                return;
+            }
+            
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }, 2000);
+        });
+    }
+};
+
+// ==========================================
+// PROGRESSIVE LOADING
+// ==========================================
+const ProgressiveLoader = {
+    init: () => {
+        // Show skeleton loaders for dynamic content
+        const containers = document.querySelectorAll('[data-load]');
+        containers.forEach(container => {
+            ProgressiveLoader.showSkeleton(container);
+            setTimeout(() => {
+                ProgressiveLoader.loadContent(container);
+            }, 1000);
+        });
+    },
+    
+    showSkeleton: (container) => {
+        const count = container.dataset.loadCount || 3;
+        container.innerHTML = Array(parseInt(count)).fill(0).map(() => `
+            <div class="skeleton" style="height: 80px; margin-bottom: 12px; border-radius: 12px;"></div>
+        `).join('');
+    },
+    
+    loadContent: (container) => {
+        // Load actual content based on data attribute
+        const type = container.dataset.load;
+        if (type === 'activity') {
+            ActivityModule.renderFeed();
+        }
+    }
+};
+
+// ==========================================
+// ENHANCE EXISTING AUTH MODULE
+// ==========================================
+const EnhancedAuth = {
+    init: () => {
+        // Add loading animations to auth forms
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.classList.add('loading');
+            });
+        }
+        
+        if (signupForm) {
+            signupForm.addEventListener('submit', (e) => {
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.classList.add('loading');
+            });
+        }
+    }
+};
+
+// ==========================================
+// INITIALIZE ALL EFFECTS
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Wait for app to fully load
+    setTimeout(() => {
+        console.log('🎨 Initializing Dynamic Effects...');
+        
+        ParticleSystem.init();
+        CursorEffect.init();
+        SmoothScroll.init();
+        TiltEffect.init();
+        GlowEffect.init();
+        RippleEffect.init();
+        NotificationSystem.init();
+        KeyboardShortcuts.init();
+        LoadingAnimations.init();
+        ActivityUpdater.init();
+        EnhancedAuth.init();
+        
+        // Re-initialize effects after navigation
+        const observer = new MutationObserver(() => {
+            TiltEffect.init();
+            SmoothScroll.init();
+            TypingEffect.init();
+        });
+        
+        const viewContainer = document.getElementById('viewContainer');
+        if (viewContainer) {
+            observer.observe(viewContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
+        
+        // Initialize typing effect
+        TypingEffect.init();
+        
+        console.log('✨ All dynamic effects loaded!');
+    }, 1500);
+});
+
+// Export for external use
+window.ScholarAI = {
+    ...window.ScholarAI,
+    ParticleSystem,
+    CursorEffect,
+    SmoothScroll,
+    TiltEffect,
+    GlowEffect,
+    NotificationSystem
+};
+
+// ==========================================
+// ENHANCED CLASS MODULE
+// ==========================================
+const EnhancedClassModule = {
+    currentTab: 'stream',
+    posts: [],
+    
+    init: () => {
+        // Initialize class view when opened
+        document.addEventListener('class-view-opened', (e) => {
+            EnhancedClassModule.setupClassView(e.detail.classId);
+        });
+    },
+    
+    setupClassView: (classId) => {
+        const classData = AppState.classes.find(c => c.id === classId);
+        if (!classData) return;
+        
+        // Setup tabs
+        EnhancedClassModule.setupTabs();
+        
+        // Setup composer
+        EnhancedClassModule.setupComposer();
+        
+        // Load posts
+        EnhancedClassModule.loadPosts(classId);
+        
+        // Setup new material button
+        document.querySelector('.btn-new-material')?.addEventListener('click', () => {
+            EnhancedClassModule.openMaterialModal();
+        });
+        
+        // Setup invite button
+        document.querySelector('.btn-invite')?.addEventListener('click', () => {
+            EnhancedClassModule.openInviteModal();
+        });
+    },
+    
+    setupTabs: () => {
+        document.querySelectorAll('.class-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active from all
+                document.querySelectorAll('.class-tab').forEach(t => t.classList.remove('active'));
+                
+                // Add active to clicked
+                tab.classList.add('active');
+                
+                // Get tab name
+                const tabName = tab.textContent.toLowerCase().trim();
+                EnhancedClassModule.currentTab = tabName;
+                
+                // Show appropriate content
+                EnhancedClassModule.showTabContent(tabName);
+            });
+        });
+    },
+    
+    setupComposer: () => {
+        const composer = document.querySelector('.stream-composer');
+        if (!composer) return;
+        
+        const input = composer.querySelector('input');
+        if (!input) return;
+        
+        input.addEventListener('focus', () => {
+            composer.style.border = '1px solid var(--primary)';
+        });
+        
+        input.addEventListener('blur', () => {
+            if (!input.value) {
+                composer.style.border = '1px solid var(--border)';
+            }
+        });
+        
+        // Handle post submission
+        composer.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                EnhancedClassModule.createPost(input.value.trim());
+                input.value = '';
+                composer.style.border = '1px solid var(--border)';
+            }
+        });
+    },
+    
+    createPost: (content) => {
+        const post = {
+            id: Utils.generateId(),
+            author: AppState.user.name,
+            avatar: AppState.user.avatar,
+            content: content,
+            timestamp: Date.now(),
+            likes: 0,
+            comments: []
+        };
+        
+        EnhancedClassModule.posts.unshift(post);
+        EnhancedClassModule.renderPosts();
+        
+        Utils.showToast('Post created successfully!', 'success');
+    },
+    
+    renderPosts: () => {
+        const streamContainer = document.querySelector('.class-stream');
+        if (!streamContainer) return;
+        
+        const emptyState = streamContainer.querySelector('.empty-stream');
+        if (emptyState && EnhancedClassModule.posts.length > 0) {
+            emptyState.remove();
+        }
+        
+        const composer = streamContainer.querySelector('.stream-composer');
+        
+        // Clear existing posts
+        streamContainer.querySelectorAll('.stream-post').forEach(p => p.remove());
+        
+        // Add posts after composer
+        EnhancedClassModule.posts.forEach(post => {
+            const postEl = EnhancedClassModule.createPostElement(post);
+            if (composer) {
+                composer.insertAdjacentHTML('afterend', postEl);
+            } else {
+                streamContainer.insertAdjacentHTML('beforeend', postEl);
+            }
+        });
+        
+        // Bind post actions
+        EnhancedClassModule.bindPostActions();
+    },
+    
+    createPostElement: (post) => {
+        return `
+            <div class="stream-post animate__animated animate__fadeInUp" data-post-id="${post.id}">
+                <div class="post-header">
+                    <img src="${post.avatar}" class="post-avatar" alt="${post.author}">
+                    <div class="post-author-info">
+                        <div class="post-author-name">${post.author}</div>
+                        <div class="post-timestamp">${Utils.formatDate(post.timestamp)}</div>
+                    </div>
+                    <button class="post-menu" onclick="EnhancedClassModule.showPostMenu('${post.id}')">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+                <div class="post-content">${post.content}</div>
+                <div class="post-actions">
+                    <button class="post-action" onclick="EnhancedClassModule.likePost('${post.id}')">
+                        <i class="far fa-heart"></i>
+                        <span>${post.likes || 0}</span>
+                    </button>
+                    <button class="post-action" onclick="EnhancedClassModule.commentPost('${post.id}')">
+                        <i class="far fa-comment"></i>
+                        <span>${post.comments?.length || 0}</span>
+                    </button>
+                    <button class="post-action">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    },
+    
+    bindPostActions: () => {
+        // Already handled via inline onclick for demo
+        // In production, use event delegation
+    },
+    
+    likePost: (postId) => {
+        const post = EnhancedClassModule.posts.find(p => p.id === postId);
+        if (post) {
+            post.likes = (post.likes || 0) + 1;
+            EnhancedClassModule.renderPosts();
+        }
+    },
+    
+    commentPost: (postId) => {
+        Utils.showToast('Comment feature coming soon!', 'info');
+    },
+    
+    showPostMenu: (postId) => {
+        Utils.showToast('Post options: Edit, Delete, Report', 'info');
+    },
+    
+    loadPosts: (classId) => {
+        // Load from storage or API
+        const savedPosts = Utils.loadFromStorage(`class_posts_${classId}`, []);
+        EnhancedClassModule.posts = savedPosts;
+        EnhancedClassModule.renderPosts();
+    },
+    
+    showTabContent: (tabName) => {
+        const streamContent = document.querySelector('.class-stream');
+        
+        switch(tabName) {
+            case 'stream':
+                if (streamContent) streamContent.style.display = 'block';
+                break;
+            case 'classwork':
+                if (streamContent) streamContent.style.display = 'none';
+                EnhancedClassModule.showClasswork();
+                break;
+            case 'people':
+                if (streamContent) streamContent.style.display = 'none';
+                EnhancedClassModule.showPeople();
+                break;
+            case 'grades':
+                if (streamContent) streamContent.style.display = 'none';
+                EnhancedClassModule.showGrades();
+                break;
+        }
+    },
+    
+    showClasswork: () => {
+        // Implementation for classwork tab
+        Utils.showToast('Classwork tab - Coming soon!', 'info');
+    },
+    
+    showPeople: () => {
+        // Implementation for people tab
+        Utils.showToast('People tab - Coming soon!', 'info');
+    },
+    
+    showGrades: () => {
+        // Implementation for grades tab
+        Utils.showToast('Grades tab - Coming soon!', 'info');
+    },
+    
+    openMaterialModal: () => {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay material-modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-card animate__animated animate__zoomIn">
+                <div class="modal-header">
+                    <h3>Add New Material</h3>
+                    <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="material-type-selector">
+                        <div class="material-type" data-type="assignment">
+                            <i class="fas fa-tasks"></i>
+                            <span>Assignment</span>
+                        </div>
+                        <div class="material-type" data-type="quiz">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Quiz</span>
+                        </div>
+                        <div class="material-type" data-type="material">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Material</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="materialTitle" placeholder="Enter title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="materialDesc" rows="4" placeholder="Add details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="materialDate">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-text" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                    <button class="btn-primary" onclick="EnhancedClassModule.createMaterial()">Create</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Handle type selection
+        modal.querySelectorAll('.material-type').forEach(type => {
+            type.addEventListener('click', () => {
+                modal.querySelectorAll('.material-type').forEach(t => t.classList.remove('selected'));
+                type.classList.add('selected');
+            });
+        });
+    },
+    
+    createMaterial: () => {
+        const title = document.getElementById('materialTitle').value;
+        const desc = document.getElementById('materialDesc').value;
+        const date = document.getElementById('materialDate').value;
+        const type = document.querySelector('.material-type.selected')?.dataset.type;
+        
+        if (!title || !type) {
+            Utils.showToast('Please fill in all required fields', 'error');
+            return;
+        }
+        
+        Utils.showToast(`${type} "${title}" created successfully!`, 'success');
+        document.querySelector('.material-modal').remove();
+    },
+    
+    openInviteModal: () => {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-card animate__animated animate__zoomIn">
+                <div class="modal-header">
+                    <h3>Invite to Class</h3>
+                    <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Email Addresses</label>
+                        <input type="email" placeholder="Enter email addresses separated by commas">
+                    </div>
+                    <div class="form-group">
+                        <label>Or share this code:</label>
+                        <div style="background: rgba(0,237,100,0.1); padding: 1rem; border-radius: 8px; text-align: center; font-family: var(--font-code); font-size: 1.5rem; color: var(--primary); font-weight: 700;">
+                            ABC-DEF-123
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-text" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                    <button class="btn-primary">Send Invites</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+};
+
+// Update ClassModule.openClass to trigger enhanced version
+const originalOpenClass = ClassModule.openClass;
+ClassModule.openClass = function(classId) {
+    originalOpenClass.call(this, classId);
+    
+    // Trigger enhanced setup
+    setTimeout(() => {
+        const event = new CustomEvent('class-view-opened', { detail: { classId } });
+        document.dispatchEvent(event);
+    }, 100);
+};
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        EnhancedClassModule.init();
+        console.log('✅ Enhanced Class Module loaded');
+    }, 1000);
+});
+
+// Export
+window.ScholarAI = {
+    ...window.ScholarAI,
+    EnhancedClassModule
+};
+
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
+const Utils = {
+    // Generate unique ID
+    generateId: () => `id_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    
+    // Show toast notification
+    showToast: (message, type = 'info') => {
+        console.log(`🔔 Toast: [${type}] ${message}`);
+        
+        const container = document.getElementById('toastContainer');
+        if (!container) {
+            console.error('❌ Toast container not found');
+            return;
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type} animate__animated animate__fadeInRight`;
+        
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            info: 'fa-info-circle'
+        };
+        
+        toast.innerHTML = `
+            <i class="fas ${icons[type]}"></i>
+            <span>${message}</span>
+        `;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove('animate__fadeInRight');
+            toast.classList.add('animate__fadeOutRight');
+            setTimeout(() => toast.remove(), 500);
+        }, 4000);
+    },
+
+    // Show global loader
+    showLoader: (message = 'Processing...') => {
+        const loader = document.getElementById('globalLoader');
+        const text = loader.querySelector('.loader-text');
+        if (text) text.textContent = message;
+        loader.style.display = 'flex';
+    },
+    
+    // Hide global loader
+    hideLoader: () => {
+        document.getElementById('globalLoader').style.display = 'none';
+    },
+    
+    // Typewriter effect
+    typeWriter: async (element, text, speed = 20) => {
+        element.textContent = '';
+        for (let i = 0; i < text.length; i++) {
+            element.textContent += text.charAt(i);
+            await new Promise(resolve => setTimeout(resolve, speed));
+        }
+    },
+    
+    // Animate number
+    animateNumber: (element, start, end, duration = 1000) => {
+        const range = end - start;
+        const increment = range / (duration / 16);
+        let current = start;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                element.textContent = Math.round(end);
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.round(current);
+            }
+        }, 16);
+    },
+    
+    // Format date
+    formatDate: (date) => {
+        const d = new Date(date);
+        const now = new Date();
+        const diff = now - d;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+        
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        if (days < 7) return `${days}d ago`;
+        return d.toLocaleDateString();
+    },
+    
+    // Store data in localStorage
+    saveToStorage: (key, data) => {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) {
+            console.error('Storage error:', e);
+        }
+    },
+    
+    // Load data from localStorage
+    loadFromStorage: (key, defaultValue = null) => {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        } catch (e) {
+            console.error('Storage error:', e);
+            return defaultValue;
+        }
+    }
+};
 
 // ==========================================
 // AUTHENTICATION MODULE
 // ==========================================
-const AuthModule = {
-    // REPLACE AuthModule.init
-init: async () => {
-    const token = Utils.loadFromStorage('scholar_token');
-    const refreshToken = Utils.loadFromStorage('scholar_refresh_token');
-    
-    if (token) {
-      // Validate session
-      API.get('/auth/me')
-        .then(response => {
-          AppState.user = response.data.user;
-          AuthModule.loadApp();
-            
-            // ADD TO script.js after AuthModule.loadApp()
-            const socket = io('http://localhost:3000', {
-         auth: { token: Utils.loadFromStorage('scholar_token') }
-        });
+// ========== AUTH MODULE UPDATES ==========
+// In script.js
 
-        })
-        .catch(() => {
-          Utils.clearStorage();
-        });
-    }
+// In script.js - Replace AuthModule.init with this:
+
+const AuthModule = {
+    // In script.js inside AuthModule
+
+    init: async () => {
+        console.log('🚀 AuthModule initializing...');
+        const splash = document.getElementById('splashScreen');
+        const loginContainer = document.getElementById('loginContainer');
+        const signupContainer = document.getElementById('signupContainer');
+        const appLayer = document.getElementById('appLayer');
     
-    document.getElementById('loginForm').addEventListener('submit', AuthModule.handleLogin);
-    document.getElementById('signupForm').addEventListener('submit', AuthModule.handleSignup);
+        // ✅ Bind events FIRST
+        AuthModule.bindEvents();
+    
+        // ✅ Hide splash after 1.5 seconds
+        setTimeout(async () => {
+            try {
+                const token = Utils.loadFromStorage('scholar_token');
+    
+                if (token) {
+                    console.log('🔍 Verifying session...');
+                    
+                    try {
+                        const response = await API.get('/auth/me');
+                        AppState.user = response.data.user;
+    
+                        console.log('✅ Session valid, loading app...');
+                        
+                        if (typeof initializeSocket === 'function') {
+                            initializeSocket(token);
+                        }
+    
+                        PDFModule.loadFiles();
+                        NotificationSystem.loadNotifications();
+                        AuthModule.loadApp();
+                        
+                    } catch (error) {
+                        console.log('❌ Session invalid');
+                        throw error;
+                    }
+                } else {
+                    throw new Error('No session found');
+                }
+    
+            } catch (error) {
+                console.log('ℹ️ Showing login screen');
+                
+                localStorage.removeItem('scholar_token');
+                localStorage.removeItem('currentUser');
+                AppState.user = null;
+    
+                // ✅ Show login screen
+                if (appLayer) appLayer.style.display = 'none';
+                if (signupContainer) signupContainer.style.display = 'none';
+                if (loginContainer) {
+                    loginContainer.style.display = 'flex';
+                }
+            } finally {
+                // ✅ ALWAYS hide splash
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                    }, 500);
+                }
+            }
+        }, 1500);
     },
-    // REPLACE ENTIRE handleLogin FUNCTION
-handleLogin: async (e) => {
+        // ... rest of AuthModule  
+        bindEvents: () => {
+            // ✅ Login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.removeEventListener('submit', AuthModule.handleLogin); // Remove old listener
+                loginForm.addEventListener('submit', AuthModule.handleLogin);
+            }
+            
+            // ✅ Signup form
+            const signupForm = document.getElementById('signupForm');
+            if (signupForm) {
+                signupForm.removeEventListener('submit', AuthModule.handleSignup);
+                signupForm.addEventListener('submit', AuthModule.handleSignup);
+            }
+            
+            // ✅ Navigation between forms
+            const goToSignup = document.getElementById('goToSignup');
+            if (goToSignup) {
+                goToSignup.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('signupContainer').style.display = 'flex';
+                });
+            }
+            
+            const goToLogin = document.getElementById('goToLogin');
+            if (goToLogin) {
+                goToLogin.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('signupContainer').style.display = 'none';
+                    document.getElementById('loginContainer').style.display = 'flex';
+                });
+            }
+            
+            // ✅ Forgot password
+            const showForgotPassword = document.getElementById('showForgotPassword');
+            if (showForgotPassword) {
+                showForgotPassword.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('forgotPasswordModal').style.display = 'flex';
+                });
+            }
+            
+            const closeForgotPassword = document.getElementById('closeForgotPassword');
+            if (closeForgotPassword) {
+                closeForgotPassword.addEventListener('click', () => {
+                    document.getElementById('forgotPasswordModal').style.display = 'none';
+                });
+            }
+            
+            const cancelForgotPassword = document.getElementById('cancelForgotPassword');
+            if (cancelForgotPassword) {
+                cancelForgotPassword.addEventListener('click', () => {
+                    document.getElementById('forgotPasswordModal').style.display = 'none';
+                });
+            }
+            
+            const submitForgotPassword = document.getElementById('submitForgotPassword');
+            if (submitForgotPassword) {
+                submitForgotPassword.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    AuthModule.handleForgotPassword();
+                });
+            }
+            
+            // ✅ Password strength
+            const passwordInput = document.getElementById('signupPassword');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', AuthModule.checkPasswordStrength);
+            }
+            
+            // ✅ Close modal on outside click
+            const forgotModal = document.getElementById('forgotPasswordModal');
+            if (forgotModal) {
+                forgotModal.addEventListener('click', (e) => {
+                    if (e.target.id === 'forgotPasswordModal') {
+                        e.target.style.display = 'none';
+                    }
+                });
+            }
+            
+            console.log('✅ Auth events bound');
+        },
+
+        handleLogin: async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalHTML = btn.innerHTML;
+            
+            if (!email || !password) {
+                Utils.showToast('Please enter email and password', 'error');
+                return;
+            }
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            btn.disabled = true;
+            
+            try {
+                const response = await API.post('/auth/login', { email, password });
+                
+                Utils.saveToStorage('scholar_token', response.data.tokens.accessToken);
+                Utils.saveToStorage('currentUser', JSON.stringify(response.data.user));
+                AppState.user = response.data.user;
+                
+                initializeSocket(response.data.tokens.accessToken);
+                
+                Utils.showToast('Welcome back to Scholar.AI!', 'success');
+                
+                // ✅ Hide login, load app
+                document.getElementById('loginContainer').style.display = 'none';
+                AuthModule.loadApp();
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                Utils.showToast(error.message || 'Login failed. Please try again.', 'error');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        },
+  handleSignup: async (e) => {
     e.preventDefault();
     
-    const email = e.target.querySelector('input[name="email"]').value;
-    const password = e.target.querySelector('input[name="password"]').value;
+    const firstName = document.getElementById('signupFirstName').value.trim();
+    const lastName = document.getElementById('signupLastName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const education = document.getElementById('signupEducation').value;
     const btn = e.target.querySelector('button[type="submit"]');
     const originalHTML = btn.innerHTML;
     
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
-    btn.disabled = true;
-    
-    try {
-      const response = await API.post('/auth/login', { email, password });
-      
-      Utils.saveToStorage('scholar_token', response.data.tokens.accessToken);
-      Utils.saveToStorage('scholar_refresh_token', response.data.tokens.refreshToken);
-      AppState.user = response.data.user;
-      
-      Utils.showToast('Welcome back to Scholar.AI!', 'success');
-      AuthModule.loadApp();
-    } catch (error) {
-      Utils.showToast(error.message || 'Login failed', 'error');
-      btn.innerHTML = originalHTML;
-      btn.disabled = false;
+    // ✅ Validation
+    if (!firstName || !lastName || !email || !password || !education) {
+        Utils.showToast('Please fill in all fields', 'error');
+        return;
     }
-    },
-    // REPLACE ENTIRE handleSignup FUNCTION
-handleSignup: async (e) => {
-    e.preventDefault();
     
-    const firstName = e.target.querySelector('input[name="firstName"]').value;
-    const lastName = e.target.querySelector('input[name="lastName"]').value;
-    const email = e.target.querySelector('input[name="email"]').value;
-    const password = e.target.querySelector('input[name="password"]').value;
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalHTML = btn.innerHTML;
+    if (password.length < 8) {
+        Utils.showToast('Password must be at least 8 characters', 'error');
+        return;
+    }
     
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
     btn.disabled = true;
     
     try {
-      const response = await API.post('/auth/register', {
-        username: (firstName + (lastName ? ' ' + lastName : '')).toLowerCase().replace(/\s+/g, '') + Math.floor(Math.random() * 1000),
-        email,
-        password
-      });
-      
-      Utils.saveToStorage('scholar_token', response.data.tokens.accessToken);
-      Utils.saveToStorage('scholar_refresh_token', response.data.tokens.refreshToken);
-      AppState.user = response.data.user;
-      
-      Utils.showToast('Account created successfully!', 'success');
-      AuthModule.loadApp();
+        const username = `${firstName.toLowerCase()}${Math.floor(Math.random() * 10000)}`;
+        
+        const response = await API.post('/auth/register', {
+            username,
+            email,
+            password,
+            profile: { firstName, lastName },
+            educationLevel: education
+        });
+        
+        Utils.saveToStorage('scholar_token', response.data.tokens.accessToken);
+        Utils.saveToStorage('currentUser', JSON.stringify(response.data.user));
+        AppState.user = response.data.user;
+        
+        initializeSocket(response.data.tokens.accessToken);
+        
+        Utils.showToast('Account created successfully!', 'success');
+        
+        // ✅ Hide signup, load app
+        document.getElementById('signupContainer').style.display = 'none';
+        AuthModule.loadApp();
+        
     } catch (error) {
-      Utils.showToast(error.message || 'Signup failed', 'error');
+        console.error('Signup error:', error);
+        Utils.showToast(error.message || 'Signup failed. Please try again.', 'error');
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+    }
+},
+
+  handleForgotPassword: async () => {
+    const email = document.getElementById('forgotEmail').value.trim();
+    
+    if (!email) {
+      Utils.showToast('Please enter your email address', 'error');
+      return;
+    }
+    
+    const btn = document.getElementById('submitForgotPassword');
+    const originalHTML = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    btn.disabled = true;
+    
+    try {
+      await API.post('/auth/forgot-password', { email });
+      
+      Utils.showToast('Password reset instructions sent!', 'success');
+      document.getElementById('forgotPasswordModal').style.display = 'none';
+      document.getElementById('forgotEmail').value = '';
+      
+    } catch (error) {
+      Utils.showToast(error.message || 'Failed to send reset link', 'error');
+    } finally {
       btn.innerHTML = originalHTML;
       btn.disabled = false;
     }
-    },    
-    loadApp: () => {
-        const authLayer = document.getElementById('authLayer');
-        const appLayer = document.getElementById('appLayer');
-        
-        authLayer.classList.add('animate__animated', 'animate__fadeOutUp');
-        
-        setTimeout(() => {
-            authLayer.style.display = 'none';
-            appLayer.style.display = 'flex';
-            
-            // Initialize all modules
-            NavigationModule.init();
-            ClassModule.init();
-            StatsModule.init();
-            ProgressModule.init();
-            ActivityModule.init();
-            
-            // Update user display
-            document.getElementById('userName').textContent = AppState.user.name;
-            document.querySelector('.user-profile img').src = AppState.user.avatar;
-        }, 800);
-    },
+  },
+  
+  checkPasswordStrength: (e) => {
+    const password = e.target.value;
+    const strengthIndicator = document.getElementById('passwordStrength');
     
-    switchView: (view) => {
-        console.log('switchView called with:', view);
-        const loginView = document.getElementById('loginView');
-        const signupView = document.getElementById('signupView');
-        
-        if (view === 'signup') {
-            loginView.style.display = 'none';
-            signupView.style.display = 'block';
-            signupView.classList.add('animate__animated', 'animate__fadeIn');
-        } else {
-            signupView.style.display = 'none';
-            loginView.style.display = 'block';
-            loginView.classList.add('animate__animated', 'animate__fadeIn');
-        }
-    },
+    if (!strengthIndicator) return;
     
-    showForgotPassword: () => {
-        const modal = document.getElementById('forgotPasswordModal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
-    },
-    
-    closeForgotPasswordModal: () => {
-        const modal = document.getElementById('forgotPasswordModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    },
-    
-    resetPassword: async () => {
-        const email = document.getElementById('resetEmail').value.trim();
-        
-        if (!email) {
-            Utils.showToast('Please enter your email address', 'error');
-            return;
-        }
-        
-        const btn = document.querySelector('.forgot-password-modal .btn-primary');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        btn.disabled = true;
-        
-        try {
-            const response = await API.post('/auth/forgot-password', { email });
-            Utils.showToast('Password reset link sent to your email!', 'success');
-            document.querySelector('.forgot-password-modal').remove();
-        } catch (error) {
-            Utils.showToast(error.message || 'Failed to send reset link', 'error');
-            btn.innerHTML = originalHTML;
-            btn.disabled = false;
-        }
-    },
-    
-    logout: () => {
-        Utils.showToast('Logging out...', 'info');
-        setTimeout(() => {
-            localStorage.clear();
-            location.reload();
-        }, 1000);
+    if (password.length === 0) {
+      strengthIndicator.className = 'password-strength';
+      strengthIndicator.textContent = '';
+      return;
     }
+    
+    let strength = 0;
+    
+    // Check length
+    if (password.length >= 8) strength++;
+    if (password.length >= 12) strength++;
+    
+    // Check complexity
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    
+    if (strength <= 2) {
+      strengthIndicator.className = 'password-strength weak';
+      strengthIndicator.textContent = 'Weak';
+    } else if (strength <= 4) {
+      strengthIndicator.className = 'password-strength medium';
+      strengthIndicator.textContent = 'Medium';
+    } else {
+      strengthIndicator.className = 'password-strength strong';
+      strengthIndicator.textContent = 'Strong';
+    }
+  },
+  
+  loadApp: () => {
+    const loginContainer = document.getElementById('loginContainer');
+    const signupContainer = document.getElementById('signupContainer');
+    const appLayer = document.getElementById('appLayer');
+    const mainHeader = document.getElementById('mainHeader');
+    
+    // Hide auth screens
+    if (loginContainer) loginContainer.style.display = 'none';
+    if (signupContainer) signupContainer.style.display = 'none';
+    
+    // Show app
+    if (appLayer) appLayer.style.display = 'flex';
+    if (mainHeader) mainHeader.style.display = 'block';
+    
+    // Initialize modules
+    NavigationModule.init();
+    ClassModule.init();
+    StatsModule.init();
+    ProgressModule.init();
+    ActivityModule.init();
+    
+    // Update user info
+    const userName = document.getElementById('userName');
+    const headerUsername = document.getElementById('headerUsername');
+    const avatarImg = document.querySelector('.user-profile img');
+    
+    if (userName) userName.textContent = AppState.user.username || 'Student';
+    if (headerUsername) headerUsername.textContent = AppState.user.username || 'Student';
+    if (avatarImg) {
+      avatarImg.src = AppState.user.profile?.avatar || 
+        `https://ui-avatars.com/api/?name=${AppState.user.username}&background=00ed64&color=001e2b`;
+    }
+    
+    NavigationModule.navigateTo('home');
+  },
+  
+  logout: () => {
+    Utils.showToast('Logging out...', 'info');
+    
+    setTimeout(() => {
+      localStorage.clear();
+      location.reload();
+    }, 1000);
+  }
 };
 
 // ==========================================
@@ -846,11 +1893,20 @@ const NavigationModule = {
                 document.getElementById('globalSearch').focus();
             }
         });
+        // Bind create class button
+        const btnCreateClass = document.getElementById('btnCreateClass');
+        if (btnCreateClass) {
+            btnCreateClass.addEventListener('click', () => {
+                if (typeof ClassModule !== 'undefined' && ClassModule.openModal) {
+                    ClassModule.openModal();
+                }
+            });
+        }
         
         // Load initial view
         NavigationModule.navigateTo('dashboard');
     },
-    
+        // Load initial view
     navigateTo: (viewName) => {
         // Update active nav link
         document.querySelectorAll('.nav-link').forEach(link => {
@@ -897,73 +1953,6 @@ const NavigationModule = {
     
     updateHeader: (title, subtitle = '') => {
         document.getElementById('pageTitle').textContent = title;
-    }
-};
-
-// ==========================================
-// CLASS MANAGEMENT MODULE
-// ==========================================
-const ClassModule = {
-    init: async () => {
-        try {
-            const res = await API.get('/classes');
-            AppState.classes = res.data?.classes || [];
-            ClassModule.renderClassList();
-        } catch (e) {
-            // fallback to local
-            AppState.classes = Utils.loadFromStorage('scholar_classes', []);
-            ClassModule.renderClassList();
-        }
-
-        // Bind color picker
-        document.querySelectorAll('.color-dot').forEach(dot => {
-            dot.addEventListener('click', (e) => {
-                document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
-                e.target.classList.add('selected');
-            });
-        });
-    },
-
-    createClass: async () => {
-        const name = document.getElementById('classNameInput').value.trim();
-        const desc = document.getElementById('classDescInput')?.value?.trim() || '';
-        const selectedColor = document.querySelector('.color-dot.selected')?.getAttribute('data-color') || 'green';
-        if (!name) return Utils.showToast('Please provide a class name', 'error');
-
-        try {
-            const res = await API.post('/classes', { name, description: desc, color: selectedColor });
-            AppState.classes.unshift(res.data);
-            Utils.saveToStorage('scholar_classes', AppState.classes);
-            ClassModule.renderClassList();
-            ClassModule.closeModal();
-            Utils.showToast(`Class "${name}" created successfully!`, 'success');
-            setTimeout(() => ClassModule.openClass(res.data._id || res.data.id), 500);
-        } catch (err) {
-            Utils.showToast('Failed to create class', 'error');
-        }
-    },
-
-    openClass: (classId) => {
-        const cls = AppState.classes.find(c => c.id === classId);
-        if (!cls) return;
-
-        AppState.activeClassId = classId;
-
-        // Hide all views
-        document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
-
-        // Show class template
-        const template = document.getElementById('view-class-template');
-        template.style.display = 'block';
-        template.classList.add('animate__animated', 'animate__fadeIn');
-
-        // Update content
-        document.getElementById('classTitle').textContent = cls.name;
-        document.getElementById('classDescription').textContent = cls.description;
-        document.getElementById('pageTitle').textContent = cls.name;
-
-        // Update active state
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     }
 };
 
@@ -1145,23 +2134,6 @@ sendMessage: async () => {
 
 Would you like me to grade your answers?`,
             
-    } finally {
-      AIModule.isProcessing = false;
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-    },
-    generateResponse: (userText) => {
-        const responses = {
-            quiz: `I've generated a quiz based on "${userText}":
-
-1. What is the main concept?
-2. How does this relate to previous topics?
-3. Can you provide a practical example?
-4. What are the key takeaways?
-5. How would you apply this knowledge?
-
-Would you like me to grade your answers?`,
-            
             exam: `For exam preparation on "${userText}", here's your study plan:
 
 - Review core concepts (30 min)
@@ -1227,6 +2199,192 @@ Would you like me to:
 };
 
 // ==========================================
+// PDF MANAGEMENT MODULE
+// ==========================================
+const PDFModule = {
+    currentPdf: null,
+    
+    init: () => {
+        AppState.pdfs = Utils.loadFromStorage('scholar_pdfs', []);
+    },
+    
+    // REPLACE ENTIRE handleUpload FUNCTION
+    handleUpload: async (event) => {
+    const file = event.target.files[0];
+    if (!file || !file.type.includes('pdf')) {
+      Utils.showToast('Please upload a PDF file', 'error');
+      return;
+    }
+    
+    if (file.size > 50 * 1024 * 1024) {
+      Utils.showToast('File too large. Maximum 50MB', 'error');
+      return;
+    }
+    
+    Utils.showLoader('Uploading PDF...');
+    
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await API.upload('/workspace/upload', formData);
+      
+      Utils.hideLoader();
+      Utils.showToast('PDF uploaded successfully!', 'success');
+      
+      // Poll for processing status
+      PDFModule.pollProcessingStatus(response.data.nodeId);
+    } catch (error) {
+      Utils.hideLoader();
+      Utils.showToast(error.message || 'Upload failed', 'error');
+    }
+  },
+  
+  // ADD THIS NEW FUNCTION TO PDFModule
+    loadFiles: async () => {
+        try {
+        const response = await API.get('/workspace/files');
+        AppState.pdfs = response.data.files || [];
+        
+        // Update UI if on PDF hub
+        if (NavigationModule.currentView === 'pdfhub') {
+            const emptyState = document.getElementById('pdfEmptyState');
+            if (AppState.pdfs.length === 0) {
+            emptyState.style.display = 'block';
+            } else {
+            emptyState.style.display = 'none';
+            // Show most recent PDF
+            const latestPdf = AppState.pdfs[0];
+            PDFModule.currentPdf = latestPdf;
+            PDFModule.showPdfDashboard(latestPdf);
+            }
+        }
+        } catch (error) {
+        console.error('Failed to load files:', error);
+        }
+    },
+    
+    
+    pollProcessingStatus: async (nodeId) => {
+        Utils.showLoader('Processing PDF...');
+        
+        const checkStatus = async () => {
+        try {
+            const response = await API.get(`/workspace/files/${nodeId}/status`);
+            
+            if (response.data.status === 'INDEXED') {
+            Utils.hideLoader();
+            Utils.showToast('PDF processing complete!', 'success');
+            clearInterval(PDFModule.pollingInterval);
+            
+            // Load the processed file
+            const fileResponse = await API.get(`/workspace/files/${nodeId}`);
+            PDFModule.currentPdf = fileResponse.data;
+            PDFModule.showPdfDashboard(PDFModule.currentPdf);
+            } else if (response.data.status === 'FAILED') {
+            Utils.hideLoader();
+            Utils.showToast('PDF processing failed', 'error');
+            clearInterval(PDFModule.pollingInterval);
+            }
+        } catch (error) {
+            console.error('Status check failed:', error);
+        }
+        };
+        
+        await checkStatus();
+        PDFModule.pollingInterval = setInterval(checkStatus, 3000);
+        },
+        pollProcessingStatus: async (nodeId) => {
+            let attempts = 0;
+            const maxAttempts = 60; // 3 minutes max
+            
+            const checkStatus = async () => {
+                try {
+                    const response = await API.get(`/workspace/files/${nodeId}/status`);
+                    
+                    if (response.data.status === 'INDEXED') {
+                        Utils.showToast('PDF processing complete!', 'success');
+                        
+                        // Get full details
+                        const details = await API.get(`/workspace/files/${nodeId}`);
+                        
+                        // Update UI
+                        PDFModule.currentPdf = {
+                            id: nodeId,
+                            name: details.data.name,
+                            pages: details.data.meta.pageCount,
+                            flashcards: 15,
+                            questions: 8,
+                            persona: details.data.persona.generatedName
+                        };
+                        
+                        PDFModule.showPdfDashboard(PDFModule.currentPdf);
+                        
+                    } else if (response.data.status === 'FAILED') {
+                        Utils.showToast('PDF processing failed', 'error');
+                    } else if (attempts < maxAttempts) {
+                        attempts++;
+                        setTimeout(checkStatus, 3000);
+                    }
+                } catch (error) {
+                    console.error('Status check failed:', error);
+                }
+            };
+            
+            setTimeout(checkStatus, 3000);
+        },
+        showPdfDashboard: (pdf) => {
+            document.getElementById('pdfEmptyState').style.display = 'none';
+            const dashboard = document.getElementById('pdfDashboard');
+            dashboard.style.display = 'block';
+            dashboard.classList.add('animate__animated', 'animate__zoomIn');
+            
+            // Update metadata
+            document.getElementById('pdfFileName').textContent = pdf.name;
+            document.getElementById('pdfPageCount').textContent = `${pdf.pages} Pages`;
+            document.getElementById('pdfPersona').textContent = pdf.persona;
+            document.getElementById('flashcardCount').textContent = `${pdf.flashcards} Concepts Generated`;
+            document.getElementById('quizCount').textContent = `${pdf.questions} Practice Questions`;
+            
+            // Generate insights
+            const insightsList = document.getElementById('pdfInsightsList');
+            insightsList.innerHTML = `
+                <li class="animate__animated animate__fadeInRight" style="animation-delay: 0.1s">
+                    The document focuses on <strong>advanced mathematical concepts</strong>.
+                </li>
+                <li class="animate__animated animate__fadeInRight" style="animation-delay: 0.2s">
+                    Key formula: <em>∫f(x)dx = F(x) + C</em> identified on page 4.
+                </li>
+                <li class="animate__animated animate__fadeInRight" style="animation-delay: 0.3s">
+                    Suggested prerequisite: <strong>Calculus I & II</strong>.
+                </li>
+                <li class="animate__animated animate__fadeInRight" style="animation-delay: 0.4s">
+                    Difficulty level: <strong>Advanced Undergraduate</strong>.
+                </li>
+            `;
+        },
+        
+        launchTool: (toolName) => {
+            const toolActions = {
+                flashcards: () => {
+                    FlashcardModule.generateFromPdf(PDFModule.currentPdf);
+                    NavigationModule.navigateTo('flashcards');
+                },
+                summary: () => Utils.showToast('Opening summary view...', 'info'),
+                quiz: () => Utils.showToast('Generating quiz questions...', 'info'),
+                chat: () => {
+                    NavigationModule.navigateTo('tutor');
+                    Utils.showToast('Chat with PDF activated', 'success');
+                }
+            };
+            
+            if (toolActions[toolName]) {
+                toolActions[toolName]();
+            }
+        }
+    };
+
+// ==========================================
 // FLASHCARD MODULE
 // ==========================================
 const FlashcardModule = {
@@ -1246,7 +2404,7 @@ const FlashcardModule = {
       
       Utils.hideLoader();
       
-      FlashcardModule.cards = response.data?.flashcards || [];
+      FlashcardModule.cards = response.data.flashcards;
       FlashcardModule.currentIndex = 0;
       FlashcardModule.renderCard();
       FlashcardModule.updateProgress();
@@ -1326,12 +2484,20 @@ const FlashcardModule = {
 // ==========================================
 const StatsModule = {
     charts: {},
-    
-    init: () => {
-        // Initialize with demo data
-        AppState.stats = Utils.loadFromStorage('scholar_stats', AppState.stats);
-    },
-    
+    init: async () => {
+        try {
+          const response = await API.get('/analytics/dashboard');
+          AppState.stats = {
+            studyHours: response.data.stats.studySessions || 0,
+            quizScore: 0, // Calculate from quiz data
+            retention: 0, // Calculate from activity
+            sessions: response.data.stats.recentActivities || 0,
+            documents: response.data.stats.totalFiles || 0
+          };
+        } catch (error) {
+          console.error('Failed to load stats:', error);
+        }
+      },    
     initCharts: () => {
         if (window.chartsInitialized) return;
         
@@ -1523,117 +2689,56 @@ const StatsModule = {
 // PROGRESS MODULE
 // ==========================================
 const ProgressModule = {
-    init: () => {
-        AppState.tasks = Utils.loadFromStorage('scholar_tasks', [
-            { id: 1, title: 'Complete Calculus Homework', subject: 'Math', due: 'Tomorrow', completed: false },
-            { id: 2, title: 'Read Chapter 5 - Biology', subject: 'Biology', due: 'In 2 days', completed: false },
-            { id: 3, title: 'Prepare for Physics Quiz', subject: 'Physics', due: 'This Friday', completed: false },
-            { id: 4, title: 'Submit Lab Report', subject: 'Chemistry', due: 'Next Monday', completed: true }
-        ]);
-        
-        ProgressModule.renderTimeline();
-        ProgressModule.updateTaskCount();
-    },
-    
-    renderTimeline: () => {
-        const timeline = document.getElementById('progressTimeline');
-        if (!timeline) return;
-        
-        timeline.innerHTML = `
-            <div class="timeline-item completed animate__animated animate__fadeInUp">
-                <div class="timeline-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="timeline-content">
-                    <h4>Introduction to Physics</h4>
-                    <p>Completed on Oct 12 • Score: 95%</p>
-                </div>
-            </div>
-            <div class="timeline-item active animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
-                <div class="timeline-icon pulse">
-                    <i class="fas fa-circle"></i>
-                </div>
-                <div class="timeline-content">
-                    <h4>Advanced Calculus Integration</h4>
-                    <p>In Progress • 3/5 Modules</p>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-fill" style="width: 60%"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="timeline-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
-                <div class="timeline-icon">
-                    <i class="fas fa-lock"></i>
-                </div>
-                <div class="timeline-content">
-                    <h4>Linear Algebra</h4>
-                    <p>Locked • Requires Calculus Completion</p>
-                </div>
-            </div>
-        `;
-    },
-    
+    init: async () => {
+        try {
+          const response = await API.get('/tasks');
+          AppState.tasks = response.data.tasks || [];
+          ProgressModule.renderTimeline();
+          ProgressModule.updateTaskCount();
+        } catch (error) {
+          console.error('Failed to load tasks:', error);
+          AppState.tasks = [];
+          ProgressModule.renderTimeline();
+          ProgressModule.updateTaskCount();
+        }
+      },
     updateTaskCount: () => {
         const pending = AppState.tasks.filter(t => !t.completed).length;
         const textEl = document.getElementById('pendingTasksText');
         if (textEl) {
             textEl.textContent = `${pending} assignment${pending !== 1 ? 's' : ''}`;
         }
-    }
+    },
+    renderTimeline: () => {
+        const timeline = document.getElementById('progressTimeline');
+        if (!timeline) return;
+        
+        if (AppState.tasks.length === 0) {
+          timeline.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-tasks empty-icon"></i>
+              <h3>No Tasks Yet</h3>
+              <p>Create your first task to start tracking your progress!</p>
+              <button class="btn-primary" onclick="NavigationModule.navigateTo('dashboard')" style="margin-top: 1rem;">
+                Get Started
+              </button>
+            </div>
+          `;
+          return;
+        }
+        
+        // Existing timeline rendering code...
+      }
 };
 
-// ==========================================
-// ACTIVITY MODULE
-// ==========================================
-const ActivityModule = {
-    // REPLACE ActivityModule.init
-init: async () => {
-    try {
-      const response = await API.get('/analytics/dashboard');
-      if (response.data.recentActivity) {
-        AppState.activities = response.data.recentActivity;
-        ActivityModule.renderFeed();
-      }
-    } catch (error) {
-      console.error('Failed to load activities:', error);
-    }
-    },
-    
-    renderFeed: () => {
-        const feed = document.getElementById('activityFeed');
-        if (!feed) return;
-        
-        feed.innerHTML = '';
-        
-        AppState.activities.forEach((activity, index) => {
-            const item = document.createElement('div');
-            item.className = 'activity-item animate__animated animate__fadeInUp';
-            item.style.animationDelay = `${index * 0.1}s`;
-            item.innerHTML = `
-                <div class="act-icon" style="color: ${activity.color}">
-                    <i class="fas ${activity.icon}"></i>
-                </div>
-                <div class="act-details">
-                    <h4>${activity.title}</h4>
-                    <span>${Utils.formatDate(activity.time)}</span>
-                </div>
-                <div class="act-score">${activity.score}</div>
-            `;
-            feed.appendChild(item);
-        });
-    }
-};
+
+
 
 // ==========================================
 // APPLICATION INITIALIZATION
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🎓 Scholar.AI - Initializing Application...');
-    
-    // Initialize visual effects
-    CursorEffect.init();
-    ParticleSystem.init();
-    SmoothScroll.init();
     
     // Initialize authentication
     AuthModule.init();
@@ -1644,9 +2749,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize AI Tutor
     AIModule.init();
     
+    // ✅ ADD THESE LINES:
+    // Load initial data if logged in
+    const token = Utils.loadFromStorage('scholar_token');
+    if (token) {
+      initializeSocket(token);
+      PDFModule.loadFiles();
+      NotificationSystem.loadNotifications();
+    }
+    
     console.log('✅ Scholar.AI - Ready');
 });
-
 // ==========================================
 // EXPORT FOR EXTERNAL USE
 // ==========================================
@@ -1661,17 +2774,8 @@ window.ScholarAI = {
     FlashcardModule,
     StatsModule,
     ProgressModule,
-    ActivityModule,
-    API,
-    SocketModule,
-    NotificationSystem,
-    PDFModule,
-    FlashcardModule,
-    ActivityUpdater
+    ActivityModule
 };
-
-// Export AuthModule to global scope for onclick handlers
-window.AuthModule = AuthModule;
 // ==========================================
 // INTERNATIONALIZATION MODULE (i18n)
 // ==========================================
@@ -3067,22 +4171,99 @@ const NoteModule = {
 
 // Initialize all extended modules
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎓 Scholar.AI - Initializing Application...');
+    
+    // ✅ Initialize auth first
+    AuthModule.init();
+    PDFModule.init();
+    AIModule.init();
+    
+    // ✅ Initialize ALL visual effects
     setTimeout(() => {
+        console.log('🎨 Initializing Dynamic Effects...');
+        document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎓 Scholar.AI - Initializing Application...');
+    
+    // ✅ Initialize auth FIRST
+    AuthModule.init();
+    
+    // ✅ Initialize modules
+    PDFModule.init();
+    AIModule.init();
+    
+    // ✅ Initialize visual effects AFTER short delay
+    setTimeout(() => {
+        console.log('🎨 Initializing visual effects...');
+        
+        // Cursor effect
+        CursorEffect.init();
+        
+        // Other effects
+        ParticleSystem.init();
+        SmoothScroll.init();
+        TiltEffect.init();
+        GlowEffect.init();
+        RippleEffect.init();
+        NotificationSystem.init();
+        KeyboardShortcuts.init();
+        LoadingAnimations.init();
+        ActivityUpdater.init();
+        EnhancedAuth.init();
         i18nModule.init();
         GamificationModule.init();
         VoiceCommandModule.init();
         StudyTimerModule.init();
         NoteModule.init();
         
-        console.log('🌍 Internationalization loaded');
-        console.log('🎮 Gamification system initialized');
-        console.log('🎤 Voice commands ready');
-        console.log('⏱️ Study timer loaded');
-        console.log('📝 Note system initialized');
-        console.log('📊 Total lines: 2500+');
-    }, 1200);
+        console.log('✨ All effects loaded!');
+    }, 800);
+    
+    console.log('✅ Scholar.AI - Ready');
 });
-
+        ParticleSystem.init();
+        CursorEffect.init();
+        SmoothScroll.init();
+        TiltEffect.init();
+        GlowEffect.init();
+        RippleEffect.init();
+        NotificationSystem.init();
+        KeyboardShortcuts.init();
+        LoadingAnimations.init();
+        ActivityUpdater.init();
+        EnhancedAuth.init();
+        i18nModule.init();
+        GamificationModule.init();
+        VoiceCommandModule.init();
+        StudyTimerModule.init();
+        NoteModule.init();
+        
+        // Re-initialize on navigation
+        const observer = new MutationObserver(() => {
+            TiltEffect.init();
+            SmoothScroll.init();
+        });
+        
+        const viewContainer = document.getElementById('viewContainer');
+        if (viewContainer) {
+            observer.observe(viewContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
+        
+        console.log('✨ All dynamic effects loaded!');
+    }, 500);  // ✅ Reduced delay for faster load
+    
+    // ✅ Load initial data if logged in
+    const token = Utils.loadFromStorage('scholar_token');
+    if (token) {
+        initializeSocket(token);
+        PDFModule.loadFiles();
+        NotificationSystem.loadNotifications();
+    }
+    
+    console.log('✅ Scholar.AI - Ready');
+});
 // Export extended modules
 window.ScholarAI = {
     ...window.ScholarAI,

@@ -3,18 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Scholar.AI - Your Intelligent Academic Workspace">
     <title>Scholar.AI | Intelligent Academic Workspace</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Animations -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- API Configuration -->
     <script>
-        // API Configuration (loads before other scripts)
         window.API_BASE_URL = 'http://localhost:3000/api/v1';
     </script>
-    <!-- SCHOLAR.AI STYLESHEET - COMPLETE -->
+    
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,85 +41,196 @@
         </div>
     </div>
 
-    <!-- ========== AUTHENTICATION LAYER ========== -->
-    <div id="authLayer" class="auth-layer active">
-        <div class="auth-container">
-            <!-- Login Form -->
-            <div id="loginView" class="auth-card animate__animated animate__fadeIn">
-                <div class="auth-brand">
-                    <div class="brand-icon pulse-glow"><i class="fas fa-layer-group"></i></div>
-                    <h1>Scholar.AI</h1>
-                    <p>Your intelligent academic workspace</p>
-                </div>
-                <form id="loginForm" class="auth-form">
-                    <div class="input-wrapper">
-                        <input type="email" name="email" placeholder="Email" required>
-                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="password" name="password" placeholder="Password" required>
-                        <span class="input-icon"><i class="fas fa-lock"></i></span>
-                    </div>
-                    <div class="auth-extras">
-                        <label class="checkbox-label"><input type="checkbox" id="rememberMe"> Remember Me</label>
-                        <a href="#" class="link-primary" onclick="console.log('Forgot password clicked'); AuthModule.showForgotPassword(); return false;">Forgot Password?</a>
-                    </div>
-                    <button type="submit" class="btn-primary btn-glow full-width">Login</button>
-                </form>
-                <div class="auth-switch">
-                    New to Scholar.AI? <a href="#" class="link-primary" onclick="console.log('Create account clicked'); AuthModule.switchView('signup'); return false;">Create Account</a>
-                </div>
+    <!-- ==================== SPLASH SCREEN ==================== -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <div class="splash-icon">
+                <i class="fas fa-cube"></i>
             </div>
-
-            <!-- Signup Form -->
-            <div id="signupView" class="auth-card animate__animated animate__fadeIn" style="display: none;">
-                <div class="auth-brand">
-                    <div class="brand-icon pulse-glow alt"><i class="fas fa-user-astronaut"></i></div>
-                    <h1>Join Scholar.AI</h1>
-                    <p>Start your intelligent learning journey</p>
-                </div>
-                <form id="signupForm" class="auth-form">
-                    <div class="input-row">
-                        <div class="input-wrapper">
-                            <input type="text" name="firstName" placeholder="First Name" required>
-                        </div>
-                        <div class="input-wrapper">
-                            <input type="text" name="lastName" placeholder="Last Name">
-                        </div>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="email" name="email" placeholder="Email" required>
-                    </div>
-                    <div class="input-wrapper">
-                        <input type="password" name="password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="btn-primary btn-glow full-width">Create Account</button>
-                </form>
-                <div class="auth-switch">
-                    Already have an account? <a href="#" class="link-primary" onclick="AuthModule.switchView('login'); return false;">Sign In</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Animated Background -->
-        <div class="auth-bg">
-            <div class="bg-orb orb-1"></div>
-            <div class="bg-orb orb-2"></div>
-            <div class="glass-float float-1">
-                <i class="fas fa-brain"></i>
-                <span>AI Models Ready</span>
-            </div>
-            <div class="glass-float float-2">
-                <i class="fas fa-chart-line"></i>
-                <span>Analytics Live</span>
+            <h1 class="splash-title">Scholar.AI</h1>
+            <p class="splash-subtitle">Your Intelligent Academic Workspace</p>
+            <div class="splash-loader">
+                <div class="loader-bar"></div>
             </div>
         </div>
     </div>
 
-    <!-- ========== APPLICATION LAYER ========== -->
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div id="loginContainer" class="auth-container" style="display:none;">
+        <div class="auth-background">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+        </div>
+        
+        <div class="auth-box animate__animated animate__fadeIn">
+            <div class="auth-logo">
+                <i class="fas fa-cube"></i>
+            </div>
+            <h2>Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to continue your learning journey</p>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="your@email.com" required autocomplete="email">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+                </div>
+                
+                <div class="auth-extras">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a class="link-primary" id="showForgotPassword">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-glow full-width" id="signupSubmitBtn">                    <span>Sign In</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <div class="auth-divider"><span>or</span></div>
+            
+            <p class="auth-link">
+                Don't have an account? 
+                <a id="goToSignup" class="link-primary">Create one now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ==================== SIGNUP SCREEN ==================== -->
+    <div id="signupContainer" class="auth-container" style="display:none;">
+        <div class="auth-background">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+        </div>
+        
+        <div class="auth-box animate__animated animate__fadeIn">
+            <div class="auth-logo">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Create Account</h2>
+            <p class="auth-subtitle">Join Scholar.AI and start learning smarter</p>
+            
+            <form id="signupForm" class="auth-form">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="signupFirstName" placeholder="John" required autocomplete="given-name">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <div class="input-field">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="signupLastName" placeholder="Doe" required autocomplete="family-name">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="your@email.com" required autocomplete="email">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="••••••••" required autocomplete="new-password">
+                        <span class="password-strength" id="passwordStrength"></span>
+                    </div>
+                    <small class="input-hint">At least 8 characters</small>
+                </div>
+                
+                <div class="input-group">
+                    <label>Education Level</label>
+                    <div class="input-field">
+                        <i class="fas fa-graduation-cap"></i>
+                        <select id="signupEducation" required>
+                            <option value="">Select level</option>
+                            <option value="high-school">High School</option>
+                            <option value="undergraduate">Undergraduate</option>
+                            <option value="graduate">Graduate</option>
+                            <option value="phd">PhD/Doctorate</option>
+                            <option value="professional">Professional</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-glow full-width">
+                    <span>Create Account</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <div class="auth-divider"><span>or</span></div>
+            
+            <p class="auth-link">
+                Already have an account? 
+                <a id="goToLogin" class="link-primary">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ==================== FORGOT PASSWORD MODAL ==================== -->
+    <div id="forgotPasswordModal" class="modal-overlay forgot-password-modal" style="display:none;">
+        <div class="modal-card modal-small animate__animated animate__zoomIn">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button class="btn-close" id="closeForgotPassword">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="modal-description">
+                    Enter your email address and we'll send you instructions to reset your password.
+                </p>
+                
+                <form id="forgotPasswordForm">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <div class="input-field">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="forgotEmail" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-text" id="cancelForgotPassword">Cancel</button>
+                <button class="btn-primary" id="submitForgotPassword">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Send Reset Link</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== APPLICATION LAYER ==================== -->
     <div id="appLayer" class="app-container" style="display: none;">
         
-        <!-- SIDEBAR NAVIGATION -->
+        <!-- ==================== SIDEBAR ==================== -->
         <aside id="sidebar" class="sidebar">
             <div class="sidebar-brand">
                 <div class="brand-logo"><i class="fas fa-cube"></i></div>
@@ -115,7 +238,7 @@
             </div>
 
             <nav class="sidebar-nav">
-                <!-- Main Menu -->
+                <!-- Main Workspace -->
                 <div class="nav-section">
                     <label class="nav-label">WORKSPACE</label>
                     <a href="#" class="nav-link active" data-view="dashboard">
@@ -157,12 +280,11 @@
                 <div class="nav-section">
                     <div class="nav-label-header">
                         <label class="nav-label">MY CLASSES</label>
-                        <button class="btn-add" onclick="ClassModule.openModal()" title="Create New Class">
-                            <i class="fas fa-plus"></i>
+                        <button class="btn-add" id="btnCreateClass" title="Create New Class">                            <i class="fas fa-plus"></i>
                         </button>
                     </div>
                     <div id="classListContainer">
-                        <!-- Dynamic class list will be injected here -->
+                        <!-- Dynamic class list injected by JS -->
                     </div>
                 </div>
             </nav>
@@ -171,7 +293,7 @@
             <div class="sidebar-footer">
                 <div class="user-profile" onclick="NavigationModule.navigateTo('profile')">
                     <div class="avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b" alt="User">
+                        <img src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b" alt="User Avatar" id="sidebarAvatar">
                         <span class="status-indicator online"></span>
                     </div>
                     <div class="user-info">
@@ -185,7 +307,7 @@
             </div>
         </aside>
 
-        <!-- MAIN CONTENT AREA -->
+        <!-- ==================== MAIN CONTENT ==================== -->
         <main class="main-content">
             <!-- Top Bar -->
             <header class="topbar">
@@ -205,9 +327,9 @@
                         <input type="text" placeholder="Deep Search..." id="globalSearch">
                         <kbd class="kbd-hint">⌘K</kbd>
                     </div>
-                    <button class="btn-icon" title="Notifications">
+                    <button class="btn-icon" title="Notifications" onclick="NotificationSystem.togglePanel()">
                         <i class="fas fa-bell"></i>
-                        <span class="notification-dot">3</span>
+                        <span class="notification-dot" style="display: none;">0</span>
                     </button>
                     <button class="btn-icon" onclick="AuthModule.logout()" title="Logout">
                         <i class="fas fa-power-off"></i>
@@ -218,19 +340,19 @@
             <!-- View Container -->
             <div class="view-container" id="viewContainer">
                 
-                <!-- ========== DASHBOARD VIEW ========== -->
+                <!-- ==================== DASHBOARD VIEW ==================== -->
                 <div id="view-dashboard" class="view active animate__animated animate__fadeIn">
                     <div class="hero-section">
                         <div class="hero-content">
-                            <h1>Ready to learn, <span class="text-gradient">Student?</span></h1>
-                            <p>Your AI Tutor has prepared 3 summaries and 2 quizzes based on your recent activity.</p>
+                            <h1>Ready to learn, <span class="text-gradient" id="heroUserName">Student</span>?</h1>
+                            <p id="heroSubtitle">Your AI Tutor is ready to help you master any subject.</p>
                             <div class="hero-actions">
                                 <button class="btn-white" onclick="NavigationModule.navigateTo('tutor')">
                                     <i class="fas fa-play"></i>
-                                    Resume Session
+                                    Start Learning
                                 </button>
                                 <button class="btn-glass" onclick="NavigationModule.navigateTo('pdfhub')">
-                                    Upload New PDF
+                                    Upload PDF
                                 </button>
                             </div>
                         </div>
@@ -254,8 +376,8 @@
                             <div class="card-icon icon-blue">
                                 <i class="fas fa-file-alt"></i>
                             </div>
-                            <h3>PDF Summarizer</h3>
-                            <p>Turn lecture notes into interactive flashcards</p>
+                            <h3>PDF Intelligence</h3>
+                            <p>Turn lecture notes into interactive study materials</p>
                             <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
                         </div>
                         <div class="feature-card hover-lift" onclick="NavigationModule.navigateTo('progress')">
@@ -263,7 +385,7 @@
                                 <i class="fas fa-check-double"></i>
                             </div>
                             <h3>Progress Tracker</h3>
-                            <p><span id="pendingTasksText">4 assignments</span> awaiting completion</p>
+                            <p><span id="pendingTasksText">Track your assignments</span></p>
                             <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
                         </div>
                     </div>
@@ -279,7 +401,7 @@
                     </div>
                 </div>
 
-                <!-- ========== AI TUTOR VIEW ========== -->
+                <!-- ==================== AI TUTOR VIEW ==================== -->
                 <div id="view-tutor" class="view" style="display: none;">
                     <div class="tutor-container">
                         <div class="tutor-sidebar">
@@ -299,10 +421,9 @@
                                 <div class="model-selector">
                                     <i class="fas fa-microchip"></i>
                                     <select id="aiModelSelector" onchange="AIModule.changeModel(this.value)">
-                                        <option value="scholar-pro">Scholar Pro (Recommended)</option>
-                                        <option value="gpt-4">GPT-4 Turbo</option>
-                                        <option value="claude-3">Claude 3.5 Sonnet</option>
-                                        <option value="mistral">Mistral Large</option>
+                                        <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
+                                        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                                        <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
                                     </select>
                                 </div>
                                 <div class="tool-chips">
@@ -349,7 +470,7 @@
                     </div>
                 </div>
 
-                <!-- ========== PDF HUB VIEW ========== -->
+                <!-- ==================== PDF HUB VIEW ==================== -->
                 <div id="view-pdfhub" class="view" style="display: none;">
                     <div class="view-header">
                         <div class="header-info">
@@ -377,6 +498,14 @@
                             <div class="pdf-file-info">
                                 <h3 id="pdfFileName">Document.pdf</h3>
                                 <div class="pdf-tags">
+                                    <div id="pdfProcessingProgress" style="display: none; margin-top: 1rem;">
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar-fill" id="pdfProgressBar" style="width: 0%"></div>
+                                        </div>
+                                        <p style="text-align: center; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                                            Processing: <span id="pdfProgressText">0%</span>
+                                        </p>
+                                    </div>
                                     <span class="tag tag-success">Processed</span>
                                     <span class="tag" id="pdfPageCount">0 Pages</span>
                                     <span class="tag tag-persona">
@@ -443,7 +572,7 @@
                     </div>
                 </div>
 
-                <!-- ========== FLASHCARDS VIEW ========== -->
+                <!-- ==================== FLASHCARDS VIEW ==================== -->
                 <div id="view-flashcards" class="view" style="display: none;">
                     <div class="flashcard-container">
                         <div class="flashcard-header">
@@ -457,12 +586,12 @@
                         </div>
 
                         <div id="flashcardDeck" class="flashcard-deck">
-                            <div class="flashcard" id="activeFlashcard">
+                            <div class="flashcard" id="activeFlashcard" onclick="FlashcardModule.flipCard()">
                                 <div class="flashcard-inner">
                                     <div class="flashcard-front">
                                         <div class="card-label">QUESTION</div>
                                         <div class="card-content" id="flashcardQuestion">
-                                            Click "Start Session" to begin
+                                            Click "Generate Flashcards" from PDF Hub to begin
                                         </div>
                                     </div>
                                     <div class="flashcard-back">
@@ -496,7 +625,7 @@
                     </div>
                 </div>
 
-                <!-- ========== ANALYTICS VIEW ========== -->
+                <!-- ==================== ANALYTICS VIEW ==================== -->
                 <div id="view-stats" class="view" style="display: none;">
                     <div class="view-header">
                         <h2>Performance Analytics</h2>
@@ -510,7 +639,7 @@
                     <div class="stats-grid">
                         <div class="chart-card card-wide">
                             <div class="card-header">
-                                <h3><i class="fas fa-wave-square"></i> Capability Sixpack Report</h3>
+                                <h3><i class="fas fa-wave-square"></i> Performance Over Time</h3>
                                 <button class="btn-icon-sm" title="Export Data">
                                     <i class="fas fa-download"></i>
                                 </button>
@@ -532,28 +661,28 @@
                         <div class="metrics-grid">
                             <div class="metric-card">
                                 <span class="metric-label">Study Sessions</span>
-                                <span class="metric-value" id="metricSessions">142</span>
+                                <span class="metric-value" id="metricSessions">0</span>
                                 <span class="metric-trend trend-up">
                                     <i class="fas fa-arrow-up"></i> 12%
                                 </span>
                             </div>
                             <div class="metric-card">
                                 <span class="metric-label">Avg. Quiz Score</span>
-                                <span class="metric-value" id="metricQuizScore">88%</span>
+                                <span class="metric-value" id="metricQuizScore">0%</span>
                                 <span class="metric-trend trend-up">
                                     <i class="fas fa-arrow-up"></i> 4%
                                 </span>
                             </div>
                             <div class="metric-card">
                                 <span class="metric-label">Documents</span>
-                                <span class="metric-value" id="metricDocs">24</span>
+                                <span class="metric-value" id="metricDocs">0</span>
                                 <span class="metric-trend trend-neutral">—</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ========== PROGRESS VIEW ========== -->
+                <!-- ==================== PROGRESS VIEW ==================== -->
                 <div id="view-progress" class="view" style="display: none;">
                     <h2 class="section-title">Learning Roadmap</h2>
                     <div id="progressTimeline" class="timeline">
@@ -561,14 +690,14 @@
                     </div>
                 </div>
 
-                <!-- ========== PROFILE VIEW ========== -->
+                <!-- ==================== PROFILE VIEW ==================== -->
                 <div id="view-profile" class="view" style="display: none;">
                     <div class="profile-card">
                         <div class="profile-banner"></div>
                         <div class="profile-content">
                             <div class="profile-avatar-section">
                                 <div class="profile-avatar">
-                                    <img src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b&size=128" alt="Profile">
+                                    <img src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b&size=128" alt="Profile" id="profileAvatar">
                                     <button class="avatar-edit-btn">
                                         <i class="fas fa-camera"></i>
                                     </button>
@@ -620,7 +749,7 @@
                     </div>
                 </div>
 
-                <!-- ========== SETTINGS VIEW ========== -->
+                <!-- ==================== SETTINGS VIEW ==================== -->
                 <div id="view-settings" class="view" style="display: none;">
                     <h2 class="section-title">System Preferences</h2>
                     <div class="settings-panel">
@@ -658,7 +787,7 @@
                     </div>
                 </div>
 
-                <!-- ========== CLASS VIEW TEMPLATE ========== -->
+                <!-- ==================== CLASS VIEW TEMPLATE ==================== -->
                 <div id="view-class-template" class="view" style="display: none;">
                     <div class="class-hero">
                         <div class="class-hero-content">
@@ -666,25 +795,25 @@
                             <p id="classDescription">Class Description</p>
                         </div>
                         <div class="class-hero-actions">
-                            <button class="btn-glass">
+                            <button class="btn-glass btn-invite">
                                 <i class="fas fa-user-plus"></i> Invite
                             </button>
-                            <button class="btn-white">
+                            <button class="btn-white btn-new-material">
                                 <i class="fas fa-plus"></i> New Material
                             </button>
                         </div>
                     </div>
 
                     <div class="class-tabs">
-                        <button class="class-tab active">Stream</button>
-                        <button class="class-tab">Classwork</button>
-                        <button class="class-tab">People</button>
-                        <button class="class-tab">Grades</button>
+                        <button class="class-tab active" data-tab="stream">Stream</button>
+                        <button class="class-tab" data-tab="classwork">Classwork</button>
+                        <button class="class-tab" data-tab="people">People</button>
+                        <button class="class-tab" data-tab="grades">Grades</button>
                     </div>
 
                     <div class="class-stream">
                         <div class="stream-composer">
-                            <img src="https://ui-avatars.com/api/?name=User&background=00ed64&color=001e2b" class="composer-avatar">
+                            <img src="https://ui-avatars.com/api/?name=User&background=00ed64&color=001e2b" class="composer-avatar" alt="User">
                             <input type="text" placeholder="Announce something to your class...">
                         </div>
                         
@@ -700,8 +829,8 @@
         </main>
     </div>
 
-    <!-- ========== CLASS CREATION MODAL ========== -->
-    <div id="createClassModal" class="modal-overlay">
+    <!-- ==================== CLASS CREATION MODAL ==================== -->
+    <div id="createClassModal" class="modal-overlay" style="display: none;">
         <div class="modal-card animate__animated animate__zoomIn">
             <div class="modal-header">
                 <h3>Create New Class</h3>
@@ -735,82 +864,10 @@
         </div>
     </div>
 
-    <!-- ========== FORGOT PASSWORD MODAL ========== -->
-    <div id="forgotPasswordModal" class="modal-overlay forgot-password-modal">
-        <div class="modal-card animate__animated animate__zoomIn">
-            <div class="modal-header">
-                <h3>Reset Password</h3>
-                <button class="btn-close" onclick="AuthModule.closeForgotPasswordModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Enter your email address and we'll send you a link to reset your password.</p>
-                <div class="form-group">
-                    <label for="resetEmail">Email</label>
-                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-text" onclick="AuthModule.closeForgotPasswordModal()">Cancel</button>
-                <button class="btn-primary" onclick="AuthModule.resetPassword()">Send Reset Link</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- External Stylesheet (for separation) -->
-    <link rel="stylesheet" href="style.css">
-    <!-- ADD THIS to index.html before script.js -->
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    
     <!-- Main Application Script -->
     <script src="script.js"></script>
 </body>
 </html>
-
-scholar-ai-backend/
-├── src/
-│   ├── config/
-│   │   ├── database.config.ts
-│   │   ├── openrouter.config.ts
-│   │   ├── redis.config.ts
-│   │   └── constants.ts
-│   ├── models/
-│   │   ├── User.model.ts
-│   │   ├── KnowledgeNode.model.ts
-│   │   ├── VectorChunk.model.ts
-│   │   ├── StudyPlan.model.ts
-│   │   └── ChatSession.model.ts
-│   ├── services/
-│   │   ├── ingestion.service.ts
-│   │   ├── vectorization.service.ts
-│   │   ├── chat.service.ts
-│   │   ├── persona.service.ts
-│   │   ├── planner.service.ts
-│   │   └── analytics.service.ts
-│   ├── workers/
-│   │   ├── pdf.worker.ts
-│   │   └── queue.config.ts
-│   ├── controllers/
-│   │   ├── auth.controller.ts
-│   │   ├── workspace.controller.ts
-│   │   ├── intelligence.controller.ts
-│   │   └── analytics.controller.ts
-│   ├── middleware/
-│   │   ├── auth.middleware.ts
-│   │   ├── rateLimiter.middleware.ts
-│   │   ├── validator.middleware.ts
-│   │   └── error.middleware.ts
-│   ├── routes/
-│   │   ├── index.ts
-│   │   ├── auth.routes.ts
-│   │   ├── workspace.routes.ts
-│   │   └── intelligence.routes.ts
-│   ├── utils/
-│   │   ├── AppError.ts
-│   │   ├── logger.ts
-│   │   └── helpers.ts
-│   └── app.ts
-├── package.json
-├── tsconfig.json
-├── .env.example
-└── README.md

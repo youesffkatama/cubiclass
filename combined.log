@@ -350,3 +350,192 @@
 {"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:49:08.020Z"}
 {"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:49:08.020Z"}
 {"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:49:09.011Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T21:46:11.410Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T21:46:12.595Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T21:46:13.351Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T21:46:13.779Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T21:46:13.780Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T21:46:13.780Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T21:46:13.781Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T21:46:13.781Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T21:46:13.781Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T21:46:13.781Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:49:57.578Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:49:57.931Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T23:50:07.889Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-06T23:50:08.008Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:09.051Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:09.226Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:50:09.226Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T23:50:09.228Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:50:09.229Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:50:09.229Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:50:09.229Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:50:09.230Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:50:09.230Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:50:10.171Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:13.656Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:13.873Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:42.463Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:42.614Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:50:42.615Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T23:50:42.616Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:50:42.617Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:50:42.617Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:50:42.617Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:50:42.617Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:50:42.617Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:50:43.528Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:48.660Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:48.813Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:51:41.240Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:51:41.426Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:51:41.427Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:51:41.429Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:51:41.430Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:51:41.430Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:51:41.430Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:51:41.430Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:51:41.430Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:51:42.353Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:52:19.182Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:52:19.360Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:52:19.361Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:52:19.362Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:52:19.363Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:52:19.363Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:52:19.363Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:52:19.363Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:52:19.364Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:52:20.395Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:52:42.093Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:52:42.289Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:52:42.289Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:52:42.291Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:52:42.291Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:52:42.291Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:52:42.292Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:52:42.292Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:52:42.292Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:52:43.203Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:53:37.355Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:53:37.542Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:53:37.543Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:53:37.544Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:53:37.545Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:53:37.545Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:53:37.545Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:53:37.545Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:53:37.546Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:53:38.455Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T23:53:46.307Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-06T23:53:46.523Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:53:47.419Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:53:47.590Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:53:47.591Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:53:47.592Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:53:47.593Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:53:47.593Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:53:47.593Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:53:47.593Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:53:47.594Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:53:48.499Z"}
+{"level":"error","message":"Registration error: secretOrPrivateKey must have a value","stack":"Error: secretOrPrivateKey must have a value\n    at module.exports [as sign] (/workspaces/cubiclass/node_modules/jsonwebtoken/sign.js:111:20)\n    at generateTokens (/workspaces/cubiclass/server.js:647:29)\n    at /workspaces/cubiclass/server.js:971:43\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)","timestamp":"2026-01-06T23:55:11.014Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:38:58.438Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:38:58.859Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:38:58.860Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:38:58.862Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:38:58.862Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:38:58.862Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:38:58.863Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:38:58.863Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:38:58.863Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:38:59.642Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:39:33.122Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:39:33.276Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:39:33.277Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:39:33.279Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:39:33.279Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:39:33.279Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:39:33.279Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:39:33.280Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:39:33.280Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:39:34.216Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:39:56.157Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:39:56.474Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:39:56.475Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:39:56.477Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:39:56.477Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:39:56.477Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:39:56.477Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:39:56.477Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:39:56.478Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:39:57.231Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-07T00:39:58.348Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-07T00:39:59.835Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:50:21.697Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:50:21.882Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:50:21.883Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:50:21.885Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:50:21.885Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:50:21.885Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:50:21.885Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:50:21.886Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:50:21.886Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:50:22.807Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:00:02.303Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:00:02.544Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:00:52.735Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:00:52.932Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T01:00:52.933Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T01:00:52.935Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T01:00:52.935Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T01:00:52.936Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T01:00:52.936Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T01:00:52.936Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T01:00:52.936Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T01:00:53.847Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:01:29.995Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:01:30.165Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T01:01:30.166Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T01:01:30.168Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T01:01:30.168Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T01:01:30.168Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T01:01:30.168Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T01:01:30.169Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T01:01:30.169Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T01:01:31.065Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-07T01:01:38.876Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-07T01:01:39.085Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:35:36.057Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:35:36.241Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T01:35:36.242Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T01:35:36.244Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T01:35:36.244Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T01:35:36.244Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T01:35:36.244Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T01:35:36.245Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T01:35:36.245Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T01:35:37.263Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:55:52.791Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:55:53.194Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T17:49:31.002Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T17:49:31.376Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T17:49:31.377Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T17:49:31.378Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T17:49:31.378Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T17:49:31.379Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T17:49:31.379Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T17:49:31.379Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T17:49:31.379Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T17:49:32.291Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T19:23:43.577Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T19:23:44.270Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T19:23:44.275Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T19:23:44.277Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T19:23:44.278Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T19:23:44.278Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T19:23:44.279Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T19:23:44.279Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T19:23:44.279Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T19:23:44.999Z"}
