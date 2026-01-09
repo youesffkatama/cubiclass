@@ -33,10 +33,23 @@ const AppState = {
 // ==========================================
 // In script.js
 
+/**
+ * ==========================================
+ * SCHOLAR.AI - PRODUCTION SPA ENGINE
+ * ==========================================
+ */
+
+// ==========================================
+// API CONFIGURATION - MUST BE FIRST!
+// ==========================================
 const API_CONFIG = {
-    baseURL: 'http://localhost:3000/api/v1',
-    timeout: 5000 // Reduced to 5 seconds for faster feedback
+    baseURL: window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev')
+        ? 'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev/api/v1'
+        : 'http://localhost:3000/api/v1',
+    timeout: 30000 // 30 seconds
 };
+
+console.log('✅ API_CONFIG loaded:', API_CONFIG);
 
 const API = {
     async request(endpoint, options = {}) {
@@ -57,7 +70,7 @@ const API = {
         };
 
         try {
-            console.log('📡 API Request:', endpoint, options.method || 'GET');
+            console.log('📡 API Request:', url, options.method || 'GET');
             
             const response = await fetch(url, config);
             clearTimeout(id);
@@ -94,25 +107,6 @@ const API = {
     },
     patch(endpoint, body) { return this.request(endpoint, { method: 'PATCH', body: JSON.stringify(body) }); },
     delete(endpoint) { return this.request(endpoint, { method: 'DELETE' }); },
-    
-    async upload(endpoint, formData) {
-        const url = `${API_CONFIG.baseURL}${endpoint}`;
-        const token = Utils.loadFromStorage('scholar_token');
-        
-        console.log('📤 Upload to:', url);
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { ...(token && { 'Authorization': `Bearer ${token}` }) },
-            body: formData
-        });
-        
-        const data = await response.json();
-        console.log('📡 Upload Response:', response.status, data);
-        
-        if (!response.ok) throw new Error(data.error?.message || 'Upload failed');
-        return data;
-    }
 };
 
 // In loadSavedSession():
@@ -1504,360 +1498,313 @@ const Utils = {
 
 // In script.js - Replace AuthModule.init with this:
 
+// ==========================================
+// AUTHENTICATION MODULE - FIXED
+// ==========================================
 const AuthModule = {
-    // In script.js inside AuthModule
-
     init: async () => {
         console.log('🚀 AuthModule initializing...');
+        
+        // Wait for DOM
+        if (document.readyState === 'loading') {
+            await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+        }
+        
         const splash = document.getElementById('splashScreen');
         const loginContainer = document.getElementById('loginContainer');
         const signupContainer = document.getElementById('signupContainer');
         const appLayer = document.getElementById('appLayer');
-    
-        // ✅ Bind events FIRST
+        
+        // Bind events immediately
         AuthModule.bindEvents();
-    
-        // ✅ Hide splash after 1.5 seconds
+        
+        // Hide splash and check session
         setTimeout(async () => {
             try {
                 const token = Utils.loadFromStorage('scholar_token');
-    
+                
                 if (token) {
                     console.log('🔍 Verifying session...');
+                    const response = await API.get('/auth/me');
+                    AppState.user = response.data.user;
                     
-                    try {
-                        const response = await API.get('/auth/me');
-                        AppState.user = response.data.user;
-    
-                        console.log('✅ Session valid, loading app...');
-                        
-                        if (typeof initializeSocket === 'function') {
-                            initializeSocket(token);
-                        }
-    
-                        PDFModule.loadFiles();
-                        NotificationSystem.loadNotifications();
-                        AuthModule.loadApp();
-                        
-                    } catch (error) {
-                        console.log('❌ Session invalid');
-                        throw error;
+                    if (typeof initializeSocket === 'function') {
+                        initializeSocket(token);
                     }
+                    
+                    AuthModule.loadApp();
                 } else {
-                    throw new Error('No session found');
+                    throw new Error('No session');
                 }
-    
             } catch (error) {
                 console.log('ℹ️ Showing login screen');
-                
                 localStorage.removeItem('scholar_token');
                 localStorage.removeItem('currentUser');
                 AppState.user = null;
-    
-                // ✅ Show login screen
+                
                 if (appLayer) appLayer.style.display = 'none';
                 if (signupContainer) signupContainer.style.display = 'none';
                 if (loginContainer) {
                     loginContainer.style.display = 'flex';
+                    loginContainer.classList.add('show');
                 }
             } finally {
-                // ✅ ALWAYS hide splash
                 if (splash) {
                     splash.style.opacity = '0';
-                    setTimeout(() => {
-                        splash.style.display = 'none';
-                    }, 500);
+                    setTimeout(() => splash.style.display = 'none', 500);
                 }
             }
         }, 1500);
     },
-        // ... rest of AuthModule  
-        bindEvents: () => {
-            // ✅ Login form
+    
+    bindEvents: () => {
+        console.log('🔗 Binding events...');
+        
+        // Wait a moment for DOM
+        setTimeout(() => {
+            // LOGIN FORM
             const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.removeEventListener('submit', AuthModule.handleLogin); // Remove old listener
-                loginForm.addEventListener('submit', AuthModule.handleLogin);
+            const loginBtn = document.querySelector('#loginForm button[type="submit"]');
+            
+            if (!loginForm) {
+                console.error('❌ Login form not found!');
+                return;
             }
             
-            // ✅ Signup form
+            console.log('✅ Login form found:', loginForm);
+            console.log('✅ Login button found:', loginBtn);
+            
+            // Remove old listeners
+            const newLoginForm = loginForm.cloneNode(true);
+            loginForm.parentNode.replaceChild(newLoginForm, loginForm);
+            
+            // Add new listener
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                console.log('🔥 LOGIN FORM SUBMITTED!');
+                AuthModule.handleLogin(e);
+            }, true);
+            
+            // Also bind to button directly
+            const loginButton = document.querySelector('#loginForm button[type="submit"]');
+            if (loginButton) {
+                loginButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔥 LOGIN BUTTON CLICKED!');
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                }, true);
+            }
+            
+            // SIGNUP FORM
             const signupForm = document.getElementById('signupForm');
-            if (signupForm) {
-                signupForm.removeEventListener('submit', AuthModule.handleSignup);
-                signupForm.addEventListener('submit', AuthModule.handleSignup);
+            const signupBtn = document.querySelector('#signupForm button[type="submit"]');
+            
+            if (!signupForm) {
+                console.error('❌ Signup form not found!');
+                return;
             }
             
-            // ✅ Navigation between forms
+            console.log('✅ Signup form found:', signupForm);
+            console.log('✅ Signup button found:', signupBtn);
+            
+            // Remove old listeners
+            const newSignupForm = signupForm.cloneNode(true);
+            signupForm.parentNode.replaceChild(newSignupForm, signupForm);
+            
+            // Add new listener
+            document.getElementById('signupForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                console.log('🔥 SIGNUP FORM SUBMITTED!');
+                AuthModule.handleSignup(e);
+            }, true);
+            
+            // Also bind to button directly
+            const signupButton = document.querySelector('#signupForm button[type="submit"]');
+            if (signupButton) {
+                signupButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔥 SIGNUP BUTTON CLICKED!');
+                    document.getElementById('signupForm').dispatchEvent(new Event('submit'));
+                }, true);
+            }
+            
+            // Navigation
             const goToSignup = document.getElementById('goToSignup');
+            const goToLogin = document.getElementById('goToLogin');
+            
             if (goToSignup) {
                 goToSignup.addEventListener('click', (e) => {
                     e.preventDefault();
+                    console.log('🔄 Switching to signup');
                     document.getElementById('loginContainer').style.display = 'none';
                     document.getElementById('signupContainer').style.display = 'flex';
+                    document.getElementById('signupContainer').classList.add('show');
                 });
             }
             
-            const goToLogin = document.getElementById('goToLogin');
             if (goToLogin) {
                 goToLogin.addEventListener('click', (e) => {
                     e.preventDefault();
+                    console.log('🔄 Switching to login');
                     document.getElementById('signupContainer').style.display = 'none';
                     document.getElementById('loginContainer').style.display = 'flex';
+                    document.getElementById('loginContainer').classList.add('show');
                 });
             }
             
-            // ✅ Forgot password
-            const showForgotPassword = document.getElementById('showForgotPassword');
-            if (showForgotPassword) {
-                showForgotPassword.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.getElementById('forgotPasswordModal').style.display = 'flex';
-                });
-            }
-            
-            const closeForgotPassword = document.getElementById('closeForgotPassword');
-            if (closeForgotPassword) {
-                closeForgotPassword.addEventListener('click', () => {
-                    document.getElementById('forgotPasswordModal').style.display = 'none';
-                });
-            }
-            
-            const cancelForgotPassword = document.getElementById('cancelForgotPassword');
-            if (cancelForgotPassword) {
-                cancelForgotPassword.addEventListener('click', () => {
-                    document.getElementById('forgotPasswordModal').style.display = 'none';
-                });
-            }
-            
-            const submitForgotPassword = document.getElementById('submitForgotPassword');
-            if (submitForgotPassword) {
-                submitForgotPassword.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    AuthModule.handleForgotPassword();
-                });
-            }
-            
-            // ✅ Password strength
-            const passwordInput = document.getElementById('signupPassword');
-            if (passwordInput) {
-                passwordInput.addEventListener('input', AuthModule.checkPasswordStrength);
-            }
-            
-            // ✅ Close modal on outside click
-            const forgotModal = document.getElementById('forgotPasswordModal');
-            if (forgotModal) {
-                forgotModal.addEventListener('click', (e) => {
-                    if (e.target.id === 'forgotPasswordModal') {
-                        e.target.style.display = 'none';
-                    }
-                });
-            }
-            
-            console.log('✅ Auth events bound');
-        },
+            console.log('✅ All events bound');
+        }, 200);
+    },
+    
+    handleLogin: async (e) => {
+        console.log('🔐 HANDLE LOGIN CALLED');
 
-        handleLogin: async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalHTML = btn.innerHTML;
-            
+        try {
+            const email = document.getElementById('loginEmail')?.value?.trim();
+            const password = document.getElementById('loginPassword')?.value;
+
+            console.log('📧 Credentials:', { email, passwordLength: password?.length });
+
             if (!email || !password) {
                 Utils.showToast('Please enter email and password', 'error');
                 return;
             }
-            
+
+            const btn = document.querySelector('#loginForm button[type="submit"]');
+            const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
             btn.disabled = true;
-            
-            try {
-                const response = await API.post('/auth/login', { email, password });
-                
-                Utils.saveToStorage('scholar_token', response.data.tokens.accessToken);
-                Utils.saveToStorage('currentUser', JSON.stringify(response.data.user));
-                AppState.user = response.data.user;
-                
-                initializeSocket(response.data.tokens.accessToken);
-                
-                Utils.showToast('Welcome back to Scholar.AI!', 'success');
-                
-                // ✅ Hide login, load app
-                document.getElementById('loginContainer').style.display = 'none';
-                AuthModule.loadApp();
-                
-            } catch (error) {
-                console.error('Login error:', error);
-                Utils.showToast(error.message || 'Login failed. Please try again.', 'error');
-                btn.innerHTML = originalHTML;
+
+            console.log('🚀 Sending login request via API');
+
+            // ✅ USE API.post instead of direct fetch
+            const data = await API.post('/auth/login', { email, password });
+
+            console.log('📦 Login response:', data);
+
+            Utils.saveToStorage('scholar_token', data.data.tokens.accessToken);
+            Utils.saveToStorage('currentUser', JSON.stringify(data.data.user));
+            AppState.user = data.data.user;
+
+            Utils.showToast('Welcome back!', 'success');
+
+            document.getElementById('loginContainer').style.display = 'none';
+            AuthModule.loadApp();
+
+        } catch (error) {
+            console.error('❌ Login error:', error);
+            Utils.showToast(error.message || 'Login failed', 'error');
+            const btn = document.querySelector('#loginForm button[type="submit"]');
+            if (btn) {
+                btn.innerHTML = '<span>Sign In</span><i class="fas fa-arrow-right"></i>';
                 btn.disabled = false;
             }
-        },
-  handleSignup: async (e) => {
-    e.preventDefault();
+        }
+    },
     
-    const firstName = document.getElementById('signupFirstName').value.trim();
-    const lastName = document.getElementById('signupLastName').value.trim();
-    const email = document.getElementById('signupEmail').value.trim();
-    const password = document.getElementById('signupPassword').value;
-    const education = document.getElementById('signupEducation').value;
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalHTML = btn.innerHTML;
-    
-    // ✅ Validation
-    if (!firstName || !lastName || !email || !password || !education) {
-        Utils.showToast('Please fill in all fields', 'error');
-        return;
-    }
-    
-    if (password.length < 8) {
-        Utils.showToast('Password must be at least 8 characters', 'error');
-        return;
-    }
-    
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
-    btn.disabled = true;
-    
-    try {
-        const username = `${firstName.toLowerCase()}${Math.floor(Math.random() * 10000)}`;
-        
-        const response = await API.post('/auth/register', {
-            username,
-            email,
-            password,
-            profile: { firstName, lastName },
-            educationLevel: education
-        });
-        
-        Utils.saveToStorage('scholar_token', response.data.tokens.accessToken);
-        Utils.saveToStorage('currentUser', JSON.stringify(response.data.user));
-        AppState.user = response.data.user;
-        
-        initializeSocket(response.data.tokens.accessToken);
-        
-        Utils.showToast('Account created successfully!', 'success');
-        
-        // ✅ Hide signup, load app
-        document.getElementById('signupContainer').style.display = 'none';
-        AuthModule.loadApp();
-        
-    } catch (error) {
-        console.error('Signup error:', error);
-        Utils.showToast(error.message || 'Signup failed. Please try again.', 'error');
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-    }
-},
+    handleSignup: async (e) => {
+        console.log('📝 HANDLE SIGNUP CALLED');
 
-  handleForgotPassword: async () => {
-    const email = document.getElementById('forgotEmail').value.trim();
+        try {
+            const firstName = document.getElementById('signupFirstName')?.value?.trim();
+            const lastName = document.getElementById('signupLastName')?.value?.trim();
+            const email = document.getElementById('signupEmail')?.value?.trim();
+            const password = document.getElementById('signupPassword')?.value;
+            const education = document.getElementById('signupEducation')?.value;
+
+            console.log('📋 Form data:', { firstName, lastName, email, education, passwordLength: password?.length });
+
+            if (!firstName || !lastName || !email || !password || !education) {
+                Utils.showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (password.length < 8) {
+                Utils.showToast('Password must be at least 8 characters', 'error');
+                return;
+            }
+
+            const btn = document.querySelector('#signupForm button[type="submit"]');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            btn.disabled = true;
+
+            const requestBody = {
+                username: `${firstName.toLowerCase()}${Math.floor(Math.random() * 10000)}`,
+                email: email,
+                password: password,
+                profile: { firstName, lastName },
+                educationLevel: education
+            };
+
+            console.log('🚀 Sending signup request via API');
+            console.log('📤 Request body:', requestBody);
+
+            // ✅ USE API.post instead of direct fetch
+            const data = await API.post('/auth/register', requestBody);
+
+            console.log('📦 Signup response:', data);
+
+            Utils.saveToStorage('scholar_token', data.data.tokens.accessToken);
+            Utils.saveToStorage('currentUser', JSON.stringify(data.data.user));
+            AppState.user = data.data.user;
+
+            Utils.showToast('Account created!', 'success');
+
+            document.getElementById('signupContainer').style.display = 'none';
+            AuthModule.loadApp();
+
+        } catch (error) {
+            console.error('❌ Signup error:', error);
+            Utils.showToast(error.message || 'Signup failed', 'error');
+            const btn = document.querySelector('#signupForm button[type="submit"]');
+            if (btn) {
+                btn.innerHTML = '<span>Create Account</span><i class="fas fa-arrow-right"></i>';
+                btn.disabled = false;
+            }
+        }
+    },
     
-    if (!email) {
-      Utils.showToast('Please enter your email address', 'error');
-      return;
+    loadApp: () => {
+        const loginContainer = document.getElementById('loginContainer');
+        const signupContainer = document.getElementById('signupContainer');
+        const appLayer = document.getElementById('appLayer');
+        
+        if (loginContainer) loginContainer.style.display = 'none';
+        if (signupContainer) signupContainer.style.display = 'none';
+        if (appLayer) appLayer.style.display = 'flex';
+        
+        NavigationModule.init();
+        ClassModule.init();
+        StatsModule.init();
+        ProgressModule.init();
+        ActivityModule.init();
+        
+        const userName = document.getElementById('userName');
+        const avatarImg = document.querySelector('.user-profile img');
+        
+        if (userName) userName.textContent = AppState.user.username || 'Student';
+        if (avatarImg) {
+            avatarImg.src = AppState.user.profile?.avatar || 
+                `https://ui-avatars.com/api/?name=${AppState.user.username}&background=00ed64&color=001e2b`;
+        }
+        
+        NavigationModule.navigateTo('dashboard');
+    },
+    
+    logout: () => {
+        Utils.showToast('Logging out...', 'info');
+        setTimeout(() => {
+            localStorage.clear();
+            location.reload();
+        }, 1000);
     }
-    
-    const btn = document.getElementById('submitForgotPassword');
-    const originalHTML = btn.innerHTML;
-    
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    btn.disabled = true;
-    
-    try {
-      await API.post('/auth/forgot-password', { email });
-      
-      Utils.showToast('Password reset instructions sent!', 'success');
-      document.getElementById('forgotPasswordModal').style.display = 'none';
-      document.getElementById('forgotEmail').value = '';
-      
-    } catch (error) {
-      Utils.showToast(error.message || 'Failed to send reset link', 'error');
-    } finally {
-      btn.innerHTML = originalHTML;
-      btn.disabled = false;
-    }
-  },
-  
-  checkPasswordStrength: (e) => {
-    const password = e.target.value;
-    const strengthIndicator = document.getElementById('passwordStrength');
-    
-    if (!strengthIndicator) return;
-    
-    if (password.length === 0) {
-      strengthIndicator.className = 'password-strength';
-      strengthIndicator.textContent = '';
-      return;
-    }
-    
-    let strength = 0;
-    
-    // Check length
-    if (password.length >= 8) strength++;
-    if (password.length >= 12) strength++;
-    
-    // Check complexity
-    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[^a-zA-Z0-9]/.test(password)) strength++;
-    
-    if (strength <= 2) {
-      strengthIndicator.className = 'password-strength weak';
-      strengthIndicator.textContent = 'Weak';
-    } else if (strength <= 4) {
-      strengthIndicator.className = 'password-strength medium';
-      strengthIndicator.textContent = 'Medium';
-    } else {
-      strengthIndicator.className = 'password-strength strong';
-      strengthIndicator.textContent = 'Strong';
-    }
-  },
-  
-  loadApp: () => {
-    const loginContainer = document.getElementById('loginContainer');
-    const signupContainer = document.getElementById('signupContainer');
-    const appLayer = document.getElementById('appLayer');
-    const mainHeader = document.getElementById('mainHeader');
-    
-    // Hide auth screens
-    if (loginContainer) loginContainer.style.display = 'none';
-    if (signupContainer) signupContainer.style.display = 'none';
-    
-    // Show app
-    if (appLayer) appLayer.style.display = 'flex';
-    if (mainHeader) mainHeader.style.display = 'block';
-    
-    // Initialize modules
-    NavigationModule.init();
-    ClassModule.init();
-    StatsModule.init();
-    ProgressModule.init();
-    ActivityModule.init();
-    
-    // Update user info
-    const userName = document.getElementById('userName');
-    const headerUsername = document.getElementById('headerUsername');
-    const avatarImg = document.querySelector('.user-profile img');
-    
-    if (userName) userName.textContent = AppState.user.username || 'Student';
-    if (headerUsername) headerUsername.textContent = AppState.user.username || 'Student';
-    if (avatarImg) {
-      avatarImg.src = AppState.user.profile?.avatar || 
-        `https://ui-avatars.com/api/?name=${AppState.user.username}&background=00ed64&color=001e2b`;
-    }
-    
-    NavigationModule.navigateTo('home');
-  },
-  
-  logout: () => {
-    Utils.showToast('Logging out...', 'info');
-    
-    setTimeout(() => {
-      localStorage.clear();
-      location.reload();
-    }, 1000);
-  }
 };
 
 // ==========================================

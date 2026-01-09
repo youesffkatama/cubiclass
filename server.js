@@ -38,6 +38,7 @@
  const pdfParse = require('pdf-parse');
  const natural = require('natural');
  const { z } = require('zod');
+ const nodemailer = require('nodemailer');
  
  // ==========================================
  // FIXED: SECURE CONFIGURATION
@@ -116,16 +117,16 @@
 // ✅ FIX: Strict CORS
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc)
     if (!origin) return callback(null, true);
-    
+
     const allowedOrigins = [
       'http://localhost:8080',
       'http://127.0.0.1:8080',
       'http://localhost:3000',
-      'http://127.0.0.1:3000'
+      'http://127.0.0.1:3000',
+      'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
     ];
-    
+
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -183,77 +184,73 @@ app.use(cors({
  const crypto = require('crypto');
 
  // Password hashing (Bible.AI style)
- function hashPassword(password) {
-   const salt = crypto.randomBytes(16).toString('hex');
-   const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
-   return { salt: salt, hash: hash };
- }
- 
- function verifyPassword(password, hash, salt) {
-   const hashToVerify = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
-   return hash === hashToVerify;
- }
- 
- // Token generation
- function generateToken() {
-   return crypto.randomBytes(32).toString('hex');
- }
- // User Schema
- const UserSchema = new mongoose.Schema({
-   username: { type: String, required: true, unique: true, trim: true },
-   email: { type: String, required: true, unique: true, lowercase: true },
-   passwordHash: { type: String, required: true },
-   refreshToken: String,
+ // ==========================================
+// PASSWORD HASHING - FIXED
+// ==========================================
 
-   token: { type: String, default: null },
+async function hashPassword(password) {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
+}
+
+async function verifyPassword(password, hash) {
+  return await bcrypt.compare(password, hash);
+}
+
+function generateToken() {
+  return require('crypto').randomBytes(32).toString('hex');
+}
+// User Schema
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true, trim: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  passwordHash: { type: String, required: true },
+  token: { type: String, default: null },
   tokenExpiry: { type: Number, default: null },
-  salt: { type: String }, // For password hashing
-  hash: { type: String }, // Hashed password
-  phone: { type: String },
-  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
-   
-   profile: {
-     firstName: String,
-     lastName: String,
-     avatar: String,
-     bio: String,
-   },
-   
-   dna: {
-     learningStyle: { type: String, enum: ['Visual', 'Textual', 'Socratic'], default: 'Visual' },
-     weaknesses: [String],
-     strengths: [String],
-     xp: { type: Number, default: 0 },
-     level: { type: Number, default: 1 },
-     rank: { 
-       type: String, 
-       enum: ['Novice', 'Scholar', 'Researcher', 'Professor', 'Nobel'],
-       default: 'Novice'
-     },
-     badges: [{
-       name: String,
-       icon: String,
-       earnedAt: Date
-     }],
-     streakDays: { type: Number, default: 0 },
-     lastActiveDate: Date
-   },
-   
-   settings: {
-     theme: { type: String, default: 'dark' },
-     aiModel: { type: String, default: 'mistralai/mistral-7b-instruct:free' },
-     notifications: { type: Boolean, default: true }
-   },
-   
-   subscription: {
-     plan: { type: String, enum: ['free', 'pro', 'enterprise'], default: 'free' },
-     expiresAt: Date
-   },
-   
-   createdAt: { type: Date, default: Date.now },
-   lastLogin: Date
- });
- 
+  
+  profile: {
+    firstName: String,
+    lastName: String,
+    avatar: String,
+    bio: String,
+  },
+  
+  dna: {
+    learningStyle: { type: String, enum: ['Visual', 'Textual', 'Socratic'], default: 'Visual' },
+    weaknesses: [String],
+    strengths: [String],
+    xp: { type: Number, default: 0 },
+    level: { type: Number, default: 1 },
+    rank: { 
+      type: String, 
+      enum: ['Novice', 'Scholar', 'Researcher', 'Professor', 'Nobel'],
+      default: 'Novice'
+    },
+    badges: [{
+      name: String,
+      icon: String,
+      earnedAt: Date
+    }],
+    streakDays: { type: Number, default: 0 },
+    lastActiveDate: Date
+  },
+  
+  settings: {
+    theme: { type: String, default: 'dark' },
+    aiModel: { type: String, default: 'mistralai/mistral-7b-instruct:free' },
+    notifications: { type: Boolean, default: true }
+  },
+  
+  subscription: {
+    plan: { type: String, enum: ['free', 'pro', 'enterprise'], default: 'free' },
+    expiresAt: Date
+  },
+  
+  createdAt: { type: Date, default: Date.now },
+  lastLogin: Date
+});
+
  // Knowledge Node Schema
  const KnowledgeNodeSchema = new mongoose.Schema({
    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
@@ -971,7 +968,7 @@ try {
  // AUTH ROUTES
  // ==========================================
  app.post('/api/v1/auth/register', async (req, res) => {
-  console.log('📝 Register request received:', req.body);
+  console.log('📝 Register request received:', { email: req.body.email, username: req.body.username });
   
   try {
     const { username, email, password, profile, educationLevel } = req.body;
@@ -1004,19 +1001,18 @@ try {
     }
     
     // ✅ Hash password
-    const { salt, hash } = hashPassword(password);
+    const passwordHash = await hashPassword(password);
     console.log('🔐 Password hashed');
     
     // ✅ Generate token
     const token = generateToken();
-    const tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000);
+    const tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days
     
     // ✅ Create user
     const user = await User.create({
       username: username,
       email: email.toLowerCase(),
-      salt: salt,
-      hash: hash,
+      passwordHash: passwordHash,
       token: token,
       tokenExpiry: tokenExpiry,
       profile: {
@@ -1043,7 +1039,6 @@ try {
       subscription: {
         plan: 'free'
       },
-      status: 'active',
       lastLogin: new Date()
     });
     
@@ -1119,7 +1114,9 @@ app.post('/api/v1/auth/login', async (req, res) => {
     }
     
     // ✅ Verify password
-    if (!verifyPassword(password, user.hash, user.salt)) {
+    const isValid = await verifyPassword(password, user.passwordHash);
+    
+    if (!isValid) {
       console.log('❌ Invalid password');
       return res.status(401).json({ 
         error: { message: 'Invalid email or password' } 
@@ -1135,7 +1132,6 @@ app.post('/api/v1/auth/login', async (req, res) => {
     user.token = token;
     user.tokenExpiry = tokenExpiry;
     user.lastLogin = new Date();
-    user.status = 'active';
     
     // ✅ Update streak
     const today = new Date().setHours(0, 0, 0, 0);
@@ -1188,7 +1184,6 @@ app.post('/api/v1/auth/login', async (req, res) => {
     });
   }
 });
-
  
  app.get('/api/v1/auth/me', authenticateToken, (req, res) => {
    res.json({
@@ -1205,45 +1200,69 @@ app.post('/api/v1/auth/login', async (req, res) => {
      }
    });
  });
- 
+
  app.post('/api/v1/auth/forgot-password', async (req, res) => {
-   try {
-     const validated = ForgotPasswordSchema.parse(req.body);
-     
-     const user = await User.findOne({ email: validated.email });
-     if (!user) {
-       // Don't reveal if email exists or not for security
-       return res.json({ success: true, message: 'If an account with that email exists, a password reset link has been sent.' });
-     }
-     
-     // Generate reset token (in a real app, you'd store this in DB with expiration)
-     const resetToken = jwt.sign(
-       { userId: user._id, type: 'password_reset' },
-       CONFIG.JWT_SECRET,
-       { expiresIn: '1h' }
-     );
-     
-     // In a real implementation, you'd send an email here
-     // For now, we'll just log it and return success
-     logger.info(`Password reset requested for ${user.email}. Reset token: ${resetToken}`);
-     
-     // TODO: Send email with reset link containing the token
-     // Example: https://yourapp.com/reset-password?token=${resetToken}
-     
-     res.json({ 
-       success: true, 
-       message: 'If an account with that email exists, a password reset link has been sent.' 
-     });
-     
-   } catch (error) {
-     logger.error('Forgot password error:', error);
-     if (error instanceof z.ZodError) {
-       return res.status(400).json({
-         error: { message: 'Validation error', details: error.errors }
-       });
-     }
-     res.status(500).json({ error: { message: 'Request failed' } });
-   }
+  try {
+    const validated = ForgotPasswordSchema.parse(req.body);
+
+    const user = await User.findOne({ email: validated.email });
+    if (!user) {
+      return res.json({ success: true, message: 'If an account with that email exists, a password reset link has been sent.' });
+    }
+
+    // Generate reset token
+    const resetToken = jwt.sign(
+      { userId: user._id, type: 'password_reset' },
+      CONFIG.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    // Create email transporter
+    const transporter = nodemailer.createTransport({
+      host: 'smtp-mail.outlook.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'youesffkatama@outlook.com',
+        pass: process.env.EMAIL_PASSWORD // Add this to your .env file
+      }
+    });
+
+    // Send email
+    const resetUrl = `${CONFIG.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    await transporter.sendMail({
+      from: '"Scholar.AI" <youesffkatama@outlook.com>',
+      to: validated.email,
+      subject: 'Password Reset Request - Scholar.AI',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #00ed64;">Password Reset Request</h2>
+          <p>You requested to reset your password for Scholar.AI.</p>
+          <p>Click the button below to reset your password (link expires in 1 hour):</p>
+          <a href="${resetUrl}" style="display: inline-block; background: #00ed64; color: #001e2b; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0;">Reset Password</a>
+          <p>Or copy this link: ${resetUrl}</p>
+          <p style="color: #666; font-size: 14px;">If you didn't request this, please ignore this email.</p>
+        </div>
+      `
+    });
+
+    logger.info(`Password reset email sent to ${validated.email}`);
+
+    res.json({
+      success: true,
+      message: 'If an account with that email exists, a password reset link has been sent.'
+    });
+
+  } catch (error) {
+    logger.error('Forgot password error:', error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: { message: 'Validation error', details: error.errors }
+      });
+    }
+    res.status(500).json({ error: { message: 'Request failed' } });
+  }
  });
  
  // ✅ NEW: User Profile & Settings
@@ -1824,168 +1843,230 @@ app.post('/api/v1/auth/login', async (req, res) => {
  // INTELLIGENCE ROUTES - RAG CHAT
  // ==========================================
  app.post('/api/v1/intelligence/chat/stream', authenticateToken, async (req, res) => {
-   try {
-     const validated = ChatSchema.parse(req.body);
-     const { query, nodeId, conversationId, model } = validated;
-     
-     let node = null;
-     if (nodeId) {
-       node = await KnowledgeNode.findOne({
-         _id: nodeId,
-         userId: req.user._id,
-         status: 'INDEXED'
-       });
-       
-       if (!node) {
-         return res.status(404).json({ error: { message: 'Document not found or not ready' } });
-       }
-     }
-     
-     res.setHeader('Content-Type', 'text/event-stream');
-     res.setHeader('Cache-Control', 'no-cache');
-     res.setHeader('Connection', 'keep-alive');
-     
-     const queryEmbedding = await generateEmbedding(sanitizeInput(query));
-     
-     let context = '';
-     let citations = [];
-     
-     if (nodeId) {
-       const relevantChunks = await VectorChunk.aggregate([
-         {
-           $vectorSearch: {
-             index: 'vector_index',
-             path: 'embedding',
-             queryVector: queryEmbedding,
-             numCandidates: 100,
-             limit: 5,
-             filter: { nodeId: new mongoose.Types.ObjectId(nodeId) }
-           }
-         },
-         {
-           $project: {
-             content: 1,
-             location: 1,
-             score: { $meta: 'vectorSearchScore' }
-           }
-         }
-       ]);
-       
-       context = relevantChunks.map(c => c.content).join('\n\n');
-       citations = relevantChunks.map(c => ({
-         chunkId: c._id,
-         pageNumber: c.location.pageNumber,
-         content: c.content.substring(0, 200)
-       }));
-     }
-     
-     const messages = [];
-     
-     if (node?.persona?.personalityPrompt) {
-       messages.push({
-         role: 'system',
-         content: `You are ${node.persona.generatedName}. ${node.persona.personalityPrompt}\n\nSpeak in a ${node.persona.tone} tone. Base your answers ONLY on the provided context. If the context doesn't contain the answer, say so.`
-       });
-     } else {
-       messages.push({
-         role: 'system',
-         content: 'You are a helpful AI tutor. Answer questions based on the provided context. If the context doesn\'t contain the answer, say so clearly.'
-       });
-     }
-     
-     if (context) {
-       messages.push({
-         role: 'system',
-         content: `Context from the document:\n\n${context}`
-       });
-     }
-     
-     if (conversationId) {
-       const conversation = await Conversation.findOne({
-         _id: conversationId,
-         userId: req.user._id
-       });
-       
-       if (conversation) {
-         const recentMessages = conversation.messages.slice(-10);
-         messages.push(...recentMessages.map(m => ({
-           role: m.role,
-           content: m.content
-         })));
-       }
-     }
-     
-     messages.push({ role: 'user', content: query });
-     
-     const stream = await openai.chat.completions.create({
-       model: model || req.user.settings.aiModel,
-       messages,
-       temperature: 0.7,
-       max_tokens: 1000,
-       stream: true
-     });
-     
-     let fullResponse = '';
-     
-     for await (const chunk of stream) {
-       const content = chunk.choices[0]?.delta?.content || '';
-       if (content) {
-         fullResponse += content;
-         res.write(`data: ${JSON.stringify({ content })}\n\n`);
-       }
-     }
-     
-     let conversation;
-     if (conversationId) {
-       conversation = await Conversation.findOneAndUpdate(
-         { _id: conversationId, userId: req.user._id },
-         {
-           $push: {
-             messages: [
-               { role: 'user', content: query },
-               { role: 'assistant', content: fullResponse, citations }
-             ]
-           },
-           updatedAt: Date.now()
-         },
-         { new: true }
-       );
-     } else {
-       conversation = await Conversation.create({
-         userId: req.user._id,
-         nodeId: nodeId || null,
-         title: query.substring(0, 50),
-         messages: [
-           { role: 'user', content: query },
-           { role: 'assistant', content: fullResponse, citations }
-         ]
-       });
-     }
-     
-     res.write(`data: ${JSON.stringify({ 
-       done: true, 
-       conversationId: conversation._id,
-       citations 
-     })}\n\n`);
-     
-     res.end();
-     
-     await awardXP(req.user._id, 2, 'Asked a question');
-     
-     await ActivityLog.create({
-       userId: req.user._id,
-       type: 'chat',
-       description: 'Chat with AI',
-       metadata: { nodeId, query: query.substring(0, 100) }
-     });
-     
-   } catch (error) {
-     logger.error('Chat stream error:', error);
-     if (!res.headersSent) {
-       res.status(500).json({ error: { message: 'Chat failed' } });
-     }
-   }
- });
+  try {
+    // Validate inputs first
+    if (!req.body.query) {
+      return res.status(400).json({ error: { message: 'Query is required' } });
+    }
+
+    const validated = ChatSchema.parse(req.body);
+    const { query, nodeId, conversationId, model } = validated;
+
+    console.log('💬 Chat request:', { query: query.substring(0, 50), nodeId, conversationId });
+
+    let node = null;
+    if (nodeId) {
+      node = await KnowledgeNode.findOne({
+        _id: nodeId,
+        userId: req.user._id,
+        status: 'INDEXED'
+      });
+
+      if (!node) {
+        return res.status(404).json({ error: { message: 'Document not found or not ready' } });
+      }
+    }
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    let queryEmbedding;
+    try {
+      queryEmbedding = await generateEmbedding(sanitizeInput(query));
+    } catch (embError) {
+      console.error('❌ Embedding generation failed:', embError);
+      res.write(`data: ${JSON.stringify({ error: 'Failed to process query' })}\n\n`);
+      res.end();
+      return;
+    }
+
+    let context = '';
+    let citations = [];
+
+    if (nodeId && queryEmbedding) {
+      try {
+        const relevantChunks = await VectorChunk.aggregate([
+          {
+            $vectorSearch: {
+              index: 'vector_index',
+              path: 'embedding',
+              queryVector: queryEmbedding,
+              numCandidates: 100,
+              limit: 5,
+              filter: { nodeId: new mongoose.Types.ObjectId(nodeId) }
+            }
+          },
+          {
+            $project: {
+              content: 1,
+              location: 1,
+              score: { $meta: 'vectorSearchScore' }
+            }
+          }
+        ]);
+
+        context = relevantChunks.map(c => c.content).join('\n\n');
+        citations = relevantChunks.map(c => ({
+          chunkId: c._id,
+          pageNumber: c.location.pageNumber,
+          content: c.content.substring(0, 200)
+        }));
+      } catch (vectorError) {
+        console.error('❌ Vector search failed:', vectorError);
+        // Continue without context
+      }
+    }
+
+    const messages = [];
+
+    if (node?.persona?.personalityPrompt) {
+      messages.push({
+        role: 'system',
+        content: `You are ${node.persona.generatedName}. ${node.persona.personalityPrompt}\n\nSpeak in a ${node.persona.tone} tone. Base your answers ONLY on the provided context. If the context doesn't contain the answer, say so.`
+      });
+    } else {
+      messages.push({
+        role: 'system',
+        content: 'You are a helpful AI tutor. Answer questions clearly and concisely. If you don\'t know something, say so.'
+      });
+    }
+
+    if (context) {
+      messages.push({
+        role: 'system',
+        content: `Context from the document:\n\n${context}`
+      });
+    }
+
+    if (conversationId) {
+      try {
+        const conversation = await Conversation.findOne({
+          _id: conversationId,
+          userId: req.user._id
+        });
+
+        if (conversation) {
+          const recentMessages = conversation.messages.slice(-10);
+          messages.push(...recentMessages.map(m => ({
+            role: m.role,
+            content: m.content
+          })));
+        }
+      } catch (convError) {
+        console.error('❌ Failed to load conversation:', convError);
+      }
+    }
+
+    messages.push({ role: 'user', content: query });
+
+    console.log('🤖 Calling OpenRouter API...');
+
+    let stream;
+    try {
+      stream = await openai.chat.completions.create({
+        model: model || req.user.settings.aiModel || 'mistralai/mistral-7b-instruct:free',
+        messages,
+        temperature: 0.7,
+        max_tokens: 1000,
+        stream: true
+      });
+    } catch (apiError) {
+      console.error('❌ OpenRouter API error:', apiError);
+      res.write(`data: ${JSON.stringify({
+        error: 'AI service unavailable. Please try again later.',
+        details: apiError.message
+      })}\n\n`);
+      res.end();
+      return;
+    }
+
+    let fullResponse = '';
+
+    try {
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        if (content) {
+          fullResponse += content;
+          res.write(`data: ${JSON.stringify({ content })}\n\n`);
+        }
+      }
+    } catch (streamError) {
+      console.error('❌ Stream error:', streamError);
+    }
+
+    // Save conversation
+    try {
+      let conversation;
+      if (conversationId) {
+        conversation = await Conversation.findOneAndUpdate(
+          { _id: conversationId, userId: req.user._id },
+          {
+            $push: {
+              messages: [
+                { role: 'user', content: query },
+                { role: 'assistant', content: fullResponse, citations }
+              ]
+            },
+            updatedAt: Date.now()
+          },
+          { new: true }
+        );
+      } else {
+        conversation = await Conversation.create({
+          userId: req.user._id,
+          nodeId: nodeId || null,
+          title: query.substring(0, 50),
+          messages: [
+            { role: 'user', content: query },
+            { role: 'assistant', content: fullResponse, citations }
+          ]
+        });
+      }
+
+      res.write(`data: ${JSON.stringify({
+        done: true,
+        conversationId: conversation._id,
+        citations
+      })}\n\n`);
+    } catch (saveError) {
+      console.error('❌ Failed to save conversation:', saveError);
+      res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+    }
+
+    res.end();
+
+    // Award XP (don't await)
+    awardXP(req.user._id, 2, 'Asked a question').catch(console.error);
+
+    // Log activity (don't await)
+    ActivityLog.create({
+      userId: req.user._id,
+      type: 'chat',
+      description: 'Chat with AI',
+      metadata: { nodeId, query: query.substring(0, 100) }
+    }).catch(console.error);
+
+  } catch (error) {
+    console.error('❌ Chat stream error:', error);
+    console.error('Error stack:', error.stack);
+
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: {
+          message: 'Chat failed',
+          details: error.message
+        }
+      });
+    } else {
+      res.write(`data: ${JSON.stringify({
+        error: 'An error occurred',
+        details: error.message
+      })}\n\n`);
+      res.end();
+    }
+  }
+});
  
  app.get('/api/v1/intelligence/chat/conversations', authenticateToken, async (req, res) => {
    try {

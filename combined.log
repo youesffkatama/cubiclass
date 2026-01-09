@@ -1,541 +1,154 @@
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T00:39:42.468Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:42.518Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:42.522Z"}
-{"level":"error","message":"Failed to connect to Redis: Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.connectionCloseHandler (/workspaces/cubiclass/node_modules/ioredis/built/Redis.js:208:28)\n    at Object.onceWrapper (node:events:623:26)\n    at EventEmitter.emit (node:events:520:35)\n    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)","timestamp":"2026-01-06T00:39:42.523Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:42.575Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:42.577Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:42.678Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:42.680Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:42.858Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:42.863Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:43.300Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:43.302Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T00:39:43.444Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T00:39:43.444Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T00:39:43.446Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T00:39:43.446Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T00:39:43.446Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T00:39:43.446Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T00:39:43.446Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T00:39:43.446Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:43.553Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:43.555Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:43.856Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:43.861Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:44.212Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:44.213Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:44.615Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:44.617Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:45.068Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:45.070Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:45.571Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:45.572Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:46.123Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:46.124Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:46.726Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:46.728Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:47.384Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:47.390Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:48.099Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:48.102Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:48.854Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:48.857Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:49.662Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:49.668Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:50.523Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:50.526Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:51.428Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:51.433Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:52.385Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:52.393Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:53.395Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:53.400Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:54.452Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:54.454Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:55.555Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:55.557Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:56.709Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:56.710Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:57.912Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:57.913Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:39:59.165Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:39:59.166Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:00.467Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:00.468Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:01.819Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:01.820Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:03.222Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:03.224Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:04.675Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:04.676Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:06.177Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:06.179Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:07.731Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:07.733Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:09.335Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:09.336Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:40:10.987Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:40:10.990Z"}
-{"cause":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":1533389,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"errorLabelSet":{},"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":1533389,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1169:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1100:11)","timestamp":"2026-01-06T00:40:12.438Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T00:41:12.062Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:12.091Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:12.095Z"}
-{"level":"error","message":"Failed to connect to Redis: Connection is closed.","stack":"Error: Connection is closed.\n    at EventEmitter.connectionCloseHandler (/workspaces/cubiclass/node_modules/ioredis/built/Redis.js:208:28)\n    at Object.onceWrapper (node:events:623:26)\n    at EventEmitter.emit (node:events:520:35)\n    at process.processTicksAndRejections (node:internal/process/task_queues:84:11)","timestamp":"2026-01-06T00:41:12.095Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:12.147Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:12.149Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T00:41:12.242Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T00:41:12.242Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T00:41:12.244Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T00:41:12.245Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T00:41:12.245Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T00:41:12.245Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T00:41:12.245Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T00:41:12.245Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:12.251Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:12.252Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:12.403Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:12.404Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:12.605Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:12.606Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:12.856Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:12.857Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:13.158Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:13.159Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:13.509Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:13.510Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:13.911Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:13.913Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:14.364Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:14.365Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:14.866Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:14.867Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:15.419Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:15.420Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:16.021Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:16.024Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:16.675Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:16.677Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:17.378Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:17.381Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:18.133Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:18.134Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:18.935Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:18.936Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:19.786Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:19.788Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:20.690Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:20.691Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:21.642Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:21.643Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:22.644Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:22.648Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:23.699Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:23.700Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:24.801Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:24.803Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:25.955Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:25.956Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:27.157Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:27.158Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:28.409Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:28.410Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:29.711Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:29.712Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:31.063Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:31.064Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:32.466Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:32.467Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:33.919Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:33.920Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:35.420Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:35.422Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:36.972Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:36.973Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:38.576Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:38.579Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:40.231Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:40.233Z"}
-{"code":"ECONNREFUSED","level":"error","message":"Redis error:","stack":"AggregateError [ECONNREFUSED]: \n    at internalConnectMultiple (node:net:1134:18)\n    at afterConnectMultiple (node:net:1715:7)","timestamp":"2026-01-06T00:41:41.934Z"}
-{"level":"warn","message":"Redis reconnecting...","timestamp":"2026-01-06T00:41:41.935Z"}
-{"cause":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":1623138,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"errorLabelSet":{},"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":1623138,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1169:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1100:11)","timestamp":"2026-01-06T00:41:42.037Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T00:52:29.000Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T00:52:29.570Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T00:52:29.590Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T00:52:29.604Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T00:52:29.607Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T00:52:29.608Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T00:52:29.608Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T00:52:29.609Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T00:52:29.612Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T00:53:24.298Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T00:53:24.609Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T00:53:24.610Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T00:53:24.612Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T00:53:24.613Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T00:53:24.613Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T00:53:24.613Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T00:53:24.614Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T00:53:24.614Z"}
-{"cause":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":2355456,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"errorLabelSet":{},"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":2355456,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1169:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1100:11)","timestamp":"2026-01-06T00:53:54.265Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T00:54:01.996Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T00:54:02.405Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T00:54:02.411Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T00:54:02.418Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T00:54:02.424Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T00:54:02.424Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T00:54:02.424Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T00:54:02.425Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T00:54:02.425Z"}
-{"cause":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":2393195,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"errorLabelSet":{},"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{"localhost:27017":{"$clusterTime":null,"address":"localhost:27017","arbiters":[],"electionId":null,"error":{"beforeHandshake":false,"errorLabelSet":{}},"hosts":[],"iscryptd":false,"lastUpdateTime":2393195,"lastWriteDate":0,"logicalSessionTimeoutMinutes":null,"maxBsonObjectSize":null,"maxMessageSizeBytes":null,"maxWireVersion":0,"maxWriteBatchSize":null,"me":null,"minRoundTripTime":0,"minWireVersion":0,"passives":[],"primary":null,"roundTripTime":-1,"setName":null,"setVersion":null,"tags":{},"topologyVersion":null,"type":"Unknown"}},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1169:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:1100:11)","timestamp":"2026-01-06T00:54:31.928Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:01:24.252Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:01:24.468Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:01:24.470Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:01:24.472Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:01:24.472Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:01:24.473Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:01:24.473Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:01:24.473Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:01:24.473Z"}
-{"code":8000,"codeName":"AtlasError","connectionGeneration":0,"errorLabelSet":{},"errorResponse":{"code":8000,"codeName":"AtlasError","errmsg":"bad auth : authentication failed","ok":0},"level":"error","message":"âŒ MongoDB connection error: bad auth : authentication failed","ok":0,"stack":"MongoServerError: bad auth : authentication failed\n    at Connection.sendCommand (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:306:27)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Connection.command (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:334:26)\n    at async continueScramConversation (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:131:15)\n    at async executeScram (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:80:5)\n    at async ScramSHA1.auth (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:39:16)\n    at async performInitialHandshake (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:104:13)\n    at async connect (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:24:9)","timestamp":"2026-01-06T01:01:25.471Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:01:54.962Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:01:55.152Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:01:55.153Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:01:55.155Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:01:55.155Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:01:55.156Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:01:55.156Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:01:55.156Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:01:55.156Z"}
-{"code":8000,"codeName":"AtlasError","connectionGeneration":0,"errorLabelSet":{},"errorResponse":{"code":8000,"codeName":"AtlasError","errmsg":"bad auth : authentication failed","ok":0},"level":"error","message":"âŒ MongoDB connection error: bad auth : authentication failed","ok":0,"stack":"MongoServerError: bad auth : authentication failed\n    at Connection.sendCommand (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:306:27)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Connection.command (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:334:26)\n    at async continueScramConversation (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:131:15)\n    at async executeScram (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:80:5)\n    at async ScramSHA1.auth (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:39:16)\n    at async performInitialHandshake (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:104:13)\n    at async connect (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:24:9)","timestamp":"2026-01-06T01:01:56.060Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:10:48.023Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:10:48.279Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:10:48.282Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:10:48.285Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:10:48.286Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:10:48.287Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:10:48.287Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:10:48.288Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:10:48.288Z"}
-{"code":8000,"codeName":"AtlasError","connectionGeneration":0,"errorLabelSet":{},"errorResponse":{"code":8000,"codeName":"AtlasError","errmsg":"bad auth : authentication failed","ok":0},"level":"error","message":"âŒ MongoDB connection error: bad auth : authentication failed","ok":0,"stack":"MongoServerError: bad auth : authentication failed\n    at Connection.sendCommand (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:306:27)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Connection.command (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:334:26)\n    at async continueScramConversation (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:131:15)\n    at async executeScram (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:80:5)\n    at async ScramSHA1.auth (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:39:16)\n    at async performInitialHandshake (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:104:13)\n    at async connect (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:24:9)","timestamp":"2026-01-06T01:10:49.192Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:14:49.093Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:14:49.301Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:14:49.303Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:14:49.304Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:14:49.305Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:14:49.305Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:14:49.305Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:14:49.306Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:14:49.306Z"}
-{"code":8000,"codeName":"AtlasError","connectionGeneration":0,"errorLabelSet":{},"errorResponse":{"code":8000,"codeName":"AtlasError","errmsg":"bad auth : authentication failed","ok":0},"level":"error","message":"âŒ MongoDB connection error: bad auth : authentication failed","ok":0,"stack":"MongoServerError: bad auth : authentication failed\n    at Connection.sendCommand (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:306:27)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Connection.command (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:334:26)\n    at async continueScramConversation (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:131:15)\n    at async executeScram (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:80:5)\n    at async ScramSHA1.auth (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:39:16)\n    at async performInitialHandshake (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:104:13)\n    at async connect (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:24:9)","timestamp":"2026-01-06T01:14:50.213Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:17:16.234Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:17:16.483Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:17:16.484Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:17:16.485Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:17:16.486Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:17:16.486Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:17:16.486Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:17:16.486Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:17:16.486Z"}
-{"code":8000,"codeName":"AtlasError","connectionGeneration":0,"errorLabelSet":{},"errorResponse":{"code":8000,"codeName":"AtlasError","errmsg":"bad auth : authentication failed","ok":0},"level":"error","message":"âŒ MongoDB connection error: bad auth : authentication failed","ok":0,"stack":"MongoServerError: bad auth : authentication failed\n    at Connection.sendCommand (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:306:27)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async Connection.command (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connection.js:334:26)\n    at async continueScramConversation (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:131:15)\n    at async executeScram (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:80:5)\n    at async ScramSHA1.auth (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/auth/scram.js:39:16)\n    at async performInitialHandshake (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:104:13)\n    at async connect (/workspaces/cubiclass/node_modules/mongodb/lib/cmap/connect.js:24:9)","timestamp":"2026-01-06T01:17:17.491Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:18:34.711Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:18:35.107Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:18:35.108Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:18:35.110Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:18:35.110Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:18:35.111Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:18:35.111Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:18:35.111Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:18:35.111Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:18:35.894Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:23:33.197Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:23:33.448Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:23:33.449Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:23:33.451Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:23:33.451Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:23:33.451Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:23:33.452Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:23:33.452Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:23:33.452Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:23:34.362Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:31:49.031Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:31:49.254Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:31:49.255Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:31:49.257Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:31:49.257Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:31:49.257Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:31:49.258Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:31:49.258Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:31:49.258Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:31:50.163Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:32:25.076Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:32:25.312Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:32:25.313Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:32:25.315Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:32:25.315Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:32:25.316Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:32:25.316Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:32:25.316Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:32:25.316Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:32:26.132Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:34:57.323Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:34:57.522Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:40:17.440Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:40:17.740Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T01:40:33.104Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:40:40.122Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:40:40.366Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:40:40.367Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:40:40.370Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:40:40.370Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:40:40.370Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:40:40.371Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:40:40.371Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:40:40.371Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:40:41.308Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:42:54.644Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:42:54.897Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:42:54.898Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:42:54.900Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:42:54.900Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:42:54.900Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:42:54.901Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:42:54.901Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:42:54.901Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:44:37.225Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:44:37.431Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:44:37.432Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:44:37.434Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:44:37.434Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:44:37.434Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:44:37.434Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:44:37.435Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:44:37.435Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:44:38.357Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:44:40.823Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:44:41.059Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:44:41.061Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:44:41.063Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:44:41.063Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:44:41.063Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:44:41.063Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:44:41.063Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:44:41.064Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:44:42.012Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T01:46:04.852Z"}
-{"level":"info","message":"Server closed","timestamp":"2026-01-06T01:46:04.965Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:46:13.429Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:46:13.663Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:46:13.664Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:46:13.666Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:46:13.667Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:46:13.667Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:46:13.667Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:46:13.668Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:46:13.668Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:46:14.595Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:47:39.599Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:47:46.137Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:47:46.332Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:48:38.550Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:48:38.737Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T01:49:04.431Z"}
-{"level":"info","message":"Server closed","timestamp":"2026-01-06T01:49:04.548Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T01:49:07.826Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T01:49:08.015Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T01:49:08.017Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T01:49:08.019Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T01:49:08.019Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T01:49:08.020Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T01:49:08.020Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T01:49:08.020Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T01:49:08.020Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T01:49:09.011Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T21:46:11.410Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T21:46:12.595Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T21:46:13.351Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T21:46:13.779Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T21:46:13.780Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T21:46:13.780Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T21:46:13.781Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T21:46:13.781Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T21:46:13.781Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T21:46:13.781Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:49:57.578Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:49:57.931Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T23:50:07.889Z"}
-{"level":"info","message":"Server closed","timestamp":"2026-01-06T23:50:08.008Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:09.051Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:09.226Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:50:09.226Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T23:50:09.228Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:50:09.229Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:50:09.229Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:50:09.229Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:50:09.230Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:50:09.230Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:50:10.171Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:13.656Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:13.873Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:42.463Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:42.614Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:50:42.615Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-06T23:50:42.616Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:50:42.617Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:50:42.617Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:50:42.617Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:50:42.617Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:50:42.617Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:50:43.528Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:50:48.660Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:50:48.813Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:51:41.240Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:51:41.426Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:51:41.427Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:51:41.429Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:51:41.430Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:51:41.430Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:51:41.430Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:51:41.430Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:51:41.430Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:51:42.353Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:52:19.182Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:52:19.360Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:52:19.361Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:52:19.362Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:52:19.363Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:52:19.363Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:52:19.363Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:52:19.363Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:52:19.364Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:52:20.395Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:52:42.093Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:52:42.289Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:52:42.289Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:52:42.291Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:52:42.291Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:52:42.291Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:52:42.292Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:52:42.292Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:52:42.292Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:52:43.203Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:53:37.355Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:53:37.542Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:53:37.543Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:53:37.544Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:53:37.545Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:53:37.545Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:53:37.545Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:53:37.545Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:53:37.546Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:53:38.455Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-06T23:53:46.307Z"}
-{"level":"info","message":"Server closed","timestamp":"2026-01-06T23:53:46.523Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-06T23:53:47.419Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-06T23:53:47.590Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-06T23:53:47.591Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-06T23:53:47.592Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-06T23:53:47.593Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-06T23:53:47.593Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-06T23:53:47.593Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-06T23:53:47.593Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-06T23:53:47.594Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-06T23:53:48.499Z"}
-{"level":"error","message":"Registration error: secretOrPrivateKey must have a value","stack":"Error: secretOrPrivateKey must have a value\n    at module.exports [as sign] (/workspaces/cubiclass/node_modules/jsonwebtoken/sign.js:111:20)\n    at generateTokens (/workspaces/cubiclass/server.js:647:29)\n    at /workspaces/cubiclass/server.js:971:43\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)","timestamp":"2026-01-06T23:55:11.014Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:38:58.438Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:38:58.859Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:38:58.860Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:38:58.862Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:38:58.862Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:38:58.862Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:38:58.863Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:38:58.863Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:38:58.863Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:38:59.642Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:39:33.122Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:39:33.276Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:39:33.277Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:39:33.279Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:39:33.279Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:39:33.279Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:39:33.279Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:39:33.280Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:39:33.280Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:39:34.216Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:39:56.157Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:39:56.474Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:39:56.475Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:39:56.477Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:39:56.477Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:39:56.477Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:39:56.477Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:39:56.477Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:39:56.478Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:39:57.231Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-07T00:39:58.348Z"}
-{"level":"info","message":"Server closed","timestamp":"2026-01-07T00:39:59.835Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T00:50:21.697Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T00:50:21.882Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T00:50:21.883Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T00:50:21.885Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T00:50:21.885Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T00:50:21.885Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T00:50:21.885Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T00:50:21.886Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T00:50:21.886Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T00:50:22.807Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:00:02.303Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:00:02.544Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:00:52.735Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:00:52.932Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T01:00:52.933Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T01:00:52.935Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T01:00:52.935Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T01:00:52.936Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T01:00:52.936Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T01:00:52.936Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T01:00:52.936Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T01:00:53.847Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:01:29.995Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:01:30.165Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T01:01:30.166Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T01:01:30.168Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T01:01:30.168Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T01:01:30.168Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T01:01:30.168Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T01:01:30.169Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T01:01:30.169Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T01:01:31.065Z"}
-{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-07T01:01:38.876Z"}
-{"level":"info","message":"Server closed","timestamp":"2026-01-07T01:01:39.085Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:35:36.057Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:35:36.241Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T01:35:36.242Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T01:35:36.244Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T01:35:36.244Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T01:35:36.244Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T01:35:36.244Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T01:35:36.245Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T01:35:36.245Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T01:35:37.263Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T01:55:52.791Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T01:55:53.194Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T17:49:31.002Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T17:49:31.376Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T17:49:31.377Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T17:49:31.378Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T17:49:31.378Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T17:49:31.379Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T17:49:31.379Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T17:49:31.379Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T17:49:31.379Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T17:49:32.291Z"}
-{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-07T19:23:43.577Z"}
-{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-07T19:23:44.270Z"}
-{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-07T19:23:44.275Z"}
-{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3001","timestamp":"2026-01-07T19:23:44.277Z"}
-{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-07T19:23:44.278Z"}
-{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-07T19:23:44.278Z"}
-{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-07T19:23:44.279Z"}
-{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-07T19:23:44.279Z"}
-{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-07T19:23:44.279Z"}
-{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-07T19:23:44.999Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T21:51:36.364Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T21:51:36.615Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T21:51:36.617Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T21:51:36.619Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T21:51:36.619Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T21:51:36.619Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T21:51:36.620Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T21:51:36.620Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T21:51:36.620Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-08T21:52:06.345Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T21:53:19.988Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T21:53:20.201Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T21:53:20.202Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T21:53:20.204Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T21:53:20.204Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T21:53:20.204Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T21:53:20.204Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T21:53:20.204Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T21:53:20.205Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-08T21:53:49.964Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T21:54:57.310Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T21:54:57.934Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T21:54:57.939Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T21:54:57.945Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T21:54:57.946Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T21:54:57.949Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T21:54:57.950Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T21:54:57.950Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T21:54:57.950Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-08T21:55:03.045Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T21:55:12.531Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T21:55:12.713Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T21:55:12.714Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T21:55:12.716Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T21:55:12.716Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T21:55:12.717Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T21:55:12.717Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T21:55:12.717Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T21:55:12.717Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-08T21:55:42.492Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T21:59:03.626Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T21:59:03.896Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T21:59:03.898Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T21:59:03.901Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T21:59:03.901Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T21:59:03.902Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T21:59:03.902Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T21:59:03.903Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T21:59:03.903Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-08T21:59:33.577Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T22:00:22.631Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T22:00:22.794Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T22:00:22.795Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T22:00:22.797Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T22:00:22.797Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T22:00:22.797Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T22:00:22.797Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T22:00:22.797Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T22:00:22.798Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-08T22:00:52.608Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T22:40:42.159Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T22:40:42.443Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T22:40:42.444Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T22:40:42.447Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T22:40:42.447Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T22:40:42.447Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T22:40:42.449Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T22:40:42.449Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T22:40:42.450Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-08T22:40:43.472Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-08T22:41:57.364Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-08T22:41:57.686Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T22:42:15.579Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T22:42:15.817Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T22:42:15.818Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T22:42:15.821Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T22:42:15.821Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T22:42:15.821Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T22:42:15.821Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T22:42:15.822Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T22:42:15.822Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-08T22:42:45.554Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T22:47:47.783Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-08T22:47:47.823Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T22:47:48.070Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T22:47:48.086Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T22:47:48.088Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T22:47:48.089Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T22:47:48.089Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T22:47:48.089Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T22:47:48.090Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T22:47:48.090Z"}
+{"level":"error","message":"Forgot password error: nodemailer.createTransporter is not a function","stack":"TypeError: nodemailer.createTransporter is not a function\n    at /workspaces/cubiclass/server.js:1221:36\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)","timestamp":"2026-01-08T22:48:06.887Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-08T22:49:11.806Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T22:49:46.188Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-08T22:49:46.222Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T22:49:46.474Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T22:49:46.479Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T22:49:46.481Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T22:49:46.482Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T22:49:46.482Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T22:49:46.482Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T22:49:46.483Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T22:49:46.483Z"}
+{"code":"EAUTH","command":"API","level":"error","message":"Forgot password error: Missing credentials for \"LOGIN\"","stack":"Error: Missing credentials for \"LOGIN\"\n    at SMTPConnection._formatError (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:809:19)\n    at SMTPConnection.login (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:454:38)\n    at /workspaces/cubiclass/node_modules/nodemailer/lib/smtp-transport/index.js:272:32\n    at SMTPConnection.<anonymous> (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:215:17)\n    at Object.onceWrapper (node:events:622:28)\n    at SMTPConnection.emit (node:events:508:28)\n    at SMTPConnection._actionEHLO (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:1371:14)\n    at SMTPConnection._processResponse (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:993:20)\n    at SMTPConnection._onData (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:774:14)\n    at SMTPConnection._onSocketData (/workspaces/cubiclass/node_modules/nodemailer/lib/smtp-connection/index.js:195:44)","timestamp":"2026-01-08T22:50:03.014Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-08T22:53:42.345Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T22:54:05.081Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-08T22:54:05.135Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T22:54:05.356Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T22:54:05.359Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T22:54:05.363Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T22:54:05.364Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T22:54:05.364Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T22:54:05.365Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T22:54:05.365Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T22:54:05.365Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf48b58cd211f3-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:42 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:43.013Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf48d6cd5e5329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:48 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:48.325Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf48df6eeb5329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:49 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:49.712Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf48ee7dd05329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:52 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:52.115Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf48f788055329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:53 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:53.569Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf48fdfd3e5329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:54 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:54.593Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf49054e025329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:55 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:55.769Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf490ce93e5329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:56 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:56.992Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf49145aac5329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:55:58 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:55:58.180Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf492adb335329-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 22:56:01 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T22:56:01.784Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-08T22:59:56.490Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T23:00:20.887Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-08T23:00:20.942Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T23:00:21.162Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T23:00:21.165Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T23:00:21.166Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T23:00:21.167Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T23:00:21.167Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T23:00:21.167Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T23:00:21.167Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T23:00:21.167Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf50253d47e1fe-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 23:00:47 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T23:00:47.610Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf503e1c8fe1fe-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 23:00:51 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T23:00:51.578Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf504a3c11e1fe-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 23:00:53 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T23:00:53.515Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf50560982e1fe-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 23:00:55 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T23:00:55.408Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf50c2fa1a11f3-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 23:01:12 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T23:01:12.867Z"}
+{"code":401,"error":{"code":401,"message":"No cookie auth credentials found"},"headers":{"access-control-allow-origin":"*","cf-ray":"9baf5170acf511f3-AMS","connection":"keep-alive","content-type":"application/json","date":"Thu, 08 Jan 2026 23:01:40 GMT","permissions-policy":"payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")","referrer-policy":"no-referrer, strict-origin-when-cross-origin","server":"cloudflare","transfer-encoding":"chunked","vary":"Accept-Encoding","x-content-type-options":"nosniff"},"level":"error","message":"Chat stream error: 401 No cookie auth credentials found","stack":"Error: 401 No cookie auth credentials found\n    at APIError.generate (/workspaces/cubiclass/node_modules/openai/error.js:48:20)\n    at OpenAI.makeStatusError (/workspaces/cubiclass/node_modules/openai/core.js:302:33)\n    at OpenAI.makeRequest (/workspaces/cubiclass/node_modules/openai/core.js:346:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async /workspaces/cubiclass/server.js:1939:21","status":401,"timestamp":"2026-01-08T23:01:40.634Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-08T23:03:43.607Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-08T23:04:13.880Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-08T23:04:13.944Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-08T23:04:14.212Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-08T23:04:14.215Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-08T23:04:14.216Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-08T23:04:14.217Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-08T23:04:14.217Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T23:04:14.217Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T23:04:14.218Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T23:04:14.218Z"}
