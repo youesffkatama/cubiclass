@@ -113,7 +113,7 @@
      directives: {
        defaultSrc: ["'self'"],
        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
-       scriptSrc: ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'cdn.socket.io', '*.googletagmanager.com', '*.google-analytics.com'],
+       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'cdn.socket.io', '*.googletagmanager.com', '*.google-analytics.com'],
        imgSrc: ["'self'", 'data:', 'https:', 'http:', 'blob:', 'filesystem:'],
        fontSrc: ["'self'", 'fonts.gstatic.com', 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net'],
        connectSrc: ["'self'", 'ws:', 'wss:', 'http:', 'https:', '*.analytics.google.com', '*.googleapis.com'],
