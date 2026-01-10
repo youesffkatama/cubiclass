@@ -121,7 +121,11 @@
        objectSrc: ["'none'"],
        mediaSrc: ["'self'", 'https:', 'http:'],
        workerSrc: ["'self'", 'blob:'],
-       manifestSrc: ["'self'"]
+       manifestSrc: ["'self'"],
+       formAction: ["'self'", 'http:', 'https:'],
+       baseUri: ["'self'"],
+       childSrc: ["'self'"],
+       frameAncestors: ["'none'"]
      }
    },
    crossOriginEmbedderPolicy: false
