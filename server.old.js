@@ -38,37 +38,10 @@
  const pdfParse = require('pdf-parse');
  const natural = require('natural');
  const { z } = require('zod');
+ const cache = require('./middleware/cache');
  const nodemailer = require('nodemailer');
  
- // ==========================================
- // FIXED: SECURE CONFIGURATION
- // ==========================================
- const CONFIG = {
-   PORT: process.env.PORT || 3000,
-   MONGODB_URI: process.env.MONGODB_URI,
-   REDIS_HOST: process.env.REDIS_HOST || 'localhost',
-   REDIS_PORT: process.env.REDIS_PORT || 6379,
-   JWT_SECRET: process.env.JWT_SECRET,
-   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-   JWT_EXPIRE: '1h',
-   JWT_REFRESH_EXPIRE: '7d',
-   OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
-   FRONTEND_URL: process.env.FRONTEND_URL,
-   UPLOAD_DIR: './uploads',
-   VECTOR_DIMENSIONS: 384,
-   MAX_FILE_SIZE: 50 * 1024 * 1024,
-   NODE_ENV: process.env.NODE_ENV || 'development'
- };
- 
- // âœ… FIX: Validate required environment variables in production
- if (CONFIG.NODE_ENV === 'production') {
-   const required = ['MONGODB_URI', 'JWT_SECRET', 'JWT_REFRESH_SECRET', 'OPENROUTER_API_KEY', 'FRONTEND_URL'];
-   const missing = required.filter(key => !process.env[key]);
-   if (missing.length > 0) {
-     console.error(`âŒ Missing required environment variables: ${missing.join(', ')}`);
-     process.exit(1);
-   }
- }
+ const CONFIG = require('./config');
  
  // ==========================================
  // LOGGING SETUP
@@ -99,26 +72,9 @@
  const server = http.createServer(app);
  const io = socketIO(server, {
    cors: {
-     origin: function(origin, callback) {
-       if (!origin) return callback(null, true);
-
-       const allowedOrigins = [
-         CONFIG.FRONTEND_URL || 'http://localhost:8080',
-         'http://localhost:8080',
-         'http://127.0.0.1:8080',
-         'http://localhost:3000',
-         'http://127.0.0.1:3000',
-         'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
-       ];
-
-       if (allowedOrigins.indexOf(origin) !== -1) {
-         callback(null, true);
-       } else {
-         callback(null, true); // Allow all in development
-       }
-     },
+     origin: CONFIG.FRONTEND_URL || 'http://localhost:8080',
      credentials: true,
-     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+     methods: ['GET', 'POST']
    }
  });
  
@@ -126,25 +82,7 @@
  // âœ… FIX: ENHANCED SECURITY MIDDLEWARE
  // ==========================================
  app.use(helmet({
-   contentSecurityPolicy: {
-     directives: {
-       defaultSrc: ["'self'"],
-       styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
-       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'cdn.socket.io', '*.googletagmanager.com', '*.google-analytics.com'],
-       imgSrc: ["'self'", 'data:', 'https:', 'http:', 'blob:', 'filesystem:'],
-       fontSrc: ["'self'", 'fonts.gstatic.com', 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net'],
-       connectSrc: ["'self'", 'ws:', 'wss:', 'http:', 'https:', '*.analytics.google.com', '*.googleapis.com'],
-       frameSrc: ["'self'", 'https:', 'data:'],
-       objectSrc: ["'none'"],
-       mediaSrc: ["'self'", 'https:', 'http:'],
-       workerSrc: ["'self'", 'blob:'],
-       manifestSrc: ["'self'"],
-       formAction: ["'self'", 'http:', 'https:'],
-       baseUri: ["'self'"],
-       childSrc: ["'self'"],
-       frameAncestors: ["'none'"]
-     }
-   },
+   contentSecurityPolicy: CONFIG.NODE_ENV === 'production',
    crossOriginEmbedderPolicy: false
  }));
  
@@ -176,7 +114,7 @@ app.use(cors({
  app.use(express.json({ limit: '10mb' }));
  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
  app.use(mongoSanitize());
- app.use(express.static('.'));
+ app.use(express.static('public'));
  app.use('/uploads', express.static('uploads'));
  
  // âœ… FIX: Stricter rate limiting for auth endpoints
@@ -213,287 +151,7 @@ app.use(cors({
    process.exit(1);
  });
  
- // ==========================================
- // MONGOOSE SCHEMAS
- // ==========================================
- const crypto = require('crypto');
-
- // Password hashing (Bible.AI style)
- // ==========================================
-// PASSWORD HASHING - FIXED
-// ==========================================
-
-async function hashPassword(password) {
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
-  return hash;
-}
-
-async function verifyPassword(password, hash) {
-  return await bcrypt.compare(password, hash);
-}
-
-function generateToken() {
-  return require('crypto').randomBytes(32).toString('hex');
-}
-// User Schema
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true, trim: true },
-  email: { type: String, required: true, unique: true, lowercase: true },
-  passwordHash: { type: String, required: true },
-  token: { type: String, default: null },
-  tokenExpiry: { type: Number, default: null },
-  
-  profile: {
-    firstName: String,
-    lastName: String,
-    avatar: String,
-    bio: String,
-  },
-  
-  dna: {
-    learningStyle: { type: String, enum: ['Visual', 'Textual', 'Socratic'], default: 'Visual' },
-    weaknesses: [String],
-    strengths: [String],
-    xp: { type: Number, default: 0 },
-    level: { type: Number, default: 1 },
-    rank: { 
-      type: String, 
-      enum: ['Novice', 'Scholar', 'Researcher', 'Professor', 'Nobel'],
-      default: 'Novice'
-    },
-    badges: [{
-      name: String,
-      icon: String,
-      earnedAt: Date
-    }],
-    streakDays: { type: Number, default: 0 },
-    lastActiveDate: Date
-  },
-  
-  settings: {
-    theme: { type: String, default: 'dark' },
-    aiModel: { type: String, default: 'mistralai/mistral-7b-instruct:free' },
-    notifications: { type: Boolean, default: true }
-  },
-  
-  subscription: {
-    plan: { type: String, enum: ['free', 'pro', 'enterprise'], default: 'free' },
-    expiresAt: Date
-  },
-  
-  createdAt: { type: Date, default: Date.now },
-  lastLogin: Date
-});
-
- // Knowledge Node Schema
- const KnowledgeNodeSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   type: { type: String, enum: ['PDF', 'WebUrl', 'Note'], default: 'PDF' },
    
-   meta: {
-     originalName: String,
-     filePath: String,
-     mimeType: String,
-     size: Number,
-     pageCount: Number,
-     wordCount: Number,
-     language: String
-   },
-   
-   persona: {
-     generatedName: String,
-     voiceHash: String,
-     personalityPrompt: String,
-     tone: String,
-     avatarUrl: String
-   },
-   
-   status: { 
-     type: String, 
-     enum: ['QUEUED', 'PROCESSING', 'INDEXED', 'FAILED'],
-     default: 'QUEUED',
-     index: true
-   },
-   processingError: String,
-   
-   tags: [String],
-   relatedNodes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'KnowledgeNode' }],
-   
-   summary: String,
-   keyPoints: [String],
-   
-   createdAt: { type: Date, default: Date.now },
-   updatedAt: { type: Date, default: Date.now }
- });
- 
- KnowledgeNodeSchema.index({ userId: 1, status: 1 });
- KnowledgeNodeSchema.index({ userId: 1, createdAt: -1 });
- 
- // Vector Chunk Schema
- const VectorChunkSchema = new mongoose.Schema({
-   nodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'KnowledgeNode', required: true, index: true },
-   content: { type: String, required: true },
-   embedding: { type: [Number], required: true },
-   
-   location: {
-     pageNumber: Number,
-     chunkIndex: Number,
-     bbox: [Number]
-   },
-   
-   metadata: {
-     wordCount: Number,
-     language: String
-   }
- });
- 
- VectorChunkSchema.index({ nodeId: 1, 'location.chunkIndex': 1 });
- 
- // Chat Conversation Schema
- const ConversationSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   nodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'KnowledgeNode', index: true },
-   title: String,
-   
-   messages: [{
-     role: { type: String, enum: ['user', 'assistant', 'system'] },
-     content: String,
-     timestamp: { type: Date, default: Date.now },
-     citations: [{
-       chunkId: mongoose.Schema.Types.ObjectId,
-       pageNumber: Number,
-       content: String
-     }]
-   }],
-   
-   createdAt: { type: Date, default: Date.now },
-   updatedAt: { type: Date, default: Date.now }
- });
- 
- ConversationSchema.index({ userId: 1, updatedAt: -1 });
- 
- // Study Plan Schema
- const StudyPlanSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   nodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'KnowledgeNode' },
-   
-   title: String,
-   subject: String,
-   examDate: Date,
-   difficulty: { type: String, enum: ['Beginner', 'Intermediate', 'Advanced'] },
-   
-   schedule: [{
-     day: Number,
-     date: Date,
-     tasks: [{
-       type: { type: String, enum: ['Read', 'Review', 'Quiz', 'Practice'] },
-       description: String,
-       estimatedMinutes: Number,
-       completed: { type: Boolean, default: false },
-       completedAt: Date
-     }]
-   }],
-   
-   progress: {
-     completedTasks: { type: Number, default: 0 },
-     totalTasks: Number,
-     percentage: { type: Number, default: 0 }
-   },
-   
-   createdAt: { type: Date, default: Date.now }
- });
- 
- StudyPlanSchema.index({ userId: 1, createdAt: -1 });
- 
- // Activity Log Schema
- const ActivityLogSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   type: { 
-     type: String, 
-     enum: ['login', 'upload', 'chat', 'quiz', 'study', 'achievement'],
-     index: true
-   },
-   description: String,
-   metadata: mongoose.Schema.Types.Mixed,
-   xpGained: { type: Number, default: 0 },
-   timestamp: { type: Date, default: Date.now }
- });
- 
- ActivityLogSchema.index({ userId: 1, timestamp: -1 });
- ActivityLogSchema.index({ userId: 1, type: 1, timestamp: -1 });
- 
- // âœ… NEW: Class Schema
- const ClassSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   name: { type: String, required: true },
-   description: String,
-   color: { type: String, default: 'green' },
-   inviteCode: { type: String, unique: true },
-   members: [{
-     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-     role: { type: String, enum: ['teacher', 'student'], default: 'student' },
-     joinedAt: { type: Date, default: Date.now }
-   }],
-   createdAt: { type: Date, default: Date.now }
- });
- 
- ClassSchema.index({ userId: 1, createdAt: -1 });
- 
- // âœ… NEW: Task Schema
- const TaskSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   classId: { type: mongoose.Schema.Types.ObjectId, ref: 'Class' },
-   title: { type: String, required: true },
-   description: String,
-   dueDate: Date,
-   completed: { type: Boolean, default: false },
-   completedAt: Date,
-   priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
-   createdAt: { type: Date, default: Date.now }
- });
- 
- TaskSchema.index({ userId: 1, completed: 1, dueDate: 1 });
- 
- // âœ… NEW: Note Schema
- const NoteSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   classId: { type: mongoose.Schema.Types.ObjectId, ref: 'Class' },
-   nodeId: { type: mongoose.Schema.Types.ObjectId, ref: 'KnowledgeNode' },
-   title: { type: String, required: true },
-   content: String,
-   tags: [String],
-   createdAt: { type: Date, default: Date.now },
-   updatedAt: { type: Date, default: Date.now }
- });
- 
- NoteSchema.index({ userId: 1, updatedAt: -1 });
- 
- // âœ… NEW: Notification Schema
- const NotificationSchema = new mongoose.Schema({
-   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-   type: { type: String, enum: ['info', 'success', 'warning', 'error'], default: 'info' },
-   title: String,
-   message: String,
-   read: { type: Boolean, default: false },
-   link: String,
-   createdAt: { type: Date, default: Date.now }
- });
- 
- NotificationSchema.index({ userId: 1, read: 1, createdAt: -1 });
- 
- // Create Models
- const User = mongoose.model('User', UserSchema);
- const KnowledgeNode = mongoose.model('KnowledgeNode', KnowledgeNodeSchema);
- const VectorChunk = mongoose.model('VectorChunk', VectorChunkSchema);
- const Conversation = mongoose.model('Conversation', ConversationSchema);
- const StudyPlan = mongoose.model('StudyPlan', StudyPlanSchema);
- const ActivityLog = mongoose.model('ActivityLog', ActivityLogSchema);
- const Class = mongoose.model('Class', ClassSchema);
- const Task = mongoose.model('Task', TaskSchema);
- const Note = mongoose.model('Note', NoteSchema);
- const Notification = mongoose.model('Notification', NotificationSchema);
- 
  // âœ… FIX: Create vector index on startup
  async function createVectorIndex() {
    try {
@@ -551,6 +209,8 @@ try {
     console.warn('⚠️ Redis initialization failed, continuing without cache:', err.message);
     redis = null;
 }
+
+module.exports = { app, server, io, redis };
  
  // ==========================================
  // OPENROUTER AI CLIENT
@@ -999,329 +659,9 @@ try {
    logger.error(`❌ Job ${job.id} failed:`, err);
  });
  
- // ==========================================
- // AUTH ROUTES
- // ==========================================
- app.post('/api/v1/auth/register', async (req, res) => {
-  console.log('📝 Register request received:', { email: req.body.email, username: req.body.username });
   
-  try {
-    const { username, email, password, profile, educationLevel } = req.body;
-    
-    // ✅ Validation
-    if (!username || !email || !password) {
-      console.log('❌ Missing required fields');
-      return res.status(400).json({
-        error: { message: 'Missing required fields: username, email, password' }
-      });
-    }
-    
-    if (password.length < 8) {
-      console.log('❌ Password too short');
-      return res.status(400).json({
-        error: { message: 'Password must be at least 8 characters' }
-      });
-    }
-    
-    // ✅ Check existing user
-    const existingUser = await User.findOne({
-      $or: [{ email: email.toLowerCase() }, { username: username }]
-    });
-    
-    if (existingUser) {
-      console.log('❌ User already exists');
-      return res.status(400).json({
-        error: { message: 'User with this email or username already exists' }
-      });
-    }
-    
-    // ✅ Hash password
-    const passwordHash = await hashPassword(password);
-    console.log('🔐 Password hashed');
-    
-    // ✅ Generate token
-    const token = generateToken();
-    const tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days
-    
-    // ✅ Create user
-    const user = await User.create({
-      username: username,
-      email: email.toLowerCase(),
-      passwordHash: passwordHash,
-      token: token,
-      tokenExpiry: tokenExpiry,
-      profile: {
-        firstName: profile?.firstName || username,
-        lastName: profile?.lastName || '',
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=00ed64&color=001e2b`
-      },
-      dna: {
-        learningStyle: 'Visual',
-        weaknesses: [],
-        strengths: [],
-        xp: 0,
-        level: 1,
-        rank: 'Novice',
-        badges: [],
-        streakDays: 0,
-        lastActiveDate: new Date()
-      },
-      settings: {
-        theme: 'dark',
-        aiModel: 'mistralai/mistral-7b-instruct:free',
-        notifications: true
-      },
-      subscription: {
-        plan: 'free'
-      },
-      lastLogin: new Date()
-    });
-    
-    console.log('✅ User created:', user._id);
-    
-    // ✅ Create welcome notification
-    await Notification.create({
-      userId: user._id,
-      type: 'success',
-      title: 'Welcome to Scholar.AI!',
-      message: 'Get started by uploading your first PDF or exploring the AI Tutor.',
-      read: false
-    });
-    
-    // ✅ Log activity
-    await ActivityLog.create({
-      userId: user._id,
-      type: 'login',
-      description: 'Account created and first login',
-      xpGained: 0
-    });
-    
-    console.log('✅ Sending success response');
-    
-    res.status(201).json({
-      success: true,
-      data: {
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          avatar: user.profile.avatar,
-          dna: user.dna,
-          settings: user.settings,
-          profile: user.profile
-        },
-        tokens: { 
-          accessToken: token
-        }
-      }
-    });
-    
-  } catch (error) {
-    console.error('❌ Registration error:', error);
-    res.status(500).json({ 
-      error: { 
-        message: 'Registration failed: ' + error.message 
-      } 
-    });
-  }
-});
-
-app.post('/api/v1/auth/login', async (req, res) => {
-  console.log('🔐 Login request received:', { email: req.body.email });
-  
-  try {
-    const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({ 
-        error: { message: 'Email and password required' } 
-      });
-    }
-    
-    // ✅ Find user
-    const user = await User.findOne({ email: email.toLowerCase() });
-    
-    if (!user) {
-      console.log('❌ User not found');
-      return res.status(401).json({ 
-        error: { message: 'Invalid email or password' } 
-      });
-    }
-    
-    // ✅ Verify password
-    const isValid = await verifyPassword(password, user.passwordHash);
-    
-    if (!isValid) {
-      console.log('❌ Invalid password');
-      return res.status(401).json({ 
-        error: { message: 'Invalid email or password' } 
-      });
-    }
-    
-    console.log('✅ Password verified');
-    
-    // ✅ Generate new token
-    const token = generateToken();
-    const tokenExpiry = Date.now() + (7 * 24 * 60 * 60 * 1000);
-    
-    user.token = token;
-    user.tokenExpiry = tokenExpiry;
-    user.lastLogin = new Date();
-    
-    // ✅ Update streak
-    const today = new Date().setHours(0, 0, 0, 0);
-    const lastActive = user.dna.lastActiveDate 
-      ? new Date(user.dna.lastActiveDate).setHours(0, 0, 0, 0) 
-      : 0;
-    const daysDiff = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
-    
-    if (daysDiff === 1) {
-      user.dna.streakDays += 1;
-    } else if (daysDiff > 1) {
-      user.dna.streakDays = 1;
-    }
-    
-    user.dna.lastActiveDate = new Date();
-    await user.save();
-    
-    console.log('✅ Login successful');
-    
-    // ✅ Log activity
-    await ActivityLog.create({
-      userId: user._id,
-      type: 'login',
-      description: 'User logged in',
-      xpGained: 0
-    });
-    
-    res.json({
-      success: true,
-      data: {
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          avatar: user.profile.avatar,
-          dna: user.dna,
-          settings: user.settings,
-          profile: user.profile
-        },
-        tokens: { 
-          accessToken: token 
-        }
-      }
-    });
-    
-  } catch (error) {
-    console.error('❌ Login error:', error);
-    res.status(500).json({ 
-      error: { message: 'Login failed: ' + error.message } 
-    });
-  }
-});
  
- app.get('/api/v1/auth/me', authenticateToken, (req, res) => {
-   res.json({
-     success: true,
-     data: {
-       user: {
-         id: req.user._id,
-         username: req.user.username,
-         email: req.user.email,
-         profile: req.user.profile,
-         dna: req.user.dna,
-         settings: req.user.settings
-       }
-     }
-   });
- });
-
- app.post('/api/v1/auth/forgot-password', async (req, res) => {
-  try {
-    const validated = ForgotPasswordSchema.parse(req.body);
-
-    const user = await User.findOne({ email: validated.email });
-    if (!user) {
-      return res.json({ success: true, message: 'If an account with that email exists, a password reset link has been sent.' });
-    }
-
-    // Generate reset token
-    const resetToken = jwt.sign(
-      { userId: user._id, type: 'password_reset' },
-      CONFIG.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-
-    // Create email transporter
-    const transporter = nodemailer.createTransport({
-      host: 'smtp-mail.outlook.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: 'youesffkatama@outlook.com',
-        pass: process.env.EMAIL_PASSWORD // Add this to your .env file
-      }
-    });
-
-    // Send email
-    const resetUrl = `${CONFIG.FRONTEND_URL}/reset-password?token=${resetToken}`;
-
-    await transporter.sendMail({
-      from: '"Scholar.AI" <youesffkatama@outlook.com>',
-      to: validated.email,
-      subject: 'Password Reset Request - Scholar.AI',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #00ed64;">Password Reset Request</h2>
-          <p>You requested to reset your password for Scholar.AI.</p>
-          <p>Click the button below to reset your password (link expires in 1 hour):</p>
-          <a href="${resetUrl}" style="display: inline-block; background: #00ed64; color: #001e2b; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0;">Reset Password</a>
-          <p>Or copy this link: ${resetUrl}</p>
-          <p style="color: #666; font-size: 14px;">If you didn't request this, please ignore this email.</p>
-        </div>
-      `
-    });
-
-    logger.info(`Password reset email sent to ${validated.email}`);
-
-    res.json({
-      success: true,
-      message: 'If an account with that email exists, a password reset link has been sent.'
-    });
-
-  } catch (error) {
-    logger.error('Forgot password error:', error);
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        error: { message: 'Validation error', details: error.errors }
-      });
-    }
-    res.status(500).json({ error: { message: 'Request failed' } });
-  }
- });
  
- // ✅ NEW: User Profile & Settings
- app.patch('/api/v1/user/profile', authenticateToken, async (req, res) => {
-   try {
-     const { firstName, lastName, bio } = req.body;
-     req.user.profile = { ...req.user.profile, firstName, lastName, bio };
-     await req.user.save();
-     res.json({ success: true, data: { profile: req.user.profile } });
-   } catch (error) {
-     res.status(500).json({ error: { message: 'Update failed' } });
-   }
- });
- 
- app.patch('/api/v1/user/settings', authenticateToken, async (req, res) => {
-   try {
-     const { theme, aiModel, notifications } = req.body;
-     req.user.settings = { ...req.user.settings, theme, aiModel, notifications };
-     await req.user.save();
-     res.json({ success: true, data: { settings: req.user.settings } });
-   } catch (error) {
-     res.status(500).json({ error: { message: 'Update failed' } });
-   }
- });
  
  // ==========================================
  // WORKSPACE ROUTES
@@ -1368,7 +708,7 @@ app.post('/api/v1/auth/login', async (req, res) => {
    }
  });
  
- app.get('/api/v1/workspace/files', authenticateToken, async (req, res) => {
+ app.get('/api/v1/workspace/files', authenticateToken, cache(600), async (req, res) => {
    try {
      const { page = 1, limit = 20, status, search } = req.query;
      
@@ -2286,7 +1626,7 @@ app.post('/api/v1/auth/login', async (req, res) => {
  // ==========================================
  // ANALYTICS ROUTES
  // ==========================================
- app.get('/api/v1/analytics/dashboard', authenticateToken, async (req, res) => {
+ app.get('/api/v1/analytics/dashboard', authenticateToken, cache(600), async (req, res) => {
    try {
      const [totalFiles, totalConversations, recentActivity] = await Promise.all([
        KnowledgeNode.countDocuments({ userId: req.user._id }),
@@ -2706,30 +2046,6 @@ app.get('/api/v1/user/stats', authenticateToken, async (req, res) => {
   }
 }
 
-function getActivityIcon(type) {
-  const icons = {
-    login: 'fa-sign-in-alt',
-    upload: 'fa-upload',
-    chat: 'fa-comments',
-    quiz: 'fa-question-circle',
-    study: 'fa-book',
-    achievement: 'fa-trophy'
-  };
-  return icons[type] || 'fa-circle';
-}
-
-function getActivityColor(type) {
-  const colors = {
-    login: '#00bfff',
-    upload: '#00ed64',
-    chat: '#bd00ff',
-    quiz: '#ff9800',
-    study: '#00ed64',
-    achievement: '#FFD700'
-  };
-  return colors[type] || '#00ed64';
-}
-
  // ==========================================
  // SERVER INITIALIZATION
  // ==========================================
@@ -2738,7 +2054,7 @@ function getActivityColor(type) {
      await initEmbeddings();
      await createVectorIndex(); // ✅ FIX: Now called!
      
-     server.listen(CONFIG.PORT, '0.0.0.0', () => {
+     server.listen(CONFIG.PORT, () => {
        logger.info(`🚀 Scholar.AI FIXED server running on port ${CONFIG.PORT}`);
        logger.info(`📚 Environment: ${CONFIG.NODE_ENV}`);
        logger.info(`🗄️ MongoDB: Connected`);
@@ -2769,4 +2085,4 @@ function getActivityColor(type) {
  
  initializeServer();
  
- module.exports = { app, server, io };
+ module.exports = { app, server, io, redis };

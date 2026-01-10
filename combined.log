@@ -152,3 +152,109 @@
 {"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-08T23:04:14.217Z"}
 {"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-08T23:04:14.218Z"}
 {"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-08T23:04:14.218Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:25:54.635Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:25:54.924Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:25:54.925Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:25:54.927Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:25:54.928Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:25:54.928Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:25:54.928Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:25:54.928Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:25:54.928Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-10T19:26:24.615Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:29:47.873Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:29:48.025Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:29:48.026Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:29:48.027Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:29:48.027Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:29:48.027Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:29:48.028Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:29:48.028Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:29:48.028Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-10T19:30:17.852Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:30:52.051Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:30:52.252Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:30:52.253Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:30:52.255Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:30:52.255Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:30:52.256Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:30:52.256Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:30:52.256Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:30:52.256Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-10T19:31:22.028Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:34:26.343Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:34:26.525Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:34:26.526Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:34:26.527Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:34:26.528Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:34:26.528Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:34:26.528Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:34:26.528Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:34:26.528Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-10T19:34:35.313Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:34:56.049Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:34:56.215Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:34:56.215Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:34:56.217Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:34:56.217Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:34:56.217Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:34:56.218Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:34:56.218Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:34:56.218Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-10T19:35:13.143Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:35:24.270Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:35:24.486Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:35:24.487Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:35:24.488Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:35:24.489Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:35:24.489Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:35:24.489Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:35:24.489Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:35:24.489Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-10T19:35:54.247Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:37:06.160Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:37:06.323Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:37:06.324Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:37:06.325Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:37:06.325Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:37:06.326Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:37:06.326Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:37:06.326Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:37:06.326Z"}
+{"level":"error","message":"âŒ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017","reason":{"commonWireVersion":0,"compatible":true,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"logicalSessionTimeoutMinutes":null,"maxElectionId":null,"maxSetVersion":null,"servers":{},"setName":null,"stale":false,"type":"Unknown"},"stack":"MongooseServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017\n    at _handleConnectionErrors (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:816:11)\n    at NativeConnection.openUri (/workspaces/cubiclass/node_modules/mongoose/lib/connection.js:791:11)","timestamp":"2026-01-10T19:37:36.136Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:38:19.175Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:38:19.347Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:38:19.347Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:38:19.349Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:38:19.349Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:38:19.349Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:38:19.350Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:38:19.350Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:38:19.350Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-10T19:38:20.353Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:44:26.209Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:44:26.373Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-10T19:47:59.488Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-10T19:47:59.804Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:48:35.989Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:48:36.175Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:48:36.176Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:48:36.178Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:48:36.178Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:48:36.178Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:48:36.179Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:48:36.179Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:48:36.179Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-10T19:48:37.251Z"}
+{"level":"info","message":"SIGTERM received, shutting down gracefully","timestamp":"2026-01-10T19:49:34.467Z"}
+{"level":"info","message":"Server closed","timestamp":"2026-01-10T19:49:34.789Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T19:49:47.363Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T19:49:47.542Z"}
+{"level":"warn","message":"Vector index may already exist:","timestamp":"2026-01-10T19:49:47.543Z"}
+{"level":"info","message":"🚀 Scholar.AI FIXED server running on port 3000","timestamp":"2026-01-10T19:49:47.545Z"}
+{"level":"info","message":"📚 Environment: development","timestamp":"2026-01-10T19:49:47.545Z"}
+{"level":"info","message":"🗄️ MongoDB: Connected","timestamp":"2026-01-10T19:49:47.545Z"}
+{"level":"info","message":"⚡ Redis: Connected","timestamp":"2026-01-10T19:49:47.546Z"}
+{"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T19:49:47.546Z"}
+{"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T19:49:47.546Z"}
+{"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-10T19:49:48.567Z"}

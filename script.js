@@ -49,8 +49,7 @@ const API_CONFIG = {
     timeout: 30000 // 30 seconds
 };
 
-console.log('✅ API_CONFIG loaded:', API_CONFIG);
-
+// Add this to handle the upload API call that was causing issues
 const API = {
     async request(endpoint, options = {}) {
         const url = `${API_CONFIG.baseURL}${endpoint}`;
@@ -71,7 +70,7 @@ const API = {
 
         try {
             console.log('📡 API Request:', url, options.method || 'GET');
-            
+
             const response = await fetch(url, config);
             clearTimeout(id);
 
@@ -91,7 +90,7 @@ const API = {
                 }
                 throw new Error(data.error?.message || `Request failed with status ${response.status}`);
             }
-            
+
             return data;
         } catch (error) {
             clearTimeout(id);
@@ -99,15 +98,65 @@ const API = {
             throw error;
         }
     },
-    
+
+    // Add upload method specifically for file uploads
+    async upload(endpoint, formData) {
+        const url = `${API_CONFIG.baseURL}${endpoint}`;
+        const token = Utils.loadFromStorage('scholar_token');
+
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), API_CONFIG.timeout);
+
+        const config = {
+            method: 'POST',
+            body: formData,
+            signal: controller.signal,
+            headers: {
+                ...(token && { 'Authorization': `Bearer ${token}` })
+                // Don't set Content-Type for multipart/form-data - let browser set it with boundary
+            }
+        };
+
+        try {
+            console.log('📤 Upload Request:', url);
+
+            const response = await fetch(url, config);
+            clearTimeout(id);
+
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                data = { error: { message: 'Invalid response from server' } };
+            }
+
+            console.log('📤 Upload Response:', response.status, data);
+
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    Utils.saveToStorage('scholar_token', null);
+                    Utils.saveToStorage('currentUser', null);
+                }
+                throw new Error(data.error?.message || `Upload failed with status ${response.status}`);
+            }
+
+            return data;
+        } catch (error) {
+            clearTimeout(id);
+            console.error('❌ Upload Error:', error);
+            throw error;
+        }
+    },
+
     get(endpoint) { return this.request(endpoint, { method: 'GET' }); },
-    post(endpoint, body) { 
+    post(endpoint, body) {
         console.log('📤 POST Body:', body);
-        return this.request(endpoint, { method: 'POST', body: JSON.stringify(body) }); 
+        return this.request(endpoint, { method: 'POST', body: JSON.stringify(body) });
     },
     patch(endpoint, body) { return this.request(endpoint, { method: 'PATCH', body: JSON.stringify(body) }); },
     delete(endpoint) { return this.request(endpoint, { method: 'DELETE' }); },
 };
+
 
 // In loadSavedSession():
 function loadSavedSession() {
@@ -136,13 +185,19 @@ function loadSavedSession() {
           console.warn('⚠️ No token provided for socket connection');
           return;
       }
-      
+
       try {
-          socket = io('http://localhost:3000', {
+          // Determine the correct server URL based on the current origin
+          const serverUrl = window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev')
+              ? 'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
+              : 'http://localhost:3000';
+
+          socket = io(serverUrl, {
               auth: { token },
               reconnection: true,
               reconnectionDelay: 1000,
-              reconnectionAttempts: 5
+              reconnectionAttempts: 5,
+              transports: ['websocket', 'polling'] // Specify transports
           });
           
           socket.on('connect', () => {
