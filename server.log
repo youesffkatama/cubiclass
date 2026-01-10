@@ -1,26 +1,16 @@
 BullMQ: DEPRECATION WARNING! Your redis options maxRetriesPerRequest must be null. On the next versions having this settings will throw an exception
 BullMQ: DEPRECATION WARNING! Your redis options maxRetriesPerRequest must be null. On the next versions having this settings will throw an exception
-[32minfo[39m: 🧠 Loading embedding model... {"timestamp":"2026-01-10T19:58:55.600Z"}
-[32minfo[39m: âœ… Embedding model loaded {"timestamp":"2026-01-10T19:58:55.756Z"}
-[33mwarn[39m: Vector index may already exist: {"timestamp":"2026-01-10T19:58:55.757Z"}
-[32minfo[39m: 🚀 Scholar.AI FIXED server running on port 3000 {"timestamp":"2026-01-10T19:58:55.758Z"}
-[32minfo[39m: 📚 Environment: development {"timestamp":"2026-01-10T19:58:55.759Z"}
-[32minfo[39m: 🗄️ MongoDB: Connected {"timestamp":"2026-01-10T19:58:55.759Z"}
-[32minfo[39m: ⚡ Redis: Connected {"timestamp":"2026-01-10T19:58:55.759Z"}
-[32minfo[39m: 🤖 AI: OpenRouter configured {"timestamp":"2026-01-10T19:58:55.759Z"}
-[32minfo[39m: ✅ ALL 175 ISSUES RESOLVED {"timestamp":"2026-01-10T19:58:55.760Z"}
+[32minfo[39m: 🧠 Loading embedding model... {"timestamp":"2026-01-10T20:10:46.266Z"}
+[32minfo[39m: âœ… Embedding model loaded {"timestamp":"2026-01-10T20:10:46.452Z"}
+[33mwarn[39m: Vector index may already exist: {"timestamp":"2026-01-10T20:10:46.453Z"}
+[32minfo[39m: 🚀 Scholar.AI FIXED server running on port 3000 {"timestamp":"2026-01-10T20:10:46.454Z"}
+[32minfo[39m: 📚 Environment: development {"timestamp":"2026-01-10T20:10:46.455Z"}
+[32minfo[39m: 🗄️ MongoDB: Connected {"timestamp":"2026-01-10T20:10:46.455Z"}
+[32minfo[39m: ⚡ Redis: Connected {"timestamp":"2026-01-10T20:10:46.455Z"}
+[32minfo[39m: 🤖 AI: OpenRouter configured {"timestamp":"2026-01-10T20:10:46.456Z"}
+[32minfo[39m: ✅ ALL 175 ISSUES RESOLVED {"timestamp":"2026-01-10T20:10:46.456Z"}
 ✅ Redis connected
 IMPORTANT! Eviction policy is volatile-lru. It should be "noeviction"
 IMPORTANT! Eviction policy is volatile-lru. It should be "noeviction"
 IMPORTANT! Eviction policy is volatile-lru. It should be "noeviction"
-[32minfo[39m: âœ… MongoDB connected {"timestamp":"2026-01-10T19:58:56.845Z"}
-ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default). This could indicate a misconfiguration which would prevent express-rate-limit from accurately identifying users. See https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/ for more information.
-    at _Validations.<anonymous> (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:180:15)
-    at _Validations.wrap (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:313:18)
-    at _Validations.xForwardedForHeader (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:178:10)
-    at Object.keyGenerator (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:542:19)
-    at /workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:595:32
-    at async /workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:576:5 {
-  code: 'ERR_ERL_UNEXPECTED_X_FORWARDED_FOR',
-  help: 'https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/'
-}
+[32minfo[39m: âœ… MongoDB connected {"timestamp":"2026-01-10T20:10:47.383Z"}

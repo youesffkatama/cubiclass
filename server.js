@@ -2596,4 +2596,4 @@ function getActivityColor(type) {
  
  initializeServer();
  
- module.exports = { app, server, io };
+ module.exports = { app, server };
