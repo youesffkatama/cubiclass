@@ -109,7 +109,18 @@
  // âœ… FIX: ENHANCED SECURITY MIDDLEWARE
  // ==========================================
  app.use(helmet({
-   contentSecurityPolicy: CONFIG.NODE_ENV === 'production',
+   contentSecurityPolicy: {
+     directives: {
+       defaultSrc: ["'self'"],
+       styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
+       scriptSrc: ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'cdn.socket.io'],
+       imgSrc: ["'self'", 'data:', 'https:', 'http:'],
+       fontSrc: ["'self'", 'fonts.gstatic.com', 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net'],
+       connectSrc: ["'self'", 'ws:', 'wss:', 'http:', 'https:'],
+       frameSrc: ["'none'"],
+       objectSrc: ["'none'"]
+     }
+   },
    crossOriginEmbedderPolicy: false
  }));
  
