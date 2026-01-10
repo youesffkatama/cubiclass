@@ -1018,47 +1018,6 @@ const EnhancedAuth = {
     }
 };
 
-// ==========================================
-// INITIALIZE ALL EFFECTS
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Wait for app to fully load
-    setTimeout(() => {
-        console.log('🎨 Initializing Dynamic Effects...');
-        
-        ParticleSystem.init();
-        CursorEffect.init();
-        SmoothScroll.init();
-        TiltEffect.init();
-        GlowEffect.init();
-        RippleEffect.init();
-        NotificationSystem.init();
-        KeyboardShortcuts.init();
-        LoadingAnimations.init();
-        ActivityUpdater.init();
-        EnhancedAuth.init();
-        
-        // Re-initialize effects after navigation
-        const observer = new MutationObserver(() => {
-            TiltEffect.init();
-            SmoothScroll.init();
-            TypingEffect.init();
-        });
-        
-        const viewContainer = document.getElementById('viewContainer');
-        if (viewContainer) {
-            observer.observe(viewContainer, {
-                childList: true,
-                subtree: true
-            });
-        }
-        
-        // Initialize typing effect
-        TypingEffect.init();
-        
-        console.log('✨ All dynamic effects loaded!');
-    }, 1500);
-});
 
 // Export for external use
 window.ScholarAI = {
@@ -1068,6 +1027,8 @@ window.ScholarAI = {
     SmoothScroll,
     TiltEffect,
     GlowEffect,
+    RippleEffect,
+    TypingEffect,
     NotificationSystem
 };
 
@@ -4174,54 +4135,19 @@ const NoteModule = {
 // Initialize all extended modules
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🎓 Scholar.AI - Initializing Application...');
-    
-    // ✅ Initialize auth first
-    AuthModule.init();
-    PDFModule.init();
-    AIModule.init();
-    
-    // ✅ Initialize ALL visual effects
-    setTimeout(() => {
-        console.log('🎨 Initializing Dynamic Effects...');
-        document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎓 Scholar.AI - Initializing Application...');
-    
+
     // ✅ Initialize auth FIRST
     AuthModule.init();
-    
+
     // ✅ Initialize modules
     PDFModule.init();
     AIModule.init();
-    
+
     // ✅ Initialize visual effects AFTER short delay
     setTimeout(() => {
         console.log('🎨 Initializing visual effects...');
-        
-        // Cursor effect
-        CursorEffect.init();
-        
-        // Other effects
-        ParticleSystem.init();
-        SmoothScroll.init();
-        TiltEffect.init();
-        GlowEffect.init();
-        RippleEffect.init();
-        NotificationSystem.init();
-        KeyboardShortcuts.init();
-        LoadingAnimations.init();
-        ActivityUpdater.init();
-        EnhancedAuth.init();
-        i18nModule.init();
-        GamificationModule.init();
-        VoiceCommandModule.init();
-        StudyTimerModule.init();
-        NoteModule.init();
-        
-        console.log('✨ All effects loaded!');
-    }, 800);
-    
-    console.log('✅ Scholar.AI - Ready');
-});
+
+        // Initialize all effects once
         ParticleSystem.init();
         CursorEffect.init();
         SmoothScroll.init();
@@ -4238,13 +4164,15 @@ document.addEventListener('DOMContentLoaded', () => {
         VoiceCommandModule.init();
         StudyTimerModule.init();
         NoteModule.init();
-        
+        TypingEffect.init(); // Add TypingEffect
+
         // Re-initialize on navigation
         const observer = new MutationObserver(() => {
             TiltEffect.init();
             SmoothScroll.init();
+            TypingEffect.init(); // Re-initialize TypingEffect on navigation
         });
-        
+
         const viewContainer = document.getElementById('viewContainer');
         if (viewContainer) {
             observer.observe(viewContainer, {
@@ -4252,10 +4180,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 subtree: true
             });
         }
-        
+
         console.log('✨ All dynamic effects loaded!');
-    }, 500);  // ✅ Reduced delay for faster load
-    
+    }, 800);  // Increased delay to ensure DOM is ready
+
     // ✅ Load initial data if logged in
     const token = Utils.loadFromStorage('scholar_token');
     if (token) {
@@ -4263,7 +4191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         PDFModule.loadFiles();
         NotificationSystem.loadNotifications();
     }
-    
+
     console.log('✅ Scholar.AI - Ready');
 });
 // Export extended modules
