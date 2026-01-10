@@ -1,872 +1,1112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Scholar.AI - Your Intelligent Academic Workspace">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Scholar.AI - Your Intelligent Academic Workspace"
+    />
     <title>Scholar.AI | Intelligent Academic Workspace</title>
-    
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <!-- Animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    
-    
+
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <!-- Toast Notification Container -->
     <div id="toastContainer" class="toast-container"></div>
 
     <!-- Global Loading Overlay -->
-    <div id="globalLoader" class="global-loader" style="display: none;">
-        <div class="loader-wrapper">
-            <div class="neural-spinner"></div>
-            <p class="loader-text">Processing Intelligence...</p>
-        </div>
+    <div id="globalLoader" class="global-loader" style="display: none">
+      <div class="loader-wrapper">
+        <div class="neural-spinner"></div>
+        <p class="loader-text">Processing Intelligence...</p>
+      </div>
     </div>
 
     <!-- ==================== SPLASH SCREEN ==================== -->
     <div id="splashScreen" class="splash-screen">
-        <div class="splash-content">
-            <div class="splash-icon">
-                <i class="fas fa-cube"></i>
-            </div>
-            <h1 class="splash-title">Scholar.AI</h1>
-            <p class="splash-subtitle">Your Intelligent Academic Workspace</p>
-            <div class="splash-loader">
-                <div class="loader-bar"></div>
-            </div>
+      <div class="splash-content">
+        <div class="splash-icon">
+          <i class="fas fa-cube"></i>
         </div>
+        <h1 class="splash-title">Scholar.AI</h1>
+        <p class="splash-subtitle">Your Intelligent Academic Workspace</p>
+        <div class="splash-loader">
+          <div class="loader-bar"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ==================== LOGIN SCREEN ==================== -->
-    <div id="loginContainer" class="auth-container" style="display:none;">
-        <div class="auth-background">
-            <div class="floating-shape shape-1"></div>
-            <div class="floating-shape shape-2"></div>
-            <div class="floating-shape shape-3"></div>
+    <div id="loginContainer" class="auth-container" style="display: none">
+      <div class="auth-background">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+      </div>
+
+      <div class="auth-box animate__animated animate__fadeIn">
+        <div class="auth-logo">
+          <i class="fas fa-cube"></i>
         </div>
-        
-        <div class="auth-box animate__animated animate__fadeIn">
-            <div class="auth-logo">
-                <i class="fas fa-cube"></i>
+        <h2>Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to continue your learning journey</p>
+
+        <form id="loginForm" class="auth-form">
+          <div class="input-group">
+            <label>Email Address</label>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="your@email.com"
+                required
+                autocomplete="email"
+              />
             </div>
-            <h2>Welcome Back</h2>
-            <p class="auth-subtitle">Sign in to continue your learning journey</p>
-            
-            <form id="loginForm" class="auth-form">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <div class="input-field">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="loginEmail" placeholder="your@email.com" required autocomplete="email">
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Password</label>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
-                    </div>
-                </div>
-                
-                <div class="auth-extras">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="rememberMe">
-                        <span>Remember me</span>
-                    </label>
-                    <a class="link-primary" id="showForgotPassword">Forgot password?</a>
-                </div>
-                
-                <button type="submit" class="btn-primary btn-glow full-width">
-                                        <span>Sign In</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </form>
-            
-            <div class="auth-divider"><span>or</span></div>
-            
-            <p class="auth-link">
-                Don't have an account? 
-                <a id="goToSignup" class="link-primary">Create one now</a>
-            </p>
-        </div>
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="••••••••"
+                required
+                autocomplete="current-password"
+              />
+            </div>
+          </div>
+
+          <div class="auth-extras">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" />
+              <span>Remember me</span>
+            </label>
+            <a class="link-primary" id="showForgotPassword">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary btn-glow full-width">
+            <span>Sign In</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <p class="auth-link">
+          Don't have an account?
+          <a id="goToSignup" class="link-primary">Create one now</a>
+        </p>
+      </div>
     </div>
 
     <!-- ==================== SIGNUP SCREEN ==================== -->
-    <div id="signupContainer" class="auth-container" style="display:none;">
-        <div class="auth-background">
-            <div class="floating-shape shape-1"></div>
-            <div class="floating-shape shape-2"></div>
-            <div class="floating-shape shape-3"></div>
+    <div id="signupContainer" class="auth-container" style="display: none">
+      <div class="auth-background">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+      </div>
+
+      <div class="auth-box animate__animated animate__fadeIn">
+        <div class="auth-logo">
+          <i class="fas fa-user-plus"></i>
         </div>
-        
-        <div class="auth-box animate__animated animate__fadeIn">
-            <div class="auth-logo">
-                <i class="fas fa-user-plus"></i>
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">Join Scholar.AI and start learning smarter</p>
+
+        <form id="signupForm" class="auth-form">
+          <div class="input-row">
+            <div class="input-group">
+              <label>First Name</label>
+              <div class="input-field">
+                <i class="fas fa-user"></i>
+                <input
+                  type="text"
+                  id="signupFirstName"
+                  placeholder="John"
+                  required
+                  autocomplete="given-name"
+                />
+              </div>
             </div>
-            <h2>Create Account</h2>
-            <p class="auth-subtitle">Join Scholar.AI and start learning smarter</p>
-            
-            <form id="signupForm" class="auth-form">
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>First Name</label>
-                        <div class="input-field">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="signupFirstName" placeholder="John" required autocomplete="given-name">
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label>Last Name</label>
-                        <div class="input-field">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="signupLastName" placeholder="Doe" required autocomplete="family-name">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <div class="input-field">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="signupEmail" placeholder="your@email.com" required autocomplete="email">
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Password</label>
-                    <div class="input-field">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="signupPassword" placeholder="••••••••" required autocomplete="new-password">
-                        <span class="password-strength" id="passwordStrength"></span>
-                    </div>
-                    <small class="input-hint">At least 8 characters</small>
-                </div>
-                
-                <div class="input-group">
-                    <label>Education Level</label>
-                    <div class="input-field">
-                        <i class="fas fa-graduation-cap"></i>
-                        <select id="signupEducation" required>
-                            <option value="">Select level</option>
-                            <option value="high-school">High School</option>
-                            <option value="undergraduate">Undergraduate</option>
-                            <option value="graduate">Graduate</option>
-                            <option value="phd">PhD/Doctorate</option>
-                            <option value="professional">Professional</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-primary btn-glow full-width">
-                    <span>Create Account</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </form>
-            
-            <div class="auth-divider"><span>or</span></div>
-            
-            <p class="auth-link">
-                Already have an account? 
-                <a id="goToLogin" class="link-primary">Sign in</a>
-            </p>
-        </div>
+
+            <div class="input-group">
+              <label>Last Name</label>
+              <div class="input-field">
+                <i class="fas fa-user"></i>
+                <input
+                  type="text"
+                  id="signupLastName"
+                  placeholder="Doe"
+                  required
+                  autocomplete="family-name"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Email Address</label>
+            <div class="input-field">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                id="signupEmail"
+                placeholder="your@email.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="signupPassword"
+                placeholder="••••••••"
+                required
+                autocomplete="new-password"
+              />
+              <span class="password-strength" id="passwordStrength"></span>
+            </div>
+            <small class="input-hint">At least 8 characters</small>
+          </div>
+
+          <div class="input-group">
+            <label>Education Level</label>
+            <div class="input-field">
+              <i class="fas fa-graduation-cap"></i>
+              <select id="signupEducation" required>
+                <option value="">Select level</option>
+                <option value="high-school">High School</option>
+                <option value="undergraduate">Undergraduate</option>
+                <option value="graduate">Graduate</option>
+                <option value="phd">PhD/Doctorate</option>
+                <option value="professional">Professional</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary btn-glow full-width">
+            <span>Create Account</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <p class="auth-link">
+          Already have an account?
+          <a id="goToLogin" class="link-primary">Sign in</a>
+        </p>
+      </div>
     </div>
 
     <!-- ==================== FORGOT PASSWORD MODAL ==================== -->
-    <div id="forgotPasswordModal" class="modal-overlay forgot-password-modal" style="display:none;">
-        <div class="modal-card modal-small animate__animated animate__zoomIn">
-            <div class="modal-header">
-                <h3>Reset Password</h3>
-                <button class="btn-close" id="closeForgotPassword">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="modal-body">
-                <p class="modal-description">
-                    Enter your email address and we'll send you instructions to reset your password.
-                </p>
-                
-                <form id="forgotPasswordForm">
-                    <div class="input-group">
-                        <label>Email Address</label>
-                        <div class="input-field">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="forgotEmail" placeholder="your@email.com" required>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn-text" id="cancelForgotPassword">Cancel</button>
-                <button class="btn-primary" id="submitForgotPassword">
-                    <i class="fas fa-paper-plane"></i>
-                    <span>Send Reset Link</span>
-                </button>
-            </div>
+    <div
+      id="forgotPasswordModal"
+      class="modal-overlay forgot-password-modal"
+      style="display: none"
+    >
+      <div class="modal-card modal-small animate__animated animate__zoomIn">
+        <div class="modal-header">
+          <h3>Reset Password</h3>
+          <button class="btn-close" id="closeForgotPassword">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
+
+        <div class="modal-body">
+          <p class="modal-description">
+            Enter your email address and we'll send you instructions to reset
+            your password.
+          </p>
+
+          <form id="forgotPasswordForm">
+            <div class="input-group">
+              <label>Email Address</label>
+              <div class="input-field">
+                <i class="fas fa-envelope"></i>
+                <input
+                  type="email"
+                  id="forgotEmail"
+                  placeholder="your@email.com"
+                  required
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-text" id="cancelForgotPassword">Cancel</button>
+          <button class="btn-primary" id="submitForgotPassword">
+            <i class="fas fa-paper-plane"></i>
+            <span>Send Reset Link</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- ==================== APPLICATION LAYER ==================== -->
-    <div id="appLayer" class="app-container" style="display: none;">
-        
-        <!-- ==================== SIDEBAR ==================== -->
-        <aside id="sidebar" class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-logo"><i class="fas fa-cube"></i></div>
-                <span>Scholar.AI</span>
+    <div id="appLayer" class="app-container" style="display: none">
+      <!-- ==================== SIDEBAR ==================== -->
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-logo"><i class="fas fa-cube"></i></div>
+          <span>Scholar.AI</span>
+        </div>
+
+        <nav class="sidebar-nav">
+          <!-- Main Workspace -->
+          <div class="nav-section">
+            <label class="nav-label">WORKSPACE</label>
+            <a href="#" class="nav-link active" data-view="dashboard">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-link" data-view="profile">
+              <i class="fas fa-id-card"></i>
+              <span>Profile</span>
+            </a>
+            <a href="#" class="nav-link" data-view="stats">
+              <i class="fas fa-chart-pie"></i>
+              <span>Analytics</span>
+            </a>
+            <a href="#" class="nav-link" data-view="progress">
+              <i class="fas fa-tasks"></i>
+              <span>Progress</span>
+            </a>
+          </div>
+
+          <!-- Intelligence Suite -->
+          <div class="nav-section">
+            <label class="nav-label"
+              >INTELLIGENCE <span class="badge-pro">PRO</span></label
+            >
+            <a href="#" class="nav-link" data-view="tutor">
+              <i class="fas fa-robot"></i>
+              <span>AI Tutor</span>
+            </a>
+            <a href="#" class="nav-link" data-view="pdfhub">
+              <i class="fas fa-file-pdf"></i>
+              <span>PDF Hub</span>
+            </a>
+            <a href="#" class="nav-link" data-view="flashcards">
+              <i class="fas fa-layer-group"></i>
+              <span>Flashcards</span>
+            </a>
+          </div>
+
+          <!-- My Classes -->
+          <div class="nav-section">
+            <div class="nav-label-header">
+              <label class="nav-label">MY CLASSES</label>
+              <button
+                class="btn-add"
+                id="btnCreateClass"
+                title="Create New Class"
+              >
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <div id="classListContainer">
+              <!-- Dynamic class list injected by JS -->
+            </div>
+          </div>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <div
+            class="user-profile"
+            onclick="NavigationModule.navigateTo('profile')"
+          >
+            <div class="avatar-wrapper">
+              <img
+                src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b"
+                alt="User Avatar"
+                id="sidebarAvatar"
+              />
+              <span class="status-indicator online"></span>
+            </div>
+            <div class="user-info">
+              <span class="user-name" id="userName">Student</span>
+              <span class="user-plan">Scholar Plan</span>
+            </div>
+          </div>
+          <button
+            class="btn-icon"
+            onclick="NavigationModule.navigateTo('settings')"
+            title="Settings"
+          >
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+      </aside>
+
+      <!-- ==================== MAIN CONTENT ==================== -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button class="btn-mobile-menu" id="mobileMenuBtn">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="breadcrumb">
+              <span class="breadcrumb-item">Workspace</span>
+              <i class="fas fa-chevron-right breadcrumb-separator"></i>
+              <span class="breadcrumb-item active" id="pageTitle"
+                >Dashboard</span
+              >
+            </div>
+          </div>
+          <div class="topbar-right">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Deep Search..."
+                id="globalSearch"
+              />
+              <kbd class="kbd-hint">⌘K</kbd>
+            </div>
+            <button
+              class="btn-icon"
+              id="themeToggle"
+              onclick="window.ThemeManager.toggleTheme()"
+              title="Toggle theme"
+            >
+              <i class="fas fa-moon"></i>
+            </button>
+            <button
+              class="btn-icon"
+              title="Notifications"
+              onclick="NotificationSystem.togglePanel()"
+            >
+              <i class="fas fa-bell"></i>
+              <span class="notification-dot" style="display: none">0</span>
+            </button>
+            <button
+              class="btn-icon"
+              onclick="AuthModule.logout()"
+              title="Logout"
+            >
+              <i class="fas fa-power-off"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- View Container -->
+        <div class="view-container" id="viewContainer">
+          <!-- ==================== DASHBOARD VIEW ==================== -->
+          <div
+            id="view-dashboard"
+            class="view active animate__animated animate__fadeIn"
+          >
+            <div class="hero-section">
+              <div class="hero-content">
+                <h1>
+                  Ready to learn,
+                  <span class="text-gradient" id="heroUserName">Student</span>?
+                </h1>
+                <p id="heroSubtitle">
+                  Your AI Tutor is ready to help you master any subject.
+                </p>
+                <div class="hero-actions">
+                  <button
+                    class="btn-white"
+                    onclick="NavigationModule.navigateTo('tutor')"
+                  >
+                    <i class="fas fa-play"></i>
+                    Start Learning
+                  </button>
+                  <button
+                    class="btn-glass"
+                    onclick="NavigationModule.navigateTo('pdfhub')"
+                  >
+                    Upload PDF
+                  </button>
+                </div>
+              </div>
+              <div class="hero-visual">
+                <i class="fas fa-atom float-anim anim-1"></i>
+                <i class="fas fa-dna float-anim anim-2"></i>
+                <i class="fas fa-calculator float-anim anim-3"></i>
+              </div>
             </div>
 
-            <nav class="sidebar-nav">
-                <!-- Main Workspace -->
-                <div class="nav-section">
-                    <label class="nav-label">WORKSPACE</label>
-                    <a href="#" class="nav-link active" data-view="dashboard">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="#" class="nav-link" data-view="profile">
-                        <i class="fas fa-id-card"></i>
-                        <span>Profile</span>
-                    </a>
-                    <a href="#" class="nav-link" data-view="stats">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Analytics</span>
-                    </a>
-                    <a href="#" class="nav-link" data-view="progress">
-                        <i class="fas fa-tasks"></i>
-                        <span>Progress</span>
-                    </a>
+            <div class="feature-grid">
+              <div
+                class="feature-card hover-lift"
+                onclick="NavigationModule.navigateTo('stats')"
+              >
+                <div class="card-icon icon-green">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Analytics</h3>
+                <p>View your learning curve and performance metrics</p>
+                <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+              </div>
+              <div
+                class="feature-card hover-lift"
+                onclick="NavigationModule.navigateTo('pdfhub')"
+              >
+                <div class="card-icon icon-blue">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>PDF Intelligence</h3>
+                <p>Turn lecture notes into interactive study materials</p>
+                <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+              </div>
+              <div
+                class="feature-card hover-lift"
+                onclick="NavigationModule.navigateTo('progress')"
+              >
+                <div class="card-icon icon-purple">
+                  <i class="fas fa-check-double"></i>
+                </div>
+                <h3>Progress Tracker</h3>
+                <p><span id="pendingTasksText">Track your assignments</span></p>
+                <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+              </div>
+            </div>
+
+            <div class="activity-section">
+              <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Recent Activity
+              </h2>
+              <div id="activityFeed" class="activity-feed">
+                <!-- Dynamic activity items -->
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== AI TUTOR VIEW ==================== -->
+          <div id="view-tutor" class="view" style="display: none">
+            <div class="tutor-container">
+              <div class="tutor-sidebar">
+                <div class="sidebar-header">
+                  <h3>Chat History</h3>
+                  <button
+                    class="btn-icon-sm"
+                    onclick="AIModule.newChat()"
+                    title="New Chat"
+                  >
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <div id="chatHistoryList" class="chat-history-list">
+                  <!-- Dynamic chat sessions -->
+                </div>
+              </div>
+
+              <div class="tutor-main">
+                <div class="tutor-toolbar">
+                  <div class="model-selector">
+                    <i class="fas fa-microchip"></i>
+                    <select
+                      id="aiModelSelector"
+                      onchange="AIModule.changeModel(this.value)"
+                    >
+                      <option value="mistralai/mistral-7b-instruct:free">
+                        Mistral 7B (Free)
+                      </option>
+                      <option value="anthropic/claude-3.5-sonnet">
+                        Claude 3.5 Sonnet
+                      </option>
+                      <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
+                    </select>
+                  </div>
+                  <div class="tool-chips">
+                    <button
+                      class="chip"
+                      data-tool="deepsearch"
+                      onclick="AIModule.activateTool('deepsearch')"
+                    >
+                      <i class="fas fa-globe"></i> Deep Search
+                    </button>
+                    <button
+                      class="chip"
+                      data-tool="quiz"
+                      onclick="AIModule.activateTool('quiz')"
+                    >
+                      <i class="fas fa-question-circle"></i> Quiz Maker
+                    </button>
+                    <button
+                      class="chip"
+                      data-tool="exam"
+                      onclick="AIModule.activateTool('exam')"
+                    >
+                      <i class="fas fa-file-signature"></i> Exam Prep
+                    </button>
+                    <button
+                      class="chip"
+                      data-tool="lecture"
+                      onclick="AIModule.activateTool('lecture')"
+                    >
+                      <i class="fas fa-chalkboard-teacher"></i> Explain
+                    </button>
+                  </div>
                 </div>
 
-                <!-- Intelligence Suite -->
-                <div class="nav-section">
-                    <label class="nav-label">INTELLIGENCE <span class="badge-pro">PRO</span></label>
-                    <a href="#" class="nav-link" data-view="tutor">
-                        <i class="fas fa-robot"></i>
-                        <span>AI Tutor</span>
-                    </a>
-                    <a href="#" class="nav-link" data-view="pdfhub">
-                        <i class="fas fa-file-pdf"></i>
-                        <span>PDF Hub</span>
-                    </a>
-                    <a href="#" class="nav-link" data-view="flashcards">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Flashcards</span>
-                    </a>
+                <div id="chatMessages" class="chat-messages">
+                  <div class="message ai animate__animated animate__fadeIn">
+                    <div class="message-avatar">
+                      <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                      <div class="message-bubble">
+                        Hello! I'm your AI Tutor. Select a tool above to focus
+                        my capabilities, or ask me anything to get started.
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <!-- My Classes -->
-                <div class="nav-section">
-                    <div class="nav-label-header">
-                        <label class="nav-label">MY CLASSES</label>
-                        <button class="btn-add" id="btnCreateClass" title="Create New Class">                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <div id="classListContainer">
-                        <!-- Dynamic class list injected by JS -->
-                    </div>
+                <div class="chat-input-area">
+                  <button class="btn-icon" title="Attach File">
+                    <i class="fas fa-paperclip"></i>
+                  </button>
+                  <div class="input-container">
+                    <textarea
+                      id="chatInput"
+                      placeholder="Ask a question..."
+                      rows="1"
+                      onkeydown="AIModule.handleKeyPress(event)"
+                    ></textarea>
+                  </div>
+                  <button class="btn-send" onclick="AIModule.sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                  </button>
                 </div>
-            </nav>
+              </div>
+            </div>
+          </div>
 
-            <!-- Sidebar Footer -->
-            <div class="sidebar-footer">
-                <div class="user-profile" onclick="NavigationModule.navigateTo('profile')">
-                    <div class="avatar-wrapper">
-                        <img src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b" alt="User Avatar" id="sidebarAvatar">
-                        <span class="status-indicator online"></span>
-                    </div>
-                    <div class="user-info">
-                        <span class="user-name" id="userName">Student</span>
-                        <span class="user-plan">Scholar Plan</span>
-                    </div>
+          <!-- ==================== PDF HUB VIEW ==================== -->
+          <div id="view-pdfhub" class="view" style="display: none">
+            <div class="view-header">
+              <div class="header-info">
+                <h2>
+                  <i class="fas fa-file-pdf text-primary"></i> Document
+                  Intelligence
+                </h2>
+                <p>
+                  Upload PDFs to generate summaries, flashcards, and AI personas
+                </p>
+              </div>
+              <label class="btn-primary btn-upload">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload PDF
+                <input
+                  type="file"
+                  id="pdfFileInput"
+                  hidden
+                  accept=".pdf"
+                  onchange="PDFModule.handleUpload(event)"
+                />
+              </label>
+            </div>
+
+            <div id="pdfEmptyState" class="empty-state">
+              <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+              <h3>Your Library is Empty</h3>
+              <p>
+                Upload lecture notes, textbooks, or research papers to begin
+                analyzing.
+              </p>
+            </div>
+
+            <div id="pdfDashboard" class="pdf-dashboard" style="display: none">
+              <div class="pdf-meta-card">
+                <div class="pdf-file-icon">
+                  <i class="fas fa-file-pdf"></i>
                 </div>
-                <button class="btn-icon" onclick="NavigationModule.navigateTo('settings')" title="Settings">
-                    <i class="fas fa-cog"></i>
+                <div class="pdf-file-info">
+                  <h3 id="pdfFileName">Document.pdf</h3>
+                  <div class="pdf-tags">
+                    <div
+                      id="pdfProcessingProgress"
+                      style="display: none; margin-top: 1rem"
+                    >
+                      <div class="progress-bar-container">
+                        <div
+                          class="progress-bar-fill"
+                          id="pdfProgressBar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <p
+                        style="
+                          text-align: center;
+                          margin-top: 0.5rem;
+                          font-size: 0.9rem;
+                          color: var(--text-muted);
+                        "
+                      >
+                        Processing: <span id="pdfProgressText">0%</span>
+                      </p>
+                    </div>
+                    <span class="tag tag-success">Processed</span>
+                    <span class="tag" id="pdfPageCount">0 Pages</span>
+                    <span class="tag tag-persona">
+                      <i class="fas fa-user-tie"></i>
+                      <span id="pdfPersona">The Professor</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="pdf-status">
+                  <div class="status-badge">Analysis Complete</div>
+                  <div class="completion-ring">100%</div>
+                </div>
+              </div>
+
+              <div class="pdf-tools-grid">
+                <div
+                  class="pdf-tool-card tool-blue"
+                  onclick="PDFModule.launchTool('flashcards')"
+                >
+                  <div class="tool-icon"><i class="fas fa-bolt"></i></div>
+                  <div class="tool-info">
+                    <h4>Flashcards</h4>
+                    <p id="flashcardCount">0 Concepts Generated</p>
+                  </div>
+                  <i class="fas fa-arrow-right tool-arrow"></i>
+                </div>
+                <div
+                  class="pdf-tool-card tool-green"
+                  onclick="PDFModule.launchTool('summary')"
+                >
+                  <div class="tool-icon"><i class="fas fa-align-left"></i></div>
+                  <div class="tool-info">
+                    <h4>Summary</h4>
+                    <p>Key Points & Insights</p>
+                  </div>
+                  <i class="fas fa-arrow-right tool-arrow"></i>
+                </div>
+                <div
+                  class="pdf-tool-card tool-purple"
+                  onclick="PDFModule.launchTool('quiz')"
+                >
+                  <div class="tool-icon"><i class="fas fa-question"></i></div>
+                  <div class="tool-info">
+                    <h4>Quiz Me</h4>
+                    <p id="quizCount">0 Practice Questions</p>
+                  </div>
+                  <i class="fas fa-arrow-right tool-arrow"></i>
+                </div>
+                <div
+                  class="pdf-tool-card tool-orange"
+                  onclick="PDFModule.launchTool('chat')"
+                >
+                  <div class="tool-icon"><i class="fas fa-comments"></i></div>
+                  <div class="tool-info">
+                    <h4>Chat with PDF</h4>
+                    <p>Ask Questions</p>
+                  </div>
+                  <i class="fas fa-arrow-right tool-arrow"></i>
+                </div>
+              </div>
+
+              <div class="pdf-split-view">
+                <div class="pdf-viewer-pane">
+                  <div id="pdfPreview" class="pdf-preview">
+                    <div class="pdf-page-placeholder"></div>
+                    <div class="pdf-page-placeholder"></div>
+                  </div>
+                </div>
+                <div class="pdf-insights-pane">
+                  <h4><i class="fas fa-lightbulb"></i> AI Insights</h4>
+                  <ul id="pdfInsightsList" class="insights-list">
+                    <!-- Dynamic insights -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== FLASHCARDS VIEW ==================== -->
+          <div id="view-flashcards" class="view" style="display: none">
+            <div class="flashcard-container">
+              <div class="flashcard-header">
+                <h2>Flashcard Study Mode</h2>
+                <div class="flashcard-progress">
+                  <span id="flashcardProgress">0/0</span>
+                  <div class="progress-bar">
+                    <div
+                      class="progress-fill"
+                      id="flashcardProgressBar"
+                      style="width: 0%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="flashcardDeck" class="flashcard-deck">
+                <div
+                  class="flashcard"
+                  id="activeFlashcard"
+                  onclick="FlashcardModule.flipCard()"
+                >
+                  <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                      <div class="card-label">QUESTION</div>
+                      <div class="card-content" id="flashcardQuestion">
+                        Click "Generate Flashcards" from PDF Hub to begin
+                      </div>
+                    </div>
+                    <div class="flashcard-back">
+                      <div class="card-label">ANSWER</div>
+                      <div class="card-content" id="flashcardAnswer">
+                        Answer will appear here
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flashcard-controls">
+                <button
+                  class="btn-control btn-danger"
+                  onclick="FlashcardModule.markCard('again')"
+                >
+                  <i class="fas fa-times"></i>
+                  Study Again
                 </button>
+                <button
+                  class="btn-control btn-primary"
+                  onclick="FlashcardModule.flipCard()"
+                >
+                  <i class="fas fa-sync-alt"></i>
+                  Flip Card
+                </button>
+                <button
+                  class="btn-control btn-success"
+                  onclick="FlashcardModule.markCard('known')"
+                >
+                  <i class="fas fa-check"></i>
+                  I Know This
+                </button>
+              </div>
+
+              <div class="keyboard-hints">
+                <kbd>←</kbd> Study Again • <kbd>Space</kbd> Flip •
+                <kbd>→</kbd> Known
+              </div>
             </div>
-        </aside>
+          </div>
 
-        <!-- ==================== MAIN CONTENT ==================== -->
-        <main class="main-content">
-            <!-- Top Bar -->
-            <header class="topbar">
-                <div class="topbar-left">
-                    <button class="btn-mobile-menu" id="mobileMenuBtn">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="breadcrumb">
-                        <span class="breadcrumb-item">Workspace</span>
-                        <i class="fas fa-chevron-right breadcrumb-separator"></i>
-                        <span class="breadcrumb-item active" id="pageTitle">Dashboard</span>
-                    </div>
-                </div>
-                <div class="topbar-right">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Deep Search..." id="globalSearch">
-                        <kbd class="kbd-hint">⌘K</kbd>
-                    </div>
-                    <button class="btn-icon" id="themeToggle" onclick="window.ThemeManager.toggleTheme()" title="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <button class="btn-icon" title="Notifications" onclick="NotificationSystem.togglePanel()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-dot" style="display: none;">0</span>
-                    </button>
-                    <button class="btn-icon" onclick="AuthModule.logout()" title="Logout">
-                        <i class="fas fa-power-off"></i>
-                    </button>
-                </div>
-            </header>
-
-            <!-- View Container -->
-            <div class="view-container" id="viewContainer">
-                
-                <!-- ==================== DASHBOARD VIEW ==================== -->
-                <div id="view-dashboard" class="view active animate__animated animate__fadeIn">
-                    <div class="hero-section">
-                        <div class="hero-content">
-                            <h1>Ready to learn, <span class="text-gradient" id="heroUserName">Student</span>?</h1>
-                            <p id="heroSubtitle">Your AI Tutor is ready to help you master any subject.</p>
-                            <div class="hero-actions">
-                                <button class="btn-white" onclick="NavigationModule.navigateTo('tutor')">
-                                    <i class="fas fa-play"></i>
-                                    Start Learning
-                                </button>
-                                <button class="btn-glass" onclick="NavigationModule.navigateTo('pdfhub')">
-                                    Upload PDF
-                                </button>
-                            </div>
-                        </div>
-                        <div class="hero-visual">
-                            <i class="fas fa-atom float-anim anim-1"></i>
-                            <i class="fas fa-dna float-anim anim-2"></i>
-                            <i class="fas fa-calculator float-anim anim-3"></i>
-                        </div>
-                    </div>
-
-                    <div class="feature-grid">
-                        <div class="feature-card hover-lift" onclick="NavigationModule.navigateTo('stats')">
-                            <div class="card-icon icon-green">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                            <h3>Analytics</h3>
-                            <p>View your learning curve and performance metrics</p>
-                            <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                        <div class="feature-card hover-lift" onclick="NavigationModule.navigateTo('pdfhub')">
-                            <div class="card-icon icon-blue">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <h3>PDF Intelligence</h3>
-                            <p>Turn lecture notes into interactive study materials</p>
-                            <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                        <div class="feature-card hover-lift" onclick="NavigationModule.navigateTo('progress')">
-                            <div class="card-icon icon-purple">
-                                <i class="fas fa-check-double"></i>
-                            </div>
-                            <h3>Progress Tracker</h3>
-                            <p><span id="pendingTasksText">Track your assignments</span></p>
-                            <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-
-                    <div class="activity-section">
-                        <h2 class="section-title">
-                            <i class="fas fa-history"></i>
-                            Recent Activity
-                        </h2>
-                        <div id="activityFeed" class="activity-feed">
-                            <!-- Dynamic activity items -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== AI TUTOR VIEW ==================== -->
-                <div id="view-tutor" class="view" style="display: none;">
-                    <div class="tutor-container">
-                        <div class="tutor-sidebar">
-                            <div class="sidebar-header">
-                                <h3>Chat History</h3>
-                                <button class="btn-icon-sm" onclick="AIModule.newChat()" title="New Chat">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <div id="chatHistoryList" class="chat-history-list">
-                                <!-- Dynamic chat sessions -->
-                            </div>
-                        </div>
-
-                        <div class="tutor-main">
-                            <div class="tutor-toolbar">
-                                <div class="model-selector">
-                                    <i class="fas fa-microchip"></i>
-                                    <select id="aiModelSelector" onchange="AIModule.changeModel(this.value)">
-                                        <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
-                                        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-                                        <option value="openai/gpt-4-turbo">GPT-4 Turbo</option>
-                                    </select>
-                                </div>
-                                <div class="tool-chips">
-                                    <button class="chip" data-tool="deepsearch" onclick="AIModule.activateTool('deepsearch')">
-                                        <i class="fas fa-globe"></i> Deep Search
-                                    </button>
-                                    <button class="chip" data-tool="quiz" onclick="AIModule.activateTool('quiz')">
-                                        <i class="fas fa-question-circle"></i> Quiz Maker
-                                    </button>
-                                    <button class="chip" data-tool="exam" onclick="AIModule.activateTool('exam')">
-                                        <i class="fas fa-file-signature"></i> Exam Prep
-                                    </button>
-                                    <button class="chip" data-tool="lecture" onclick="AIModule.activateTool('lecture')">
-                                        <i class="fas fa-chalkboard-teacher"></i> Explain
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div id="chatMessages" class="chat-messages">
-                                <div class="message ai animate__animated animate__fadeIn">
-                                    <div class="message-avatar">
-                                        <i class="fas fa-robot"></i>
-                                    </div>
-                                    <div class="message-content">
-                                        <div class="message-bubble">
-                                            Hello! I'm your AI Tutor. Select a tool above to focus my capabilities, or ask me anything to get started.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="chat-input-area">
-                                <button class="btn-icon" title="Attach File">
-                                    <i class="fas fa-paperclip"></i>
-                                </button>
-                                <div class="input-container">
-                                    <textarea id="chatInput" placeholder="Ask a question..." rows="1" onkeydown="AIModule.handleKeyPress(event)"></textarea>
-                                </div>
-                                <button class="btn-send" onclick="AIModule.sendMessage()">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== PDF HUB VIEW ==================== -->
-                <div id="view-pdfhub" class="view" style="display: none;">
-                    <div class="view-header">
-                        <div class="header-info">
-                            <h2><i class="fas fa-file-pdf text-primary"></i> Document Intelligence</h2>
-                            <p>Upload PDFs to generate summaries, flashcards, and AI personas</p>
-                        </div>
-                        <label class="btn-primary btn-upload">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            Upload PDF
-                            <input type="file" id="pdfFileInput" hidden accept=".pdf" onchange="PDFModule.handleUpload(event)">
-                        </label>
-                    </div>
-
-                    <div id="pdfEmptyState" class="empty-state">
-                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
-                        <h3>Your Library is Empty</h3>
-                        <p>Upload lecture notes, textbooks, or research papers to begin analyzing.</p>
-                    </div>
-
-                    <div id="pdfDashboard" class="pdf-dashboard" style="display: none;">
-                        <div class="pdf-meta-card">
-                            <div class="pdf-file-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="pdf-file-info">
-                                <h3 id="pdfFileName">Document.pdf</h3>
-                                <div class="pdf-tags">
-                                    <div id="pdfProcessingProgress" style="display: none; margin-top: 1rem;">
-                                        <div class="progress-bar-container">
-                                            <div class="progress-bar-fill" id="pdfProgressBar" style="width: 0%"></div>
-                                        </div>
-                                        <p style="text-align: center; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                                            Processing: <span id="pdfProgressText">0%</span>
-                                        </p>
-                                    </div>
-                                    <span class="tag tag-success">Processed</span>
-                                    <span class="tag" id="pdfPageCount">0 Pages</span>
-                                    <span class="tag tag-persona">
-                                        <i class="fas fa-user-tie"></i>
-                                        <span id="pdfPersona">The Professor</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="pdf-status">
-                                <div class="status-badge">Analysis Complete</div>
-                                <div class="completion-ring">100%</div>
-                            </div>
-                        </div>
-
-                        <div class="pdf-tools-grid">
-                            <div class="pdf-tool-card tool-blue" onclick="PDFModule.launchTool('flashcards')">
-                                <div class="tool-icon"><i class="fas fa-bolt"></i></div>
-                                <div class="tool-info">
-                                    <h4>Flashcards</h4>
-                                    <p id="flashcardCount">0 Concepts Generated</p>
-                                </div>
-                                <i class="fas fa-arrow-right tool-arrow"></i>
-                            </div>
-                            <div class="pdf-tool-card tool-green" onclick="PDFModule.launchTool('summary')">
-                                <div class="tool-icon"><i class="fas fa-align-left"></i></div>
-                                <div class="tool-info">
-                                    <h4>Summary</h4>
-                                    <p>Key Points & Insights</p>
-                                </div>
-                                <i class="fas fa-arrow-right tool-arrow"></i>
-                            </div>
-                            <div class="pdf-tool-card tool-purple" onclick="PDFModule.launchTool('quiz')">
-                                <div class="tool-icon"><i class="fas fa-question"></i></div>
-                                <div class="tool-info">
-                                    <h4>Quiz Me</h4>
-                                    <p id="quizCount">0 Practice Questions</p>
-                                </div>
-                                <i class="fas fa-arrow-right tool-arrow"></i>
-                            </div>
-                            <div class="pdf-tool-card tool-orange" onclick="PDFModule.launchTool('chat')">
-                                <div class="tool-icon"><i class="fas fa-comments"></i></div>
-                                <div class="tool-info">
-                                    <h4>Chat with PDF</h4>
-                                    <p>Ask Questions</p>
-                                </div>
-                                <i class="fas fa-arrow-right tool-arrow"></i>
-                            </div>
-                        </div>
-
-                        <div class="pdf-split-view">
-                            <div class="pdf-viewer-pane">
-                                <div id="pdfPreview" class="pdf-preview">
-                                    <div class="pdf-page-placeholder"></div>
-                                    <div class="pdf-page-placeholder"></div>
-                                </div>
-                            </div>
-                            <div class="pdf-insights-pane">
-                                <h4><i class="fas fa-lightbulb"></i> AI Insights</h4>
-                                <ul id="pdfInsightsList" class="insights-list">
-                                    <!-- Dynamic insights -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== FLASHCARDS VIEW ==================== -->
-                <div id="view-flashcards" class="view" style="display: none;">
-                    <div class="flashcard-container">
-                        <div class="flashcard-header">
-                            <h2>Flashcard Study Mode</h2>
-                            <div class="flashcard-progress">
-                                <span id="flashcardProgress">0/0</span>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="flashcardProgressBar" style="width: 0%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="flashcardDeck" class="flashcard-deck">
-                            <div class="flashcard" id="activeFlashcard" onclick="FlashcardModule.flipCard()">
-                                <div class="flashcard-inner">
-                                    <div class="flashcard-front">
-                                        <div class="card-label">QUESTION</div>
-                                        <div class="card-content" id="flashcardQuestion">
-                                            Click "Generate Flashcards" from PDF Hub to begin
-                                        </div>
-                                    </div>
-                                    <div class="flashcard-back">
-                                        <div class="card-label">ANSWER</div>
-                                        <div class="card-content" id="flashcardAnswer">
-                                            Answer will appear here
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flashcard-controls">
-                            <button class="btn-control btn-danger" onclick="FlashcardModule.markCard('again')">
-                                <i class="fas fa-times"></i>
-                                Study Again
-                            </button>
-                            <button class="btn-control btn-primary" onclick="FlashcardModule.flipCard()">
-                                <i class="fas fa-sync-alt"></i>
-                                Flip Card
-                            </button>
-                            <button class="btn-control btn-success" onclick="FlashcardModule.markCard('known')">
-                                <i class="fas fa-check"></i>
-                                I Know This
-                            </button>
-                        </div>
-
-                        <div class="keyboard-hints">
-                            <kbd>←</kbd> Study Again • <kbd>Space</kbd> Flip • <kbd>→</kbd> Known
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== ANALYTICS VIEW ==================== -->
-                <div id="view-stats" class="view" style="display: none;">
-                    <div class="view-header">
-                        <h2>Performance Analytics</h2>
-                        <select class="select-period" onchange="StatsModule.updatePeriod(this.value)">
-                            <option value="7">Last 7 Days</option>
-                            <option value="30" selected>Last 30 Days</option>
-                            <option value="90">Last 90 Days</option>
-                        </select>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="chart-card card-wide">
-                            <div class="card-header">
-                                <h3><i class="fas fa-wave-square"></i> Performance Over Time</h3>
-                                <button class="btn-icon-sm" title="Export Data">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                            </div>
-                            <div class="chart-wrapper">
-                                <canvas id="performanceChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="chart-card">
-                            <div class="card-header">
-                                <h3><i class="fas fa-chart-pie"></i> Study Focus</h3>
-                            </div>
-                            <div class="chart-wrapper">
-                                <canvas id="subjectChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="metrics-grid">
-                            <div class="metric-card">
-                                <span class="metric-label">Study Sessions</span>
-                                <span class="metric-value" id="metricSessions">0</span>
-                                <span class="metric-trend trend-up">
-                                    <i class="fas fa-arrow-up"></i> 12%
-                                </span>
-                            </div>
-                            <div class="metric-card">
-                                <span class="metric-label">Avg. Quiz Score</span>
-                                <span class="metric-value" id="metricQuizScore">0%</span>
-                                <span class="metric-trend trend-up">
-                                    <i class="fas fa-arrow-up"></i> 4%
-                                </span>
-                            </div>
-                            <div class="metric-card">
-                                <span class="metric-label">Documents</span>
-                                <span class="metric-value" id="metricDocs">0</span>
-                                <span class="metric-trend trend-neutral">—</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== PROGRESS VIEW ==================== -->
-                <div id="view-progress" class="view" style="display: none;">
-                    <h2 class="section-title">Learning Roadmap</h2>
-                    <div id="progressTimeline" class="timeline">
-                        <!-- Dynamic timeline items -->
-                    </div>
-                </div>
-
-                <!-- ==================== PROFILE VIEW ==================== -->
-                <div id="view-profile" class="view" style="display: none;">
-                    <div class="profile-card">
-                        <div class="profile-banner"></div>
-                        <div class="profile-content">
-                            <div class="profile-avatar-section">
-                                <div class="profile-avatar">
-                                    <img src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b&size=128" alt="Profile" id="profileAvatar">
-                                    <button class="avatar-edit-btn">
-                                        <i class="fas fa-camera"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="profile-info">
-                                <h2 id="profileDisplayName">Student User</h2>
-                                <p id="profileBio">Computer Science Major • Senior Year</p>
-                                <div class="profile-badges">
-                                    <span class="badge">Dean's List</span>
-                                    <span class="badge">Top Contributor</span>
-                                    <span class="badge">Quiz Master</span>
-                                </div>
-                            </div>
-                            <div class="profile-actions">
-                                <button class="btn-glass">Edit Profile</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="profile-stats-grid">
-                        <div class="stat-tile">
-                            <div class="stat-icon icon-green">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <div class="stat-details">
-                                <span class="stat-label">Courses Completed</span>
-                                <span class="stat-value">8</span>
-                            </div>
-                        </div>
-                        <div class="stat-tile">
-                            <div class="stat-icon icon-blue">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="stat-details">
-                                <span class="stat-label">Study Hours</span>
-                                <span class="stat-value">142</span>
-                            </div>
-                        </div>
-                        <div class="stat-tile">
-                            <div class="stat-icon icon-purple">
-                                <i class="fas fa-award"></i>
-                            </div>
-                            <div class="stat-details">
-                                <span class="stat-label">Achievements</span>
-                                <span class="stat-value">24</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== SETTINGS VIEW ==================== -->
-                <div id="view-settings" class="view" style="display: none;">
-                    <h2 class="section-title">System Preferences</h2>
-                    <div class="settings-panel">
-                        <div class="setting-row">
-                            <div class="setting-info">
-                                <h4>Theme</h4>
-                                <p>Choose your preferred color scheme</p>
-                            </div>
-                            <select class="setting-select" id="themeSelector" onchange="window.ThemeManager.setTheme(this.value)">
-                                <option value="dark">Dark Mode</option>
-                                <option value="light">Light Mode</option>
-                            </select>
-                        </div>
-                        <div class="setting-row">
-                            <div class="setting-info">
-                                <h4>Email Notifications</h4>
-                                <p>Receive updates about assignments and deadlines</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <div class="setting-row">
-                            <div class="setting-info">
-                                <h4>AI Persona Personality</h4>
-                                <p>Adjust how the tutor responds to you</p>
-                            </div>
-                            <select class="setting-select">
-                                <option>Academic & Strict</option>
-                                <option selected>Friendly & Encouraging</option>
-                                <option>Socratic (Question-Based)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ==================== CLASS VIEW TEMPLATE ==================== -->
-                <div id="view-class-template" class="view" style="display: none;">
-                    <div class="class-hero">
-                        <div class="class-hero-content">
-                            <h1 id="classTitle">Class Name</h1>
-                            <p id="classDescription">Class Description</p>
-                        </div>
-                        <div class="class-hero-actions">
-                            <button class="btn-glass btn-invite">
-                                <i class="fas fa-user-plus"></i> Invite
-                            </button>
-                            <button class="btn-white btn-new-material">
-                                <i class="fas fa-plus"></i> New Material
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="class-tabs">
-                        <button class="class-tab active" data-tab="stream">Stream</button>
-                        <button class="class-tab" data-tab="classwork">Classwork</button>
-                        <button class="class-tab" data-tab="people">People</button>
-                        <button class="class-tab" data-tab="grades">Grades</button>
-                    </div>
-
-                    <div class="class-stream">
-                        <div class="stream-composer">
-                            <img src="https://ui-avatars.com/api/?name=User&background=00ed64&color=001e2b" class="composer-avatar" alt="User">
-                            <input type="text" placeholder="Announce something to your class...">
-                        </div>
-                        
-                        <div class="empty-stream">
-                            <i class="fas fa-comments"></i>
-                            <h3>No posts yet</h3>
-                            <p>Start a discussion with your classmates</p>
-                        </div>
-                    </div>
-                </div>
-
+          <!-- ==================== ANALYTICS VIEW ==================== -->
+          <div id="view-stats" class="view" style="display: none">
+            <div class="view-header">
+              <h2>Performance Analytics</h2>
+              <select
+                class="select-period"
+                onchange="StatsModule.updatePeriod(this.value)"
+              >
+                <option value="7">Last 7 Days</option>
+                <option value="30" selected>Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+              </select>
             </div>
-        </main>
+
+            <div class="stats-grid">
+              <div class="chart-card card-wide">
+                <div class="card-header">
+                  <h3>
+                    <i class="fas fa-wave-square"></i> Performance Over Time
+                  </h3>
+                  <button class="btn-icon-sm" title="Export Data">
+                    <i class="fas fa-download"></i>
+                  </button>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="performanceChart"></canvas>
+                </div>
+              </div>
+
+              <div class="chart-card">
+                <div class="card-header">
+                  <h3><i class="fas fa-chart-pie"></i> Study Focus</h3>
+                </div>
+                <div class="chart-wrapper">
+                  <canvas id="subjectChart"></canvas>
+                </div>
+              </div>
+
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <span class="metric-label">Study Sessions</span>
+                  <span class="metric-value" id="metricSessions">0</span>
+                  <span class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> 12%
+                  </span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Avg. Quiz Score</span>
+                  <span class="metric-value" id="metricQuizScore">0%</span>
+                  <span class="metric-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> 4%
+                  </span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-label">Documents</span>
+                  <span class="metric-value" id="metricDocs">0</span>
+                  <span class="metric-trend trend-neutral">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== PROGRESS VIEW ==================== -->
+          <div id="view-progress" class="view" style="display: none">
+            <h2 class="section-title">Learning Roadmap</h2>
+            <div id="progressTimeline" class="timeline">
+              <!-- Dynamic timeline items -->
+            </div>
+          </div>
+
+          <!-- ==================== PROFILE VIEW ==================== -->
+          <div id="view-profile" class="view" style="display: none">
+            <div class="profile-card">
+              <div class="profile-banner"></div>
+              <div class="profile-content">
+                <div class="profile-avatar-section">
+                  <div class="profile-avatar">
+                    <img
+                      src="https://ui-avatars.com/api/?name=Student&background=00ed64&color=001e2b&size=128"
+                      alt="Profile"
+                      id="profileAvatar"
+                    />
+                    <button class="avatar-edit-btn">
+                      <i class="fas fa-camera"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="profile-info">
+                  <h2 id="profileDisplayName">Student User</h2>
+                  <p id="profileBio">Computer Science Major • Senior Year</p>
+                  <div class="profile-badges">
+                    <span class="badge">Dean's List</span>
+                    <span class="badge">Top Contributor</span>
+                    <span class="badge">Quiz Master</span>
+                  </div>
+                </div>
+                <div class="profile-actions">
+                  <button class="btn-glass">Edit Profile</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-stats-grid">
+              <div class="stat-tile">
+                <div class="stat-icon icon-green">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="stat-details">
+                  <span class="stat-label">Courses Completed</span>
+                  <span class="stat-value">8</span>
+                </div>
+              </div>
+              <div class="stat-tile">
+                <div class="stat-icon icon-blue">
+                  <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-details">
+                  <span class="stat-label">Study Hours</span>
+                  <span class="stat-value">142</span>
+                </div>
+              </div>
+              <div class="stat-tile">
+                <div class="stat-icon icon-purple">
+                  <i class="fas fa-award"></i>
+                </div>
+                <div class="stat-details">
+                  <span class="stat-label">Achievements</span>
+                  <span class="stat-value">24</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== SETTINGS VIEW ==================== -->
+          <div id="view-settings" class="view" style="display: none">
+            <h2 class="section-title">System Preferences</h2>
+            <div class="settings-panel">
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>Theme</h4>
+                  <p>Choose your preferred color scheme</p>
+                </div>
+                <select
+                  class="setting-select"
+                  id="themeSelector"
+                  onchange="window.ThemeManager.setTheme(this.value)"
+                >
+                  <option value="dark">Dark Mode</option>
+                  <option value="light">Light Mode</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>Email Notifications</h4>
+                  <p>Receive updates about assignments and deadlines</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <h4>AI Persona Personality</h4>
+                  <p>Adjust how the tutor responds to you</p>
+                </div>
+                <select class="setting-select">
+                  <option>Academic & Strict</option>
+                  <option selected>Friendly & Encouraging</option>
+                  <option>Socratic (Question-Based)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== CLASS VIEW TEMPLATE ==================== -->
+          <div id="view-class-template" class="view" style="display: none">
+            <div class="class-hero">
+              <div class="class-hero-content">
+                <h1 id="classTitle">Class Name</h1>
+                <p id="classDescription">Class Description</p>
+              </div>
+              <div class="class-hero-actions">
+                <button class="btn-glass btn-invite">
+                  <i class="fas fa-user-plus"></i> Invite
+                </button>
+                <button class="btn-white btn-new-material">
+                  <i class="fas fa-plus"></i> New Material
+                </button>
+              </div>
+            </div>
+
+            <div class="class-tabs">
+              <button class="class-tab active" data-tab="stream">Stream</button>
+              <button class="class-tab" data-tab="classwork">Classwork</button>
+              <button class="class-tab" data-tab="people">People</button>
+              <button class="class-tab" data-tab="grades">Grades</button>
+            </div>
+
+            <div class="class-stream">
+              <div class="stream-composer">
+                <img
+                  src="https://ui-avatars.com/api/?name=User&background=00ed64&color=001e2b"
+                  class="composer-avatar"
+                  alt="User"
+                />
+                <input
+                  type="text"
+                  placeholder="Announce something to your class..."
+                />
+              </div>
+
+              <div class="empty-stream">
+                <i class="fas fa-comments"></i>
+                <h3>No posts yet</h3>
+                <p>Start a discussion with your classmates</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
     <!-- ==================== CLASS CREATION MODAL ==================== -->
-    <div id="createClassModal" class="modal-overlay" style="display: none;">
-        <div class="modal-card animate__animated animate__zoomIn">
-            <div class="modal-header">
-                <h3>Create New Class</h3>
-                <button class="btn-close" onclick="ClassModule.closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Class Name</label>
-                    <input type="text" id="classNameInput" placeholder="e.g. Advanced Calculus">
-                </div>
-                <div class="form-group">
-                    <label>Description (Optional)</label>
-                    <textarea id="classDescInput" placeholder="Course details, room number, schedule..." rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Color Theme</label>
-                    <div class="color-picker">
-                        <span class="color-dot c-green selected" data-color="green"></span>
-                        <span class="color-dot c-blue" data-color="blue"></span>
-                        <span class="color-dot c-purple" data-color="purple"></span>
-                        <span class="color-dot c-orange" data-color="orange"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-text" onclick="ClassModule.closeModal()">Cancel</button>
-                <button class="btn-primary" onclick="ClassModule.createClass()">Create Class</button>
-            </div>
+    <div id="createClassModal" class="modal-overlay" style="display: none">
+      <div class="modal-card animate__animated animate__zoomIn">
+        <div class="modal-header">
+          <h3>Create New Class</h3>
+          <button class="btn-close" onclick="ClassModule.closeModal()">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Class Name</label>
+            <input
+              type="text"
+              id="classNameInput"
+              placeholder="e.g. Advanced Calculus"
+            />
+          </div>
+          <div class="form-group">
+            <label>Description (Optional)</label>
+            <textarea
+              id="classDescInput"
+              placeholder="Course details, room number, schedule..."
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Color Theme</label>
+            <div class="color-picker">
+              <span
+                class="color-dot c-green selected"
+                data-color="green"
+              ></span>
+              <span class="color-dot c-blue" data-color="blue"></span>
+              <span class="color-dot c-purple" data-color="purple"></span>
+              <span class="color-dot c-orange" data-color="orange"></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-text" onclick="ClassModule.closeModal()">
+            Cancel
+          </button>
+          <button class="btn-primary" onclick="ClassModule.createClass()">
+            Create Class
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Socket.IO -->
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    
+
     <!-- Theme Management -->
     <script src="theme.js"></script>
 
@@ -875,5 +1115,5 @@
 
     <!-- Main Application Script -->
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

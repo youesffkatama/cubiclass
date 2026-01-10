@@ -17,6 +17,7 @@ We take security issues seriously. We appreciate your efforts to responsibly dis
 To report a security issue, please contact us at **security@scholar-ai.com** (replace with actual email if available) or through GitHub's private vulnerability reporting feature.
 
 Please include the following information in your report:
+
 - A detailed description of the vulnerability
 - Steps to reproduce the issue
 - Potential impact of the vulnerability
@@ -31,6 +32,7 @@ Please include the following information in your report:
 ## Security Best Practices
 
 ### For Developers
+
 - Always validate and sanitize user inputs
 - Use parameterized queries to prevent SQL injection
 - Implement proper authentication and authorization
@@ -41,6 +43,7 @@ Please include the following information in your report:
 - Use secure session management
 
 ### For Users
+
 - Use strong, unique passwords
 - Enable two-factor authentication when available
 - Keep your software updated
@@ -49,18 +52,21 @@ Please include the following information in your report:
 ## Security Features
 
 ### Authentication
+
 - JWT-based authentication with refresh tokens
 - Secure password hashing with bcrypt
 - Rate limiting on authentication endpoints
 - Session management with proper token expiration
 
 ### Data Protection
+
 - Input sanitization using express-mongo-sanitize
 - Content Security Policy (CSP) headers
 - Helmet.js security middleware
 - Secure file upload handling
 
 ### Network Security
+
 - CORS configuration with origin validation
 - Rate limiting with express-rate-limit
 - HTTP security headers
@@ -69,6 +75,7 @@ Please include the following information in your report:
 ## Dependencies Security
 
 We regularly audit our dependencies for known vulnerabilities using:
+
 - `npm audit` for automated scanning
 - Manual review of critical dependencies
 - Automated security scanning in CI/CD pipeline
@@ -84,6 +91,7 @@ We regularly audit our dependencies for known vulnerabilities using:
 ## Incident Response
 
 In case of a security incident:
+
 1. Contain the issue to prevent further damage
 2. Assess the scope and impact
 3. Notify affected users if necessary
@@ -94,6 +102,7 @@ In case of a security incident:
 ## Security Testing
 
 Our security testing includes:
+
 - Automated dependency vulnerability scanning
 - Input validation testing
 - Authentication and authorization testing
@@ -104,6 +113,7 @@ Our security testing includes:
 ## Compliance
 
 This project aims to comply with:
+
 - GDPR (General Data Protection Regulation)
 - CCPA (California Consumer Privacy Act)
 - OWASP Top 10 security guidelines

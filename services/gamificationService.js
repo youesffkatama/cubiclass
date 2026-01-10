@@ -1,5 +1,5 @@
 const awardXP = (userId, amount, reason) => {
-    // Dummy function
-}
+  // Dummy function
+};
 
 module.exports = { awardXP };

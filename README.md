@@ -9,6 +9,7 @@
 ## 🚀 Features
 
 ### Core Capabilities
+
 - **📄 PDF Processing**: Advanced text extraction with OCR fallback for scanned documents
 - **🧠 Local Embeddings**: Zero-cost vectorization using Xenova transformers (all-MiniLM-L6-v2)
 - **💬 RAG Chat System**: Context-aware conversations with streaming responses
@@ -18,6 +19,7 @@
 - **📅 Study Planner**: AI-powered study schedules with spaced repetition
 
 ### Advanced Features
+
 - **🤝 Debate Engine**: AI vs AI debates using different documents
 - **🔍 Vector Search**: MongoDB Atlas Vector Search for semantic similarity
 - **⚡ Background Processing**: BullMQ worker queues for scalable PDF processing
@@ -27,20 +29,20 @@
 
 ## 📋 Tech Stack
 
-| Category | Technology |
-|----------|-----------|
-| **Runtime** | Node.js 20+ LTS |
-| **Language** | TypeScript 5.3 |
-| **Framework** | Express.js |
-| **Database** | MongoDB Atlas (with Vector Search) |
-| **Cache/Queue** | Redis + BullMQ |
-| **AI/LLM** | OpenRouter (Mistral, Llama 3) |
-| **Embeddings** | @xenova/transformers (local) |
-| **PDF Processing** | pdf-parse, Tesseract.js, pdf-lib |
-| **Real-time** | Socket.io |
-| **Validation** | Zod |
-| **Logging** | Winston |
-| **Testing** | Jest (ready) |
+| Category           | Technology                         |
+| ------------------ | ---------------------------------- |
+| **Runtime**        | Node.js 20+ LTS                    |
+| **Language**       | TypeScript 5.3                     |
+| **Framework**      | Express.js                         |
+| **Database**       | MongoDB Atlas (with Vector Search) |
+| **Cache/Queue**    | Redis + BullMQ                     |
+| **AI/LLM**         | OpenRouter (Mistral, Llama 3)      |
+| **Embeddings**     | @xenova/transformers (local)       |
+| **PDF Processing** | pdf-parse, Tesseract.js, pdf-lib   |
+| **Real-time**      | Socket.io                          |
+| **Validation**     | Zod                                |
+| **Logging**        | Winston                            |
+| **Testing**        | Jest (ready)                       |
 
 ## 🏗️ Architecture
 
@@ -67,6 +69,7 @@ scholar-ai-backend/
 ## 🚦 Quick Start
 
 ### Prerequisites
+
 - **Node.js** 20+ LTS
 - **MongoDB Atlas** account (free M0 tier)
 - **Redis** instance (local or cloud)
@@ -96,6 +99,7 @@ nano .env
 ```
 
 **Critical Environment Variables:**
+
 ```env
 MONGODB_URI=mongodb+srv://...
 REDIS_HOST=your-redis-host
@@ -165,6 +169,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ## 📡 API Endpoints
 
 ### Authentication (`/api/v1/auth`)
+
 - `POST /register` - Register new user
 - `POST /login` - Login user
 - `POST /refresh` - Refresh access token
@@ -174,6 +179,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 - `DELETE /account` - Delete account
 
 ### Workspace (`/api/v1/workspace`)
+
 - `POST /upload` - Upload PDF file
 - `GET /files` - List all documents
 - `GET /files/:id` - Get document details
@@ -183,6 +189,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 - `GET /stats` - Workspace statistics
 
 ### Intelligence (`/api/v1/intelligence`)
+
 - `POST /chat/stream` - Stream chat response (SSE)
 - `GET /chat/conversations` - List conversations
 - `GET /chat/conversations/:id` - Get conversation
@@ -195,6 +202,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 - `POST /search` - Search across documents
 
 ### Analytics (`/api/v1/analytics`)
+
 - `GET /heatmap` - Study heatmap data
 - `GET /subjects` - Subject distribution
 - `GET /performance` - Performance metrics
@@ -212,6 +220,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ## 🔧 Configuration
 
 ### Rate Limits (per user/IP)
+
 - **Auth endpoints**: 5 requests / 15 minutes
 - **File upload**: 5 uploads / day
 - **Chat**: 50 messages / hour
@@ -219,6 +228,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 - **General API**: 100 requests / 15 minutes
 
 ### Subscription Plans
+
 - **Free**: Basic features, standard rate limits
 - **Pro**: 3x rate limits, priority processing
 - **Enterprise**: 10x rate limits, custom features
@@ -226,17 +236,20 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ## 🧪 Development
 
 ### Run Tests
+
 ```bash
 npm test
 ```
 
 ### Build for Production
+
 ```bash
 npm run build
 npm start
 ```
 
 ### Code Quality
+
 ```bash
 # Linting
 npm run lint
@@ -248,12 +261,14 @@ npm run format
 ## 🚢 Deployment
 
 ### Docker Deployment (Coming Soon)
+
 ```bash
 docker build -t scholar-ai-backend .
 docker run -p 3000:3000 --env-file .env scholar-ai-backend
 ```
 
 ### Environment-Specific Configs
+
 - Copy `.env.example` to `.env.production`
 - Set `NODE_ENV=production`
 - Use strong JWT secrets
@@ -261,6 +276,7 @@ docker run -p 3000:3000 --env-file .env scholar-ai-backend
 - Set up proper CORS origins
 
 ### Recommended Services
+
 - **Hosting**: Railway, Render, Fly.io, AWS EC2
 - **Database**: MongoDB Atlas (M0 free tier)
 - **Redis**: Redis Cloud (free 30MB)
@@ -269,17 +285,22 @@ docker run -p 3000:3000 --env-file .env scholar-ai-backend
 ## 📊 Monitoring
 
 ### Log Files
+
 Logs are stored in `./logs/`:
+
 - `application-YYYY-MM-DD.log` - All logs
 - `error-YYYY-MM-DD.log` - Error logs only
 
 ### Health Checks
+
 ```bash
 curl http://localhost:3000/api/v1/health
 ```
 
 ### Queue Monitoring
+
 Access BullMQ dashboard (if installed):
+
 ```bash
 npm install -g @bull-board/cli
 bull-board
@@ -310,21 +331,25 @@ bull-board
 ## 🐛 Troubleshooting
 
 ### MongoDB Connection Issues
+
 - Verify MONGODB_URI is correct
 - Check IP whitelist in Atlas
 - Ensure network access is configured
 
 ### Vector Search Not Working
+
 - Verify index name is `vector_index`
 - Check dimensions are set to 384
 - Ensure index is on `vectorchunks` collection
 
 ### Worker Not Processing Files
+
 - Check Redis connection
 - Verify REDIS_HOST and REDIS_PORT
 - Ensure worker is running: `npm run worker`
 
 ### OpenRouter API Errors
+
 - Verify API key is valid
 - Check rate limits
 - Try different free models
@@ -344,12 +369,11 @@ MIT License - see LICENSE file for details
 ## 📧 Support
 
 For issues and questions:
+
 - Open an issue on GitHub
 - Email: support@scholar-ai.com
 - Documentation: https://docs.scholar-ai.com
 
 ---
 
-
 **Built with ❤️ by the Scholar.AI Team**
-

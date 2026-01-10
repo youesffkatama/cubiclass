@@ -1,11 +1,11 @@
-const { redis } = require('../server');
+const { redis } = require("../server");
 
 const cache = (duration) => {
   return (req, res, next) => {
     if (redis === null) {
-        return next();
+      return next();
     }
-    const key = '__express__' + req.originalUrl || req.url;
+    const key = "__express__" + req.originalUrl || req.url;
     redis.get(key, (err, reply) => {
       if (err) {
         return next();
