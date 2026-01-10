@@ -111,10 +111,16 @@
          'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
        ];
 
-       if (allowedOrigins.indexOf(origin) !== -1) {
+       // For development, allow all origins
+       if (CONFIG.NODE_ENV === 'development') {
          callback(null, true);
        } else {
-         callback(null, true); // Allow all in development
+         // For production, check against allowed origins
+         if (allowedOrigins.indexOf(origin) !== -1) {
+           callback(null, true);
+         } else {
+           callback(null, false);
+         }
        }
      },
      credentials: true,
@@ -159,13 +165,20 @@ app.use(cors({
       'http://127.0.0.1:8080',
       'http://localhost:3000',
       'http://127.0.0.1:3000',
-      'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
+      'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev',
+      CONFIG.FRONTEND_URL // Include the configured frontend URL
     ];
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // For development, allow all origins
+    if (CONFIG.NODE_ENV === 'development') {
       callback(null, true);
     } else {
-      callback(null, true); // Allow all in development
+      // For production, check against allowed origins
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
     }
   },
   credentials: true,
