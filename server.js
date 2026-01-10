@@ -113,12 +113,15 @@
      directives: {
        defaultSrc: ["'self'"],
        styleSrc: ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'cdn.jsdelivr.net', 'cdnjs.cloudflare.com'],
-       scriptSrc: ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'cdn.socket.io'],
-       imgSrc: ["'self'", 'data:', 'https:', 'http:'],
+       scriptSrc: ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'cdn.socket.io', '*.googletagmanager.com', '*.google-analytics.com'],
+       imgSrc: ["'self'", 'data:', 'https:', 'http:', 'blob:', 'filesystem:'],
        fontSrc: ["'self'", 'fonts.gstatic.com', 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net'],
-       connectSrc: ["'self'", 'ws:', 'wss:', 'http:', 'https:'],
-       frameSrc: ["'none'"],
-       objectSrc: ["'none'"]
+       connectSrc: ["'self'", 'ws:', 'wss:', 'http:', 'https:', '*.analytics.google.com', '*.googleapis.com'],
+       frameSrc: ["'self'", 'https:', 'data:'],
+       objectSrc: ["'none'"],
+       mediaSrc: ["'self'", 'https:', 'http:'],
+       workerSrc: ["'self'", 'blob:'],
+       manifestSrc: ["'self'"]
      }
    },
    crossOriginEmbedderPolicy: false
