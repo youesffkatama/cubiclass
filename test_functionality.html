@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scholar.AI - Test Page</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #001e2b;
+            color: #00ed64;
+        }
+        .container {
+            background-color: rgba(0, 30, 43, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #00ed64;
+        }
+        h1 {
+            color: #00ed64;
+            text-align: center;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .success {
+            background-color: rgba(0, 237, 100, 0.2);
+            border: 1px solid #00ed64;
+        }
+        .error {
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+        }
+        .info {
+            background-color: rgba(0, 191, 255, 0.2);
+            border: 1px solid #00bfff;
+        }
+        button {
+            background-color: #00ed64;
+            color: #001e2b;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #00ff6a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scholar.AI - Functionality Test</h1>
+        
+        <div id="status" class="status info">
+            Testing environment: <span id="env-info"></span>
+        </div>
+        
+        <div class="status info">
+            <h3>Connection Status</h3>
+            <p>Current URL: <span id="current-url"></span></p>
+            <p>Server URL: <span id="server-url"></span></p>
+        </div>
+        
+        <div class="status info">
+            <h3>Tests</h3>
+            <button onclick="testSocket()">Test Socket Connection</button>
+            <button onclick="testAPI()">Test API Connection</button>
+            <button onclick="testUI()">Test UI Functionality</button>
+            <button onclick="runAllTests()">Run All Tests</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Display environment info
+        document.getElementById('env-info').textContent = window.location.hostname;
+        document.getElementById('current-url').textContent = window.location.href;
+        
+        // Determine server URL based on environment
+        const isCodespace = window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev');
+        let serverUrl;
+        
+        if (isCodespace) {
+            const codespaceName = window.location.hostname.split('.')[0];
+            serverUrl = `https://${codespaceName}-3000.app.github.dev`;
+        } else {
+            serverUrl = 'http://localhost:3000';
+        }
+        
+        document.getElementById('server-url').textContent = serverUrl;
+
+        async function testSocket() {
+            const results = document.getElementById('results');
+            results.innerHTML += '<div class="status info">Testing Socket Connection...</div>';
+            
+            try {
+                const socket = io(serverUrl, {
+                    transports: ['websocket', 'polling'],
+                    timeout: 10000
+                });
+                
+                socket.on('connect', () => {
+                    results.innerHTML += '<div class="status success">✅ Socket connected successfully!</div>';
+                    socket.disconnect();
+                });
+                
+                socket.on('connect_error', (error) => {
+                    results.innerHTML += `<div class="status error">❌ Socket connection failed: ${error.message}</div>`;
+                });
+                
+                // Set timeout for connection failure
+                setTimeout(() => {
+                    if (socket.connected !== true) {
+                        results.innerHTML += '<div class="status error">❌ Socket connection timed out</div>';
+                        socket.disconnect();
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                results.innerHTML += `<div class="status error">❌ Socket test error: ${error.message}</div>`;
+            }
+        }
+
+        async function testAPI() {
+            const results = document.getElementById('results');
+            results.innerHTML += '<div class="status info">Testing API Connection...</div>';
+            
+            try {
+                // Test health endpoint
+                const response = await fetch(`${serverUrl}/api/v1/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    results.innerHTML += '<div class="status success">✅ API connection successful!</div>';
+                    results.innerHTML += `<div class="status info">Server status: ${data.status}</div>`;
+                } else {
+                    results.innerHTML += `<div class="status error">❌ API connection failed: ${response.status}</div>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<div class="status error">❌ API test error: ${error.message}</div>`;
+            }
+        }
+
+        function testUI() {
+            const results = document.getElementById('results');
+            results.innerHTML += '<div class="status info">Testing UI Functionality...</div>';
+            
+            try {
+                // Test basic UI elements
+                const hasNavigation = document.querySelector('.nav-link') !== null;
+                const hasViews = document.querySelectorAll('.view').length > 0;
+                
+                if (hasNavigation && hasViews) {
+                    results.innerHTML += '<div class="status success">✅ UI elements found and functional!</div>';
+                } else {
+                    results.innerHTML += '<div class="status error">❌ Some UI elements missing</div>';
+                }
+            } catch (error) {
+                results.innerHTML += `<div class="status error">❌ UI test error: ${error.message}</div>`;
+            }
+        }
+
+        async function runAllTests() {
+            document.getElementById('results').innerHTML = '';
+            await testSocket();
+            await testAPI();
+            testUI();
+        }
+    </script>
+</body>
+</html>

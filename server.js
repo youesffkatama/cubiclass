@@ -26,7 +26,6 @@
  const path = require('path');
  const fs = require('fs').promises;
  const http = require('http');
- const socketIO = require('socket.io');
  const helmet = require('helmet');
  const cors = require('cors');
  const rateLimit = require('express-rate-limit');
@@ -97,36 +96,6 @@
  // ==========================================
  const app = express();
  const server = http.createServer(app);
- const io = socketIO(server, {
-   cors: {
-     origin: function(origin, callback) {
-       if (!origin) return callback(null, true);
-
-       const allowedOrigins = [
-         CONFIG.FRONTEND_URL || 'http://localhost:8080',
-         'http://localhost:8080',
-         'http://127.0.0.1:8080',
-         'http://localhost:3000',
-         'http://127.0.0.1:3000',
-         'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
-       ];
-
-       // For development, allow all origins
-       if (CONFIG.NODE_ENV === 'development') {
-         callback(null, true);
-       } else {
-         // For production, check against allowed origins
-         if (allowedOrigins.indexOf(origin) !== -1) {
-           callback(null, true);
-         } else {
-           callback(null, false);
-         }
-       }
-     },
-     credentials: true,
-     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-   }
- });
  
  // ==========================================
  // âœ… FIX: ENHANCED SECURITY MIDDLEWARE
@@ -775,14 +744,8 @@ try {
       xpGained: amount
     });
     
-    // ✅ Real-time XP notification
-    emitToUser(userId, 'xp-gained', {
-      amount,
-      reason,
-      newXP: user.dna.xp,
-      level: user.dna.level,
-      leveledUp
-    });
+    // Store XP gain in activity log for client to poll
+    // The client will periodically check for new activities to show XP gains
     
     // ✅ Send notification if leveled up
     if (leveledUp) {
@@ -821,9 +784,14 @@ try {
      
      await KnowledgeNode.findByIdAndUpdate(nodeId, { status: 'PROCESSING' });
      
-     // Emit processing started
+     // Store processing started in database for client to poll
      const node = await KnowledgeNode.findById(nodeId);
-     emitToUser(node.userId.toString(), 'pdf:processing-started', { nodeId });
+     await KnowledgeNode.findByIdAndUpdate(nodeId, {
+       $set: {
+         'meta.statusMessage': 'Processing started...',
+         'meta.progress': 0
+       }
+     });
      
      const dataBuffer = await fs.readFile(filePath);
      const pdfData = await pdfParse(dataBuffer);
@@ -839,7 +807,12 @@ try {
      });
      
      await job.updateProgress(10);
-     emitToUser(node.userId.toString(), 'pdf:progress', { nodeId, progress: 10 });
+     await KnowledgeNode.findByIdAndUpdate(nodeId, {
+       $set: {
+         'meta.progress': 10,
+         'meta.statusMessage': 'Processing started...'
+       }
+     });
      
      // âœ… FIX: Smart chunking
      const chunks = [];
@@ -864,7 +837,12 @@ try {
      logger.info(`📦 Created ${chunks.length} chunks`);
      
      await job.updateProgress(25);
-     emitToUser(node.userId.toString(), 'pdf:progress', { nodeId, progress: 25 });
+     await KnowledgeNode.findByIdAndUpdate(nodeId, {
+       $set: {
+         'meta.progress': 25,
+         'meta.statusMessage': 'Creating chunks...'
+       }
+     });
      
      // âœ… FIX: Batch embedding generation
      const batchSize = 10;
@@ -889,13 +867,23 @@ try {
        
        const progress = 25 + Math.floor((i / chunks.length) * 40);
        await job.updateProgress(progress);
-       emitToUser(node.userId.toString(), 'pdf:progress', { nodeId, progress });
+       await KnowledgeNode.findByIdAndUpdate(nodeId, {
+         $set: {
+           'meta.progress': progress,
+           'meta.statusMessage': `Processing chunks... (${Math.floor(i/batchSize)}/${Math.ceil(chunks.length/batchSize)})`
+         }
+       });
      }
      
      logger.info(`✅ Saved ${chunks.length} vector chunks`);
      
      await job.updateProgress(70);
-     emitToUser(node.userId.toString(), 'pdf:progress', { nodeId, progress: 70 });
+     await KnowledgeNode.findByIdAndUpdate(nodeId, {
+       $set: {
+         'meta.progress': 70,
+         'meta.statusMessage': 'Generating AI persona...'
+       }
+     });
      
      // Generate persona
      try {
@@ -936,7 +924,12 @@ try {
      }
      
      await job.updateProgress(85);
-     emitToUser(node.userId.toString(), 'pdf:progress', { nodeId, progress: 85 });
+     await KnowledgeNode.findByIdAndUpdate(nodeId, {
+       $set: {
+         'meta.progress': 85,
+         'meta.statusMessage': 'Generating summary...'
+       }
+     });
      
      // Generate summary
      try {
@@ -968,16 +961,8 @@ try {
      
      await job.updateProgress(100);
      
-     // âœ… FIX: Emit completion with full data
-     const finalNode = await KnowledgeNode.findById(nodeId).lean();
-     emitToUser(node.userId.toString(), 'pdf:completed', {
-       nodeId,
-       status: 'INDEXED',
-       persona: finalNode.persona,
-       summary: finalNode.summary,
-       keyPoints: finalNode.keyPoints,
-       meta: finalNode.meta
-     });
+     // The client will poll for status changes, so no need to emit
+     // The status will be 'INDEXED' which the client can detect
      
      logger.info(`✅ Successfully processed PDF: ${nodeId}`);
      
@@ -991,11 +976,8 @@ try {
        processingError: error.message
      });
      
-     const node = await KnowledgeNode.findById(nodeId);
-     emitToUser(node.userId.toString(), 'pdf:failed', {
-       nodeId,
-       error: 'Processing failed. Please try again.'
-     });
+     // The client will poll for status changes, so no need to emit
+     // The status will be 'FAILED' which the client can detect
      
      throw error;
    }
@@ -1470,7 +1452,8 @@ app.post('/api/v1/auth/login', async (req, res) => {
        success: true,
        data: {
          status: node.status,
-         progress,
+         progress: node.meta?.progress || progress,
+         statusMessage: node.meta?.statusMessage,
          error: node.processingError,
          pageCount: node.meta?.pageCount
        }
@@ -2434,166 +2417,6 @@ app.post('/api/v1/auth/login', async (req, res) => {
     });
   }
 });
- // ==========================================
- // ✅ SOCKET.IO REAL-TIME IMPLEMENTATION
- // ==========================================
- io.use((socket, next) => {
-   const token = socket.handshake.auth.token;
-   
-   if (!token) {
-     return next(new Error('Authentication error'));
-   }
-   
-   try {
-     const decoded = jwt.verify(token, CONFIG.JWT_SECRET);
-     socket.userId = decoded.userId;
-     next();
-   } catch (err) {
-     next(new Error('Authentication error'));
-   }
- });
- 
- io.on('connection', (socket) => {
-  logger.info(`🔌 User connected: ${socket.userId}`);
-  
-  socket.join(`user:${socket.userId}`);
-  
-  // ✅ User online status
-  socket.on('user-online', async () => {
-    try {
-      await User.findByIdAndUpdate(socket.userId, {
-        'dna.lastActiveDate': new Date()
-      });
-      
-      // Broadcast to friends/classmates
-      socket.broadcast.emit('user-status-changed', {
-        userId: socket.userId,
-        status: 'online'
-      });
-    } catch (error) {
-      logger.error('User online error:', error);
-    }
-  });
-  
-  // ✅ Typing indicators
-  socket.on('typing', ({ conversationId }) => {
-    socket.to(`conversation:${conversationId}`).emit('user-typing', {
-      userId: socket.userId
-    });
-  });
-  
-  socket.on('stop-typing', ({ conversationId }) => {
-    socket.to(`conversation:${conversationId}`).emit('user-stopped-typing', {
-      userId: socket.userId
-    });
-  });
-  
-  // ✅ Conversation rooms
-  socket.on('join-conversation', ({ conversationId }) => {
-    socket.join(`conversation:${conversationId}`);
-    logger.info(`User ${socket.userId} joined conversation ${conversationId}`);
-  });
-  
-  socket.on('leave-conversation', ({ conversationId }) => {
-    socket.leave(`conversation:${conversationId}`);
-  });
-  
-  // ✅ Class rooms
-  socket.on('join-class', ({ classId }) => {
-    socket.join(`class:${classId}`);
-    socket.to(`class:${classId}`).emit('user-joined', {
-      userId: socket.userId
-    });
-    logger.info(`User ${socket.userId} joined class ${classId}`);
-  });
-  
-  socket.on('leave-class', ({ classId }) => {
-    socket.leave(`class:${classId}`);
-    socket.to(`class:${classId}`).emit('user-left', {
-      userId: socket.userId
-    });
-  });
-  
-  // ✅ Class post created
-  socket.on('class-post-created', async ({ classId, post }) => {
-    socket.to(`class:${classId}`).emit('new-class-post', post);
-    
-    // Send notifications to class members
-    try {
-      const classObj = await Class.findById(classId);
-      if (classObj) {
-        classObj.members.forEach(member => {
-          if (!member.userId.equals(socket.userId)) {
-            sendNotification(member.userId, {
-              type: 'info',
-              title: 'New Class Post',
-              message: post.content.substring(0, 100),
-              link: `/class/${classId}`
-            });
-          }
-        });
-      }
-    } catch (error) {
-      logger.error('Class post notification error:', error);
-    }
-  });
-  
-  // ✅ Study session started
-  socket.on('study-session-started', async ({ duration }) => {
-    await trackActivity(
-      socket.userId,
-      'study',
-      `Started ${duration} minute study session`
-    );
-  });
-  
-  // ✅ Study session completed
-  socket.on('study-session-completed', async ({ duration }) => {
-    await trackActivity(
-      socket.userId,
-      'study',
-      `Completed ${duration} minute study session`
-    );
-    await awardXP(socket.userId, 25, 'Completed study session');
-  });
-  
-  // ✅ Quiz completed
-  socket.on('quiz-completed', async ({ score, total }) => {
-    const percentage = Math.round((score / total) * 100);
-    
-    await trackActivity(
-      socket.userId,
-      'quiz',
-      `Completed quiz: ${score}/${total} (${percentage}%)`,
-      { score, total, percentage }
-    );
-    
-    const xpAmount = Math.round(percentage / 2); // 50 XP for 100%
-    await awardXP(socket.userId, xpAmount, `Quiz completed: ${percentage}%`);
-  });
-  
-  // ✅ Flashcard session completed
-  socket.on('flashcard-session-completed', async ({ cardsReviewed, cardsKnown }) => {
-    await trackActivity(
-      socket.userId,
-      'study',
-      `Reviewed ${cardsReviewed} flashcards`,
-      { cardsReviewed, cardsKnown }
-    );
-    
-    await awardXP(socket.userId, cardsReviewed * 2, 'Flashcard practice');
-  });
-  
-  socket.on('disconnect', () => {
-    logger.info(`🔌 User disconnected: ${socket.userId}`);
-    
-    // Broadcast offline status
-    socket.broadcast.emit('user-status-changed', {
-      userId: socket.userId,
-      status: 'offline'
-    });
-  });
-});
 
 // ✅ ADD NEW ENDPOINT - Get user stats (Around line 750)
 app.get('/api/v1/user/stats', authenticateToken, async (req, res) => {
@@ -2637,15 +2460,6 @@ app.get('/api/v1/user/stats', authenticateToken, async (req, res) => {
   }
 });
 
- // Utility function to emit to specific user
- function emitToUser(userId, event, data) {
-   io.to(`user:${userId}`).emit(event, data);
- }
- 
- // Utility function to emit to class
- function emitToClass(classId, event, data) {
-   io.to(`class:${classId}`).emit(event, data);
- }
  
  // ==========================================
  // ERROR HANDLING

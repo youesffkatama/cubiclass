@@ -178,99 +178,7 @@ function loadSavedSession() {
     return false;
   };
 
-  let socket = null;
 
-  function initializeSocket(token) {
-      if (!token) {
-          console.warn('⚠️ No token provided for socket connection');
-          return;
-      }
-
-      try {
-          // Determine the correct server URL based on the current origin
-          // In GitHub Codespace, the server runs locally but is accessible via a forwarded port
-          const isCodespace = window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev');
-
-          let serverUrl;
-          if (isCodespace) {
-              // In Codespace, use the forwarded port URL
-              // Extract the Codespace name and port from the current URL
-              const codespaceName = window.location.hostname.split('.')[0]; // e.g., 'studious-space-telegram-5gj47g7j6rvxhvv94'
-              serverUrl = `https://${codespaceName}-3000.app.github.dev`;
-          } else {
-              // For local development
-              serverUrl = 'http://localhost:3000';
-          }
-
-          // Initialize socket connection
-          socket = io(serverUrl, {
-              auth: { token },
-              reconnection: true,
-              reconnectionDelay: 1000,
-              reconnectionAttempts: 5,
-              transports: ['websocket', 'polling'] // Specify transports
-          });
-
-          socket.on('connect', () => {
-              console.log('🔌 Socket connected to:', serverUrl);
-          });
-
-          socket.on('connect_error', (error) => {
-              console.warn('⚠️ Socket connection error:', error.message);
-              console.warn('💡 Server URL tried:', serverUrl);
-          });
-
-          socket.on('disconnect', () => {
-              console.log('🔌 Socket disconnected');
-          });
-
-          // Real-time PDF processing updates
-          socket.on('pdf:processing-started', (data) => {
-              Utils.showToast('Processing PDF...', 'info');
-          });
-
-          socket.on('pdf:progress', (data) => {
-              console.log(`PDF Progress: ${data.progress}%`);
-              const progressBar = document.getElementById('pdfProgressBar');
-              const progressText = document.getElementById('pdfProgressText');
-              if (progressBar) progressBar.style.width = `${data.progress}%`;
-              if (progressText) progressText.textContent = `${data.progress}%`;
-          });
-
-          socket.on('pdf:completed', async (data) => {
-              Utils.showToast('PDF processing complete!', 'success');
-              await PDFModule.loadFiles();
-              if (data) {
-                  PDFModule.currentPdf = data;
-                  PDFModule.showPdfDashboard(data);
-              }
-          });
-
-          socket.on('pdf:failed', (data) => {
-              Utils.showToast('PDF processing failed', 'error');
-          });
-
-          // Real-time XP updates
-          socket.on('xp-gained', (data) => {
-              if (data.leveledUp) {
-                  Utils.showToast(`🎉 Level Up! You're now level ${data.newLevel}!`, 'success');
-              } else {
-                  Utils.showToast(`+${data.amount} XP: ${data.reason}`, 'success');
-              }
-              if (AppState.user) {
-                  AppState.user.dna.xp = data.newXP;
-                  AppState.user.dna.level = data.level;
-              }
-          });
-
-          socket.on('notification', (data) => {
-              NotificationSystem.add(data);
-          });
-
-      } catch (error) {
-          console.error('❌ Socket initialization failed:', error);
-      }
-  }
 
 
 
@@ -1556,9 +1464,6 @@ const AuthModule = {
                     const response = await API.get('/auth/me');
                     AppState.user = response.data.user;
                     
-                    if (typeof initializeSocket === 'function') {
-                        initializeSocket(token);
-                    }
                     
                     AuthModule.loadApp();
                 } else {
@@ -2242,16 +2147,29 @@ const PDFModule = {
     
     pollProcessingStatus: async (nodeId) => {
         Utils.showLoader('Processing PDF...');
-        
+
         const checkStatus = async () => {
         try {
             const response = await API.get(`/workspace/files/${nodeId}/status`);
-            
+
+            // Update progress bar if progress is available
+            if (response.data.progress !== undefined) {
+                const progressBar = document.getElementById('pdfProgressBar');
+                const progressText = document.getElementById('pdfProgressText');
+                if (progressBar) progressBar.style.width = `${response.data.progress}%`;
+                if (progressText) progressText.textContent = `${response.data.progress}%`;
+            }
+
+            // Update status message if available
+            if (response.data.statusMessage) {
+                Utils.showToast(response.data.statusMessage, 'info');
+            }
+
             if (response.data.status === 'INDEXED') {
             Utils.hideLoader();
             Utils.showToast('PDF processing complete!', 'success');
             clearInterval(PDFModule.pollingInterval);
-            
+
             // Load the processed file
             const fileResponse = await API.get(`/workspace/files/${nodeId}`);
             PDFModule.currentPdf = fileResponse.data;
@@ -2265,48 +2183,9 @@ const PDFModule = {
             console.error('Status check failed:', error);
         }
         };
-        
+
         await checkStatus();
         PDFModule.pollingInterval = setInterval(checkStatus, 3000);
-        },
-        pollProcessingStatus: async (nodeId) => {
-            let attempts = 0;
-            const maxAttempts = 60; // 3 minutes max
-            
-            const checkStatus = async () => {
-                try {
-                    const response = await API.get(`/workspace/files/${nodeId}/status`);
-                    
-                    if (response.data.status === 'INDEXED') {
-                        Utils.showToast('PDF processing complete!', 'success');
-                        
-                        // Get full details
-                        const details = await API.get(`/workspace/files/${nodeId}`);
-                        
-                        // Update UI
-                        PDFModule.currentPdf = {
-                            id: nodeId,
-                            name: details.data.name,
-                            pages: details.data.meta.pageCount,
-                            flashcards: 15,
-                            questions: 8,
-                            persona: details.data.persona.generatedName
-                        };
-                        
-                        PDFModule.showPdfDashboard(PDFModule.currentPdf);
-                        
-                    } else if (response.data.status === 'FAILED') {
-                        Utils.showToast('PDF processing failed', 'error');
-                    } else if (attempts < maxAttempts) {
-                        attempts++;
-                        setTimeout(checkStatus, 3000);
-                    }
-                } catch (error) {
-                    console.error('Status check failed:', error);
-                }
-            };
-            
-            setTimeout(checkStatus, 3000);
         },
         showPdfDashboard: (pdf) => {
             document.getElementById('pdfEmptyState').style.display = 'none';
@@ -2728,7 +2607,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load initial data if logged in
     const token = Utils.loadFromStorage('scholar_token');
     if (token) {
-      initializeSocket(token);
       PDFModule.loadFiles();
       NotificationSystem.loadNotifications();
     }
@@ -4199,9 +4077,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ Load initial data if logged in
     const token = Utils.loadFromStorage('scholar_token');
     if (token) {
-        initializeSocket(token);
         PDFModule.loadFiles();
         NotificationSystem.loadNotifications();
+
+        // Start polling for user updates
+        startUserUpdatesPolling();
+    }
+
+    // Function to poll for user updates (replaces real-time updates)
+    function startUserUpdatesPolling() {
+        // Poll for user updates every 10 seconds
+        setInterval(async () => {
+            try {
+                const response = await API.get('/auth/me');
+                const newUser = response.data.user;
+
+                // Check if user data has changed (XP, level, etc.)
+                if (AppState.user && AppState.user.dna.xp !== newUser.dna.xp) {
+                    // XP has changed - show XP gained notification
+                    const xpDiff = newUser.dna.xp - AppState.user.dna.xp;
+                    if (xpDiff > 0) {
+                        // Check if user leveled up
+                        if (newUser.dna.level > AppState.user.dna.level) {
+                            Utils.showToast(`🎉 Level Up! You're now level ${newUser.dna.level}!`, 'success');
+                        } else {
+                            Utils.showToast(`+${xpDiff} XP: Updated`, 'success');
+                        }
+                    }
+
+                    // Update user data
+                    AppState.user = newUser;
+                }
+
+                // Update UI if needed
+                const userName = document.getElementById('userName');
+                if (userName) userName.textContent = AppState.user.username || 'Student';
+            } catch (error) {
+                console.error('Error polling for user updates:', error);
+            }
+        }, 10000); // Poll every 10 seconds
     }
 
     console.log('✅ Scholar.AI - Ready');
