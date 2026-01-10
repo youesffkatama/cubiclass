@@ -14,3 +14,13 @@ IMPORTANT! Eviction policy is volatile-lru. It should be "noeviction"
 IMPORTANT! Eviction policy is volatile-lru. It should be "noeviction"
 IMPORTANT! Eviction policy is volatile-lru. It should be "noeviction"
 [32minfo[39m: âœ… MongoDB connected {"timestamp":"2026-01-10T20:10:47.383Z"}
+ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default). This could indicate a misconfiguration which would prevent express-rate-limit from accurately identifying users. See https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/ for more information.
+    at _Validations.<anonymous> (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:180:15)
+    at _Validations.wrap (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:313:18)
+    at _Validations.xForwardedForHeader (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:178:10)
+    at Object.keyGenerator (/workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:542:19)
+    at /workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:595:32
+    at async /workspaces/cubiclass/node_modules/express-rate-limit/dist/index.cjs:576:5 {
+  code: 'ERR_ERL_UNEXPECTED_X_FORWARDED_FOR',
+  help: 'https://express-rate-limit.github.io/ERR_ERL_UNEXPECTED_X_FORWARDED_FOR/'
+}

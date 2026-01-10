@@ -24,8 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const user = Utils.loadFromStorage('currentUser');
 
     if (token && user) {
-        // Initialize socket
-        // initializeSocket(token);
 
         // Load modules
         NavigationModule.init();

@@ -282,3 +282,5 @@
 {"level":"info","message":"🤖 AI: OpenRouter configured","timestamp":"2026-01-10T20:10:46.456Z"}
 {"level":"info","message":"✅ ALL 175 ISSUES RESOLVED","timestamp":"2026-01-10T20:10:46.456Z"}
 {"level":"info","message":"âœ… MongoDB connected","timestamp":"2026-01-10T20:10:47.383Z"}
+{"level":"info","message":"🧠 Loading embedding model...","timestamp":"2026-01-10T20:13:08.526Z"}
+{"level":"info","message":"âœ… Embedding model loaded","timestamp":"2026-01-10T20:13:08.710Z"}

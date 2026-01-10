@@ -2148,6 +2148,15 @@ const PDFModule = {
     pollProcessingStatus: async (nodeId) => {
         Utils.showLoader('Processing PDF...');
 
+        // Add data attribute to track processing for real-time polling
+        const processingElement = document.querySelector('[data-pdf-processing]');
+        if (!processingElement) {
+            const dummyElement = document.createElement('div');
+            dummyElement.setAttribute('data-pdf-processing', 'true');
+            dummyElement.setAttribute('data-pdf-id', nodeId);
+            document.body.appendChild(dummyElement);
+        }
+
         const checkStatus = async () => {
         try {
             const response = await API.get(`/workspace/files/${nodeId}/status`);
@@ -2174,10 +2183,18 @@ const PDFModule = {
             const fileResponse = await API.get(`/workspace/files/${nodeId}`);
             PDFModule.currentPdf = fileResponse.data;
             PDFModule.showPdfDashboard(PDFModule.currentPdf);
+
+            // Remove the processing indicator
+            const processingElement = document.querySelector(`[data-pdf-id="${nodeId}"]`);
+            if (processingElement) processingElement.remove();
             } else if (response.data.status === 'FAILED') {
             Utils.hideLoader();
             Utils.showToast('PDF processing failed', 'error');
             clearInterval(PDFModule.pollingInterval);
+
+            // Remove the processing indicator
+            const processingElement = document.querySelector(`[data-pdf-id="${nodeId}"]`);
+            if (processingElement) processingElement.remove();
             }
         } catch (error) {
             console.error('Status check failed:', error);
@@ -4117,6 +4134,83 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 10000); // Poll every 10 seconds
     }
+
+    // Enhanced real-time functionality using HTTP polling
+    function startRealTimePolling() {
+        // Poll for notifications every 5 seconds
+        setInterval(async () => {
+            try {
+                const response = await API.get('/notifications');
+                if (response.data.notifications && response.data.notifications.length > 0) {
+                    // Process new notifications
+                    const newNotifications = response.data.notifications.filter(n => !n.read);
+                    if (newNotifications.length > 0) {
+                        newNotifications.forEach(notification => {
+                            Utils.showToast(notification.message, notification.type || 'info');
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error polling for notifications:', error);
+            }
+        }, 5000); // Poll every 5 seconds
+
+        // Poll for activity updates every 15 seconds
+        setInterval(async () => {
+            try {
+                const response = await API.get('/analytics/dashboard');
+                if (response.data.recentActivity && response.data.recentActivity.length > 0) {
+                    // Update activity feed if there are new activities
+                    if (typeof ActivityModule !== 'undefined' && ActivityModule.renderFeed) {
+                        ActivityModule.renderFeed();
+                    }
+                }
+            } catch (error) {
+                console.error('Error polling for activity updates:', error);
+            }
+        }, 15000); // Poll every 15 seconds
+
+        // Poll for PDF processing status every 3 seconds (for active uploads)
+        setInterval(async () => {
+            try {
+                // Only poll if there are ongoing PDF processes
+                const pdfElements = document.querySelectorAll('[data-pdf-processing]');
+                if (pdfElements.length > 0) {
+                    // Get the PDF IDs that are currently processing
+                    for (let i = 0; i < pdfElements.length; i++) {
+                        const pdfId = pdfElements[i].dataset.pdfId;
+                        if (pdfId) {
+                            const response = await API.get(`/workspace/files/${pdfId}/status`);
+                            if (response.data.status === 'INDEXED') {
+                                Utils.showToast('PDF processing complete!', 'success');
+                                if (typeof PDFModule !== 'undefined' && PDFModule.loadFiles) {
+                                    await PDFModule.loadFiles();
+                                }
+                                // Remove the processing indicator
+                                pdfElements[i].removeAttribute('data-pdf-processing');
+                            } else if (response.data.status === 'FAILED') {
+                                Utils.showToast('PDF processing failed', 'error');
+                                pdfElements[i].removeAttribute('data-pdf-processing');
+                            }
+
+                            // Update progress if available
+                            if (response.data.progress !== undefined) {
+                                const progressBar = document.getElementById('pdfProgressBar');
+                                const progressText = document.getElementById('pdfProgressText');
+                                if (progressBar) progressBar.style.width = `${response.data.progress}%`;
+                                if (progressText) progressText.textContent = `${response.data.progress}%`;
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error polling for PDF status:', error);
+            }
+        }, 3000); // Poll every 3 seconds
+    }
+
+    // Start the real-time polling
+    startRealTimePolling();
 
     console.log('✅ Scholar.AI - Ready');
 });

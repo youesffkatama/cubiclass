@@ -406,129 +406,12 @@ class Utils {
 }
 
 // ==========================================
-// SOCKET MANAGEMENT WITH ERROR HANDLING
-// ==========================================
-class SocketManager {
-  constructor() {
-    this.socket = null;
-    this.isConnected = false;
-    this.reconnectAttempts = 0;
-    this.maxReconnectAttempts = 5;
-  }
-
-  initializeSocket(token) {
-    if (!token) {
-      console.error('❌ Cannot initialize socket: No token provided');
-      return null;
-    }
-
-    try {
-      // Disconnect existing socket first
-      if (this.socket && this.socket.connected) {
-        this.socket.disconnect();
-      }
-
-      this.socket = io('http://localhost:3000', {
-        auth: { token },
-        reconnection: true,
-        reconnectionDelay: 1000,
-        reconnectionAttempts: this.maxReconnectAttempts,
-        timeout: 10000
-      });
-
-      this.socket.on('connect', () => {
-        console.log('✅ Socket connected');
-        this.isConnected = true;
-        this.reconnectAttempts = 0;
-      });
-
-      this.socket.on('connect_error', (error) => {
-        console.error('❌ Socket connection failed:', error.message);
-        this.isConnected = false;
-      });
-
-      this.socket.on('disconnect', (reason) => {
-        console.log('🔌 Socket disconnected:', reason);
-        this.isConnected = false;
-        if (reason === 'io server disconnect') {
-          // The server disconnected, reconnect manually
-          this.socket.connect();
-        }
-      });
-
-      // Real-time PDF processing updates
-      this.socket.on('pdf:processing-started', (data) => {
-        Utils.showToast('Processing PDF...', 'info');
-      });
-
-      this.socket.on('pdf:progress', (data) => {
-        console.log(`PDF Progress: ${data.progress}%`);
-        const progressBar = document.getElementById('pdfProgressBar');
-        const progressText = document.getElementById('pdfProgressText');
-        if (progressBar) progressBar.style.width = `${data.progress}%`;
-        if (progressText) progressText.textContent = `${data.progress}%`;
-      });
-
-      this.socket.on('pdf:completed', async (data) => {
-        Utils.showToast('PDF processing complete!', 'success');
-        // Assuming PDFModule exists and has loadFiles method
-        if (window.PDFModule && typeof window.PDFModule.loadFiles === 'function') {
-          await window.PDFModule.loadFiles();
-        }
-        if (data) {
-          if (window.PDFModule) window.PDFModule.currentPdf = data;
-          if (window.PDFModule && typeof window.PDFModule.showPdfDashboard === 'function') {
-            window.PDFModule.showPdfDashboard(data);
-          }
-        }
-      });
-
-      this.socket.on('pdf:failed', (data) => {
-        Utils.showToast('PDF processing failed', 'error');
-      });
-
-      // Real-time XP updates
-      this.socket.on('xp-gained', (data) => {
-        if (data.leveledUp) {
-          Utils.showToast(`🎉 Level Up! You're now level ${data.newLevel}!`, 'success');
-        } else {
-          Utils.showToast(`+${data.amount} XP: ${data.reason}`, 'success');
-        }
-        if (window.AppState && window.AppState.user) {
-          window.AppState.user.dna.xp = data.newXP;
-          window.AppState.user.dna.level = data.level;
-        }
-      });
-
-      this.socket.on('notification', (data) => {
-        if (window.NotificationSystem && typeof window.NotificationSystem.add === 'function') {
-          window.NotificationSystem.add(data);
-        }
-      });
-
-      return this.socket;
-    } catch (error) {
-      console.error('❌ Socket initialization error:', error);
-      return null;
-    }
-  }
-
-  disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
-      this.isConnected = false;
-    }
-  }
-}
-
-// ==========================================
 // AUTHENTICATION MODULE
 // ==========================================
 class AuthModule {
   constructor(apiClient, stateManager) {
     this.apiClient = apiClient;
     this.stateManager = stateManager;
-    this.socketManager = new SocketManager();
   }
 
   async init() {
@@ -557,7 +440,6 @@ class AuthModule {
           const response = await this.apiClient.get('/auth/me');
           this.stateManager.setState({ user: response.data.user });
 
-          this.socketManager.initializeSocket(token);
 
           this.loadApp();
         } else {
@@ -656,9 +538,6 @@ class AuthModule {
       await this.apiClient.saveToStorage('currentUser', JSON.stringify(data.data.user));
       this.stateManager.setState({ user: data.data.user });
 
-      // Initialize socket AFTER storage
-      this.socketManager.initializeSocket(data.data.tokens.accessToken);
-
       // Add small delay to ensure storage is complete
       await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -725,9 +604,6 @@ class AuthModule {
       await this.apiClient.saveToStorage('scholar_refresh_token', data.data.tokens.refreshToken);
       await this.apiClient.saveToStorage('currentUser', JSON.stringify(data.data.user));
       this.stateManager.setState({ user: data.data.user });
-
-      // Initialize socket AFTER storage
-      this.socketManager.initializeSocket(data.data.tokens.accessToken);
 
       // Add small delay to ensure storage is complete
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -837,10 +713,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const user = apiClient.loadFromStorage('currentUser');
 
   if (token && user) {
-    // Initialize socket
-    const socketManager = new SocketManager();
-    socketManager.initializeSocket(token);
-    window.SocketManager = socketManager;
 
     // Load modules in sequence
     setTimeout(() => {
@@ -946,9 +818,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Global cleanup function to prevent memory leaks
 function globalCleanup() {
   // Disconnect socket if it exists
-  if (window.SocketManager && typeof window.SocketManager.disconnect === 'function') {
-    window.SocketManager.disconnect();
-  }
 
   // Clear intervals
   if (window.PDFModule && window.PDFModule.pollingInterval) {
@@ -975,5 +844,4 @@ window.ScholarAI = {
   AppStateManager,
   ErrorBoundary,
   Utils,
-  SocketManager
 };

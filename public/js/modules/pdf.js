@@ -85,7 +85,7 @@ export const PDFModule = {
         }
 
         document.getElementById('pdfPageCount').textContent = `${pageCount} Pages`;
-        // Further updates for persona, summary etc. will come via socket events
+        // Further updates for persona, summary etc. will be polled from the server
     },
     
     launchTool: (toolName) => {
