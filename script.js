@@ -188,10 +188,21 @@ function loadSavedSession() {
 
       try {
           // Determine the correct server URL based on the current origin
-          const serverUrl = window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev')
-              ? 'https://studious-space-telegram-5gj47g7j6rvxhvv94-3000.app.github.dev'
-              : 'http://localhost:3000';
+          // In GitHub Codespace, the server runs locally but is accessible via a forwarded port
+          const isCodespace = window.location.hostname.includes('github.dev') || window.location.hostname.includes('app.github.dev');
 
+          let serverUrl;
+          if (isCodespace) {
+              // In Codespace, use the forwarded port URL
+              // Extract the Codespace name and port from the current URL
+              const codespaceName = window.location.hostname.split('.')[0]; // e.g., 'studious-space-telegram-5gj47g7j6rvxhvv94'
+              serverUrl = `https://${codespaceName}-3000.app.github.dev`;
+          } else {
+              // For local development
+              serverUrl = 'http://localhost:3000';
+          }
+
+          // Initialize socket connection
           socket = io(serverUrl, {
               auth: { token },
               reconnection: true,
@@ -199,24 +210,25 @@ function loadSavedSession() {
               reconnectionAttempts: 5,
               transports: ['websocket', 'polling'] // Specify transports
           });
-          
+
           socket.on('connect', () => {
-              console.log('🔌 Socket connected');
+              console.log('🔌 Socket connected to:', serverUrl);
           });
-          
+
           socket.on('connect_error', (error) => {
               console.warn('⚠️ Socket connection error:', error.message);
+              console.warn('💡 Server URL tried:', serverUrl);
           });
-          
+
           socket.on('disconnect', () => {
               console.log('🔌 Socket disconnected');
           });
-          
+
           // Real-time PDF processing updates
           socket.on('pdf:processing-started', (data) => {
               Utils.showToast('Processing PDF...', 'info');
           });
-          
+
           socket.on('pdf:progress', (data) => {
               console.log(`PDF Progress: ${data.progress}%`);
               const progressBar = document.getElementById('pdfProgressBar');
@@ -224,7 +236,7 @@ function loadSavedSession() {
               if (progressBar) progressBar.style.width = `${data.progress}%`;
               if (progressText) progressText.textContent = `${data.progress}%`;
           });
-          
+
           socket.on('pdf:completed', async (data) => {
               Utils.showToast('PDF processing complete!', 'success');
               await PDFModule.loadFiles();
@@ -233,11 +245,11 @@ function loadSavedSession() {
                   PDFModule.showPdfDashboard(data);
               }
           });
-          
+
           socket.on('pdf:failed', (data) => {
               Utils.showToast('PDF processing failed', 'error');
           });
-          
+
           // Real-time XP updates
           socket.on('xp-gained', (data) => {
               if (data.leveledUp) {
@@ -250,11 +262,11 @@ function loadSavedSession() {
                   AppState.user.dna.level = data.level;
               }
           });
-          
+
           socket.on('notification', (data) => {
               NotificationSystem.add(data);
           });
-          
+
       } catch (error) {
           console.error('❌ Socket initialization failed:', error);
       }
